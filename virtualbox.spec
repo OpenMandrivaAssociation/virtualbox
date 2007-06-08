@@ -1,5 +1,5 @@
-%define name	virtualbox
-%define ver	1.3.8
+
+%define ver	1.4.0
 %define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
@@ -23,18 +23,18 @@
 %define _requires_exceptions ^VBox
 
 Summary:	A general-purpose full virtualizer for x86 hardware
-Name:		%{name}
+Name:		virtualbox
 Version:	%{version}
 Release:	%{release}
-Source0:	%{pkgname}-%{pkgver}.tar.bz2
+Source0:	http://virtualbox.org/download/%ver/%pkgname-%{version}.tar.bz2
 Source1:	virtualbox.run
 Source2:	virtualbox.init
 Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
-Patch0:		vbox-ose-1.3.8-mdvconfig.patch
+Patch0:		vbox-ose-1.4.0-mdvconfig.patch
 Patch1:		vbox-1.3.3-disable-nmi.patch
-Patch2:		VirtualBox-OSE-1.3.4-futex.patch
+Patch2:		VirtualBox-OSE-1.4.0-futex.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -52,15 +52,16 @@ BuildRequires:	libxcursor-devel
 %else
 BuildRequires:	X11-devel
 %endif
-BuildRequires:	libSDL-devel, libqt-devel
+BuildRequires:	SDL-devel, libqt-devel
 BuildRequires:	libIDL-devel, libext2fs-devel
 BuildRequires:	libxslt-proc, libxerces-c-devel, libxalan-c-devel >= 1.10
+BuildRequires:	hal-devel
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
 virtualizer for x86 hardware.
 
-%package -n dkms-%{name}
+%package -n	dkms-%{name}
 Summary:	VirtualBox OSE kernel module
 Group:		System/Kernel and hardware
 Requires(post):   rpm-helper
@@ -73,9 +74,9 @@ Requires(preun):  dkms
 Kernel support for VirtualBox OSE.
 
 %prep
-%setup -q -n %{dirname}-%{ver}
+%setup -q -n %{pkgname}-%{ver}
 %patch0 -p1 -b .mdvconfig
-%patch1 -p1 -b .disable-nmi
+#%patch1 -p1 -b .disable-nmi
 %patch2 -p1 -b .futex
 
 %build
@@ -219,5 +220,3 @@ fi
 # initscripts integration
 %config %{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
-
-
