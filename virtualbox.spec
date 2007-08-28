@@ -153,7 +153,6 @@ EOF
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
 cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
-Encoding=UTF-8
 Name=VirtualBox OSE
 Comment=Full virtualizer for x86 hardware
 Exec=%{_bindir}/VirtualBox
