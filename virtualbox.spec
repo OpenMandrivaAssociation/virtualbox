@@ -40,10 +40,6 @@ Url:		http://www.virtualbox.org/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 ExclusiveArch:	%{ix86} x86_64
 Requires:	dkms-%{name} = %{version}-%{release}
-%ifarch %{ix86}
-# XXX buildrequires kbuild (kmk)
-BuildRequires:	libstdc++5
-%endif
 BuildRequires:	dev86, iasl
 BuildRequires:	zlib-devel
 %if %{mdkversion} >= 200700
