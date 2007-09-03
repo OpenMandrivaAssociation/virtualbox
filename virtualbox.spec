@@ -1,11 +1,11 @@
 
-%define ver	1.4.0
+%define ver	1.5.0
 %define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
-%define pkgname	VirtualBox-OSE
+%define distname	VirtualBox-%{version}_OSE
 %define dirname vbox-ose
 %define pkgver	%{ver}%{?svndate:-%{svndate}}
 
@@ -26,13 +26,13 @@ Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	%{version}
 Release:	%{release}
-Source0:	http://virtualbox.org/download/%ver/%pkgname-%{version}.tar.bz2
+Source0:	http://virtualbox.org/download/%ver/%distname.tar.bz2
 Source1:	virtualbox.run
 Source2:	virtualbox.init
 Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
-Patch0:		vbox-ose-1.4.0-mdvconfig.patch
+Patch0:		VirtualBox-1.5.0_OSE-mdvconfig.patch
 Patch1:		vbox-1.3.3-disable-nmi.patch
 Patch2:		VirtualBox-OSE-1.4.0-futex.patch
 License:	GPL
@@ -74,7 +74,7 @@ Requires(preun):  dkms
 Kernel support for VirtualBox OSE.
 
 %prep
-%setup -q -n %{pkgname}-%{ver}
+%setup -q -n %{distname}
 %patch0 -p1 -b .mdvconfig
 #%patch1 -p1 -b .disable-nmi
 %patch2 -p1 -b .futex
