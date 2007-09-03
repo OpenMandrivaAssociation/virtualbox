@@ -33,7 +33,6 @@ Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
 Patch0:		VirtualBox-1.5.0_OSE-mdvconfig.patch
-Patch1:		vbox-1.3.3-disable-nmi.patch
 Patch2:		VirtualBox-OSE-1.4.0-futex.patch
 License:	GPL
 Group:		Emulators
@@ -76,7 +75,6 @@ Kernel support for VirtualBox OSE.
 %prep
 %setup -q -n %{distname}
 %patch0 -p1 -b .mdvconfig
-#%patch1 -p1 -b .disable-nmi
 %patch2 -p1 -b .futex
 
 %build
