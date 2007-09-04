@@ -1,6 +1,6 @@
 
 %define ver	1.5.0
-%define rel	1
+%define rel	2
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -68,6 +68,20 @@ Requires(preun):  dkms
 %description -n dkms-%{name}
 Kernel support for VirtualBox OSE.
 
+%package -n	x11-driver-input-vboxmouse
+Summary:	The X.org driver for mouse in VirtualBox guests
+Group:		System/X11
+
+%description -n -driver-input-vboxmouse
+The X.org driver for mouse in VirtualBox guests
+
+%package -n	x11-driver-video-vboxvideo
+Summary:	The X.org driver for video in VirtualBox guests
+Group:		System/X11
+
+%description -n x11-driver-video-vboxvideo
+The X.org driver for video in VirtualBox guests
+
 %prep
 %setup -q -n %{distname}
 %patch0 -p1 -b .mdvconfig
@@ -122,6 +136,13 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d/
 cat > $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d/%{name}.rules << EOF
 KERNEL=="%{kname}", MODE="0666"
 EOF
+
+# install additions
+pushd out/%{vbox_platform}/release/bin/additions
+  install -d $RPM_BUILD_ROOT%{_libdir}/xorg/modules/{input,drivers}
+  install vboxmouse_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+  install vboxvideo_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+popd
 
 # install icons
 mkdir -p $RPM_BUILD_ROOT%{_iconsdir}
@@ -213,3 +234,11 @@ fi
 # initscripts integration
 %config %{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
+
+%files -n x11-driver-input-vboxmouse
+%defattr(-,root,root)
+%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+
+%files -n x11-driver-video-vboxvideo
+%defattr(-,root,root)
+%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
