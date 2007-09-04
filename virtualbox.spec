@@ -87,7 +87,7 @@ rm -rf $RPM_BUILD_ROOT
 
 # install vbox components
 mkdir -p $RPM_BUILD_ROOT%{vboxdir}
-(cd out/%{vbox_platform}/release/bin && tar cf - .) | \
+(cd out/%{vbox_platform}/release/bin && tar cf - --exclude=additions .) | \
 (cd $RPM_BUILD_ROOT%{vboxdir} && tar xf -)
 
 # install service
