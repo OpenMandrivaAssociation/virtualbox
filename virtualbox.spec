@@ -72,7 +72,7 @@ Kernel support for VirtualBox OSE.
 Summary:	The X.org driver for mouse in VirtualBox guests
 Group:		System/X11
 
-%description -n -driver-input-vboxmouse
+%description -n x11-driver-input-vboxmouse
 The X.org driver for mouse in VirtualBox guests
 
 %package -n	x11-driver-video-vboxvideo
