@@ -34,6 +34,9 @@ Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
 Patch0:		VirtualBox-1.5.0_OSE-mdvconfig.patch
 Patch2:		VirtualBox-OSE-1.4.0-futex.patch
+# (from upstream SVN r4574)
+# Linux host keyboard handler: fixed support for Brazilian, Belgian, US intl and US dvorak keyboards.  Added support for multimedia keys.
+Patch3:		virtualbox-1.5.0-keyboards.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -87,6 +90,7 @@ The X.org driver for video in VirtualBox guests
 %setup -q -n %{distname}
 %patch0 -p1 -b .mdvconfig
 %patch2 -p1 -b .futex
+%patch3 -p0 -b .keyboards
 
 %build
 export LIBPATH_LIB="%{_lib}"
