@@ -50,7 +50,7 @@ BuildRequires:	X11-devel
 BuildRequires:	SDL-devel, libqt-devel
 BuildRequires:	libIDL-devel, libext2fs-devel
 BuildRequires:	libxslt-proc, libxerces-c-devel, libxalan-c-devel >= 1.10
-BuildRequires:	hal-devel, libxt-devel
+BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
 BuildRequires:	kernel-source-latest
 
 %description
