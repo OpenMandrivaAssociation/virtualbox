@@ -75,6 +75,26 @@ Requires(preun):  dkms
 %description -n dkms-%{name}
 Kernel support for VirtualBox OSE.
 
+%if %{build_additions}
+%package -n	dkms-vboxadd
+Summary:	Kernel module for VirtualBox OSE additions
+Group:		System/Kernel and hardware
+Requires(post):	  dkms
+Requires(preun):  dkms
+
+%description -n dkms-vboxadd
+Kernel module for VirtualBox OSE additions.
+
+%package -n	dkms-vboxvfs
+Summary:	Kernel module for VirtualBox OSE VFS
+Group:		System/Kernel and hardware
+Requires(post):	  dkms
+Requires(preun):  dkms
+
+%description -n dkms-vboxvfs
+Kernel module for VirtualBox OSE VFS.
+%endif
+
 %package -n	x11-driver-input-vboxmouse
 Summary:	The X.org driver for mouse in VirtualBox guests
 Group:		System/X11
@@ -155,6 +175,16 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -d $RPM_BUILD_ROOT%{_libdir}/xorg/modules/{input,drivers}
   install vboxmouse_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/input/vboxmouse_drv.so
   install vboxvideo_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+  for kmod in vboxadd vboxvfs; do
+    mkdir -p $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}
+    cp -a src/$kmod/* $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}/
+    cat > $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}/dkms.conf << EOF
+PACKAGE_NAME=$kmod
+PACKAGE_VERSION=%{version}
+DEST_MODULE_LOCATION[0]=/kernel/3rdparty/vbox
+AUTOINSTALL=yes
+EOF
+  done
 popd
 %endif
 
@@ -226,6 +256,32 @@ if [ "$1" -ge "1" ]; then
   /sbin/service %{name} condrestart > /dev/null 2>&1 || :
 fi
 
+%if %{build_additions}
+%post -n dkms-vboxadd
+set -x
+/usr/sbin/dkms --rpm_safe_upgrade add -m vboxadd -v %{version}
+/usr/sbin/dkms --rpm_safe_upgrade build -m vboxadd -v %{version}
+/usr/sbin/dkms --rpm_safe_upgrade install -m vboxadd -v %{version}
+:
+
+%preun -n dkms-vboxadd
+set -x
+/usr/sbin/dkms --rpm_safe_upgrade remove -m vboxadd -v %{version} --all
+:
+
+%post -n dkms-vboxvfs
+set -x
+/usr/sbin/dkms --rpm_safe_upgrade add -m vboxvfs -v %{version}
+/usr/sbin/dkms --rpm_safe_upgrade build -m vboxvfs -v %{version}
+/usr/sbin/dkms --rpm_safe_upgrade install -m vboxvfs -v %{version}
+:
+
+%preun -n dkms-vboxvfs
+set -x
+/usr/sbin/dkms --rpm_safe_upgrade remove -m vboxvfs -v %{version} --all
+:
+%endif
+
 %files
 %defattr(-,root,root)
 %config %{_sysconfdir}/vbox/vbox.cfg
@@ -257,4 +313,14 @@ fi
 %files -n x11-driver-video-vboxvideo
 %defattr(-,root,root)
 %{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+
+%files -n dkms-vboxadd
+%defattr(-,root,root)
+%dir %{_usr}/src/vboxadd-%{version}
+%{_usr}/src/vboxadd-%{version}/*
+
+%files -n dkms-vboxvfs
+%defattr(-,root,root)
+%dir %{_usr}/src/vboxvfs-%{version}
+%{_usr}/src/vboxvfs-%{version}/*
 %endif
