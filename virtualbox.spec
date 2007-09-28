@@ -32,6 +32,7 @@ Release:	%{release}
 Source0:	http://virtualbox.org/download/%ver/%distname.tar.bz2
 Source1:	virtualbox.run
 Source2:	virtualbox.init
+Source3:	98vboxadd-xclient
 Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
@@ -76,6 +77,17 @@ Requires(preun):  dkms
 Kernel support for VirtualBox OSE.
 
 %if %{build_additions}
+%package 	guest-additions
+Summary:	Additions for VirtualBox OSE guest systems
+Group:		Emulators
+Requires:	kmod(vboxadd)
+Requires:	kmod(vboxvfs)
+
+%description    guest-additions
+This packages contains additions for VirtualBox OSE guest systems.
+It allows to share files with the host system, copy/paste between
+guest and host, and sync time with host.
+
 %package -n	dkms-vboxadd
 Summary:	Kernel module for VirtualBox OSE additions
 Group:		System/Kernel and hardware
@@ -172,6 +184,19 @@ EOF
 # install additions
 %if %{build_additions}
 pushd out/%{vbox_platform}/release/bin/additions
+  install -d $RPM_BUILD_ROOT/sbin $RPM_BUILD_ROOT%{_sbindir}
+  install -m755 mountvboxsf $RPM_BUILD_ROOT/sbin/mount.vboxsf
+  install -m755 vboxadd-timesync $RPM_BUILD_ROOT%{_sbindir}
+
+  install -d $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit.d
+  install -m755 vboxadd-xclient $RPM_BUILD_ROOT%{_bindir}
+  install -m755 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit.d
+
+  install -d $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.preload.d
+  cat > $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
+vboxadd
+vboxvfs
+EOF
   install -d $RPM_BUILD_ROOT%{_libdir}/xorg/modules/{input,drivers}
   install vboxmouse_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/input/vboxmouse_drv.so
   install vboxvideo_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
@@ -306,6 +331,14 @@ set -x
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
 
 %if %{build_additions}
+%files guest-additions
+%defattr(-,root,root)
+/sbin/mount.vboxsf
+%{_sbindir}/vboxadd-timesync
+%{_bindir}/vboxadd-xclient
+%{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
+%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
+
 %files -n x11-driver-input-vboxmouse
 %defattr(-,root,root)
 %{_libdir}/xorg/modules/input/vboxmouse_drv.so
