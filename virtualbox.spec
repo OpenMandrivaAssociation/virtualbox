@@ -93,7 +93,6 @@ Requires(preun):  dkms
 
 %description -n dkms-vboxvfs
 Kernel module for VirtualBox OSE VFS.
-%endif
 
 %package -n	x11-driver-input-vboxmouse
 Summary:	The X.org driver for mouse in VirtualBox guests
@@ -108,6 +107,7 @@ Group:		System/X11
 
 %description -n x11-driver-video-vboxvideo
 The X.org driver for video in VirtualBox guests
+%endif
 
 %prep
 %setup -q -n %{distname}
