@@ -1,6 +1,6 @@
 
 %define ver	1.5.0
-%define rel	3
+%define rel	4
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -88,6 +88,8 @@ Requires:	kmod(vboxadd)
 Requires:	kmod(vboxvfs)
 Requires:	x11-driver-input-vboxmouse
 Requires:	x11-driver-video-vboxvideo
+Requires(post):   rpm-helper
+Requires(preun):  rpm-helper
 
 %description    guest-additions
 This packages contains additions for VirtualBox OSE guest systems.
@@ -191,6 +193,8 @@ EOF
 
 # install additions
 %if %{build_additions}
+install -m755 src/VBox/Additions/linux/installer/vboxadd-timesync.sh $RPM_BUILD_ROOT%{_initrddir}/vboxadd-timesync
+
 pushd out/%{vbox_platform}/release/bin/additions
   install -d $RPM_BUILD_ROOT/sbin $RPM_BUILD_ROOT%{_sbindir}
   install -m755 mountvboxsf $RPM_BUILD_ROOT/sbin/mount.vboxsf
@@ -293,6 +297,12 @@ if [ "$1" -ge "1" ]; then
 fi
 
 %if %{build_additions}
+%post guest-additions
+%_post_service vboxadd-timesync
+
+%preun guest-additions
+%_preun_service vboxadd-timesync
+
 %post -n dkms-vboxadd
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade add -m vboxadd -v %{version}
@@ -345,6 +355,7 @@ set -x
 %files guest-additions
 %defattr(-,root,root)
 /sbin/mount.vboxsf
+%{_initrddir}/vboxadd-timesync
 %{_sbindir}/vboxadd-timesync
 %{_bindir}/vboxadd-xclient
 %{_sysconfdir}/security/console.perms.d/60-vboxadd.perms
