@@ -82,6 +82,8 @@ Summary:	Additions for VirtualBox OSE guest systems
 Group:		Emulators
 Requires:	kmod(vboxadd)
 Requires:	kmod(vboxvfs)
+Requires:	x11-driver-input-vboxmouse
+Requires:	x11-driver-video-vboxvideo
 
 %description    guest-additions
 This packages contains additions for VirtualBox OSE guest systems.
