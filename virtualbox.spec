@@ -11,8 +11,11 @@
 
 %define vboxdir	%{_libdir}/%{name}
 
+%define build_additions 0
+
 %ifarch %{ix86}
 %define vbox_platform linux.x86
+%define build_additions 1
 %endif
 %ifarch x86_64
 %define vbox_platform linux.amd64
@@ -98,6 +101,10 @@ export LIBPATH_LIB="%{_lib}"
 export VBOX_LIBPATH_X11="/usr/X11R6/%{_lib}"
 %endif
 ./configure
+%if !%{build_additions}
+sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
+%endif
+
 . ./env.sh
 kmk %_smp_mflags all
 
@@ -143,11 +150,13 @@ KERNEL=="%{kname}", MODE="0666"
 EOF
 
 # install additions
+%if %{build_additions}
 pushd out/%{vbox_platform}/release/bin/additions
   install -d $RPM_BUILD_ROOT%{_libdir}/xorg/modules/{input,drivers}
   install vboxmouse_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/input/vboxmouse_drv.so
   install vboxvideo_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 popd
+%endif
 
 # install icons
 mkdir -p $RPM_BUILD_ROOT%{_iconsdir}
@@ -240,6 +249,7 @@ fi
 %config %{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
 
+%if %{build_additions}
 %files -n x11-driver-input-vboxmouse
 %defattr(-,root,root)
 %{_libdir}/xorg/modules/input/vboxmouse_drv.so
@@ -247,3 +257,4 @@ fi
 %files -n x11-driver-video-vboxvideo
 %defattr(-,root,root)
 %{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+%endif
