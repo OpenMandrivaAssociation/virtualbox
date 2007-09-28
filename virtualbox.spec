@@ -109,6 +109,7 @@ Kernel module for VirtualBox OSE VFS.
 %package -n	x11-driver-input-vboxmouse
 Summary:	The X.org driver for mouse in VirtualBox guests
 Group:		System/X11
+Suggests:	virtualbox-guest-additions
 
 %description -n x11-driver-input-vboxmouse
 The X.org driver for mouse in VirtualBox guests
@@ -116,6 +117,7 @@ The X.org driver for mouse in VirtualBox guests
 %package -n	x11-driver-video-vboxvideo
 Summary:	The X.org driver for video in VirtualBox guests
 Group:		System/X11
+Suggests:	virtualbox-guest-additions
 
 %description -n x11-driver-video-vboxvideo
 The X.org driver for video in VirtualBox guests
