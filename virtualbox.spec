@@ -37,6 +37,9 @@ Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
 Patch0:		VirtualBox-1.5.0_OSE-mdvconfig.patch
+# (blino) use misc_register() to register vboxadd device
+#         so that /dev/vboxadd gets created automatically by udev
+Patch1:		VirtualBox-1.5.0_OSE-misc_register.patch
 Patch2:		VirtualBox-OSE-1.4.0-futex.patch
 # (from upstream SVN r4574)
 # Linux host keyboard handler: fixed support for Brazilian, Belgian, US intl and US dvorak keyboards.  Added support for multimedia keys.
