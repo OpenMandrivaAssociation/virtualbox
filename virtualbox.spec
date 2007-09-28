@@ -33,6 +33,7 @@ Source0:	http://virtualbox.org/download/%ver/%distname.tar.bz2
 Source1:	virtualbox.run
 Source2:	virtualbox.init
 Source3:	98vboxadd-xclient
+Source4:	60-vboxadd.perms
 Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
@@ -195,6 +196,9 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -m755 mountvboxsf $RPM_BUILD_ROOT/sbin/mount.vboxsf
   install -m755 vboxadd-timesync $RPM_BUILD_ROOT%{_sbindir}
 
+  install -d $RPM_BUILD_ROOT%{_sysconfdir}/security/console.perms.d/
+  install -m644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/security/console.perms.d/
+
   install -d $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit.d
   install -m755 vboxadd-xclient $RPM_BUILD_ROOT%{_bindir}
   install -m755 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit.d
@@ -343,6 +347,7 @@ set -x
 /sbin/mount.vboxsf
 %{_sbindir}/vboxadd-timesync
 %{_bindir}/vboxadd-xclient
+%{_sysconfdir}/security/console.perms.d/60-vboxadd.perms
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
 
