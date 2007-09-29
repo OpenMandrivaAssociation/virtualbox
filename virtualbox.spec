@@ -336,7 +336,7 @@ set -x
 %dir %{vboxdir}
 %{vboxdir}/*
 # initscripts integration
-%config %{_initrddir}/%{name}
+%{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
 # desktop integration
 %{_menudir}/%{name}
