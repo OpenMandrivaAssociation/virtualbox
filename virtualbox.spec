@@ -1,6 +1,6 @@
 
 %define ver	1.5.0
-%define rel	4
+%define rel	5
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -53,7 +53,7 @@ ExclusiveArch:	%{ix86} x86_64
 Requires(post):   rpm-helper
 Requires(preun):  rpm-helper
 Requires(postun): rpm-helper
-Requires:	dkms-%{name} = %{version}-%{release}
+Requires:	kmod(vboxdrv) = %{version}
 Conflicts:	dkms-%{name} <= 1.5.0-%{mkrel 4}
 BuildRequires:	dev86, iasl
 BuildRequires:	zlib-devel
