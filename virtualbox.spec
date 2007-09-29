@@ -50,7 +50,11 @@ Group:		Emulators
 Url:		http://www.virtualbox.org/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 ExclusiveArch:	%{ix86} x86_64
+Requires(post):   rpm-helper
+Requires(preun):  rpm-helper
+Requires(postun): rpm-helper
 Requires:	dkms-%{name} = %{version}-%{release}
+Conflicts:	dkms-%{name} <= 1.5.0-%{mkrel 4}
 BuildRequires:	dev86, iasl
 BuildRequires:	zlib-devel
 %if %{mdkversion} >= 200700
@@ -71,9 +75,6 @@ virtualizer for x86 hardware.
 %package -n	dkms-%{name}
 Summary:	VirtualBox OSE kernel module
 Group:		System/Kernel and hardware
-Requires(post):   rpm-helper
-Requires(preun):  rpm-helper
-Requires(postun): rpm-helper
 Requires(post):	  dkms
 Requires(preun):  dkms
 
@@ -270,9 +271,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %update_menus
+%_post_service %{name}
 
 %postun
 %clean_menus
+if [ "$1" -ge "1" ]; then
+  /sbin/service %{name} condrestart > /dev/null 2>&1 || :
+fi
+
+%preun
+%_preun_service %{name}
 
 %post -n dkms-%{name}
 set -x
@@ -280,21 +288,12 @@ set -x
 /usr/sbin/dkms --rpm_safe_upgrade build -m %{name} -v %{version}
 /usr/sbin/dkms --rpm_safe_upgrade install -m %{name} -v %{version}
 /sbin/modprobe %{kname} >/dev/null 2>&1 || :
-#
-%_post_service %{name}
 
 %preun -n dkms-%{name}
 # rmmod can fail
 /sbin/rmmod %{kname} >/dev/null 2>&1
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade remove -m %{name} -v %{version} --all || :
-#
-%_preun_service %{name}
-
-%postun -n dkms-%{name}
-if [ "$1" -ge "1" ]; then
-  /sbin/service %{name} condrestart > /dev/null 2>&1 || :
-fi
 
 %if %{build_additions}
 %post guest-additions
@@ -336,6 +335,9 @@ set -x
 %{_bindir}/VBoxSDL
 %dir %{vboxdir}
 %{vboxdir}/*
+# initscripts integration
+%config %{_initrddir}/%{name}
+%config %{_sysconfdir}/udev/rules.d/%{name}.rules
 # desktop integration
 %{_menudir}/%{name}
 %{_iconsdir}/*.png
@@ -347,9 +349,6 @@ set -x
 %defattr(-,root,root)
 %dir %{_usr}/src/%{name}-%{version}
 %{_usr}/src/%{name}-%{version}/*
-# initscripts integration
-%config %{_initrddir}/%{name}
-%config %{_sysconfdir}/udev/rules.d/%{name}.rules
 
 %if %{build_additions}
 %files guest-additions
