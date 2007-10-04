@@ -176,11 +176,11 @@ ln -s %{vboxdir}/vbox-run.sh $RPM_BUILD_ROOT%{_bindir}/VBoxManage
 ln -s %{vboxdir}/vbox-run.sh $RPM_BUILD_ROOT%{_bindir}/VBoxSDL
 
 # install dkms sources
-mkdir -p $RPM_BUILD_ROOT%{_usr}/src/%{name}-%{version}
-mv $RPM_BUILD_ROOT%{vboxdir}/src/* $RPM_BUILD_ROOT%{_usr}/src/%{name}-%{version}/
-cat > $RPM_BUILD_ROOT%{_usr}/src/%{name}-%{version}/dkms.conf << EOF
+mkdir -p $RPM_BUILD_ROOT%{_usr}/src/%{name}-%{version}-%{release}
+mv $RPM_BUILD_ROOT%{vboxdir}/src/* $RPM_BUILD_ROOT%{_usr}/src/%{name}-%{version}-%{release}/
+cat > $RPM_BUILD_ROOT%{_usr}/src/%{name}-%{version}-%{release}/dkms.conf << EOF
 PACKAGE_NAME=%{name}
-PACKAGE_VERSION=%{version}
+PACKAGE_VERSION=%{version}-%{release}
 DEST_MODULE_LOCATION[0]=/kernel/3rdparty/vbox
 BUILT_MODULE_NAME[0]=%{kname}
 AUTOINSTALL=yes
@@ -217,11 +217,11 @@ EOF
   install vboxmouse_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/input/vboxmouse_drv.so
   install vboxvideo_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
   for kmod in vboxadd vboxvfs; do
-    mkdir -p $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}
-    cp -a src/$kmod/* $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}/
-    cat > $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}/dkms.conf << EOF
+    mkdir -p $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}-%{release}
+    cp -a src/$kmod/* $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}-%{release}/
+    cat > $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}-%{release}/dkms.conf << EOF
 PACKAGE_NAME=$kmod
-PACKAGE_VERSION=%{version}
+PACKAGE_VERSION=%{version}-%{release}
 DEST_MODULE_LOCATION[0]=/kernel/3rdparty/vbox
 AUTOINSTALL=yes
 EOF
@@ -284,16 +284,16 @@ fi
 
 %post -n dkms-%{name}
 set -x
-/usr/sbin/dkms --rpm_safe_upgrade add -m %{name} -v %{version}
-/usr/sbin/dkms --rpm_safe_upgrade build -m %{name} -v %{version}
-/usr/sbin/dkms --rpm_safe_upgrade install -m %{name} -v %{version}
+/usr/sbin/dkms --rpm_safe_upgrade add -m %{name} -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade build -m %{name} -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade install -m %{name} -v %{version}-%{release}
 /sbin/modprobe %{kname} >/dev/null 2>&1 || :
 
 %preun -n dkms-%{name}
 # rmmod can fail
 /sbin/rmmod %{kname} >/dev/null 2>&1
 set -x
-/usr/sbin/dkms --rpm_safe_upgrade remove -m %{name} -v %{version} --all || :
+/usr/sbin/dkms --rpm_safe_upgrade remove -m %{name} -v %{version}-%{release} --all || :
 
 %if %{build_additions}
 %post guest-additions
@@ -304,26 +304,26 @@ set -x
 
 %post -n dkms-vboxadd
 set -x
-/usr/sbin/dkms --rpm_safe_upgrade add -m vboxadd -v %{version}
-/usr/sbin/dkms --rpm_safe_upgrade build -m vboxadd -v %{version}
-/usr/sbin/dkms --rpm_safe_upgrade install -m vboxadd -v %{version}
+/usr/sbin/dkms --rpm_safe_upgrade add -m vboxadd -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade build -m vboxadd -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade install -m vboxadd -v %{version}-%{release}
 :
 
 %preun -n dkms-vboxadd
 set -x
-/usr/sbin/dkms --rpm_safe_upgrade remove -m vboxadd -v %{version} --all
+/usr/sbin/dkms --rpm_safe_upgrade remove -m vboxadd -v %{version}-%{release} --all
 :
 
 %post -n dkms-vboxvfs
 set -x
-/usr/sbin/dkms --rpm_safe_upgrade add -m vboxvfs -v %{version}
-/usr/sbin/dkms --rpm_safe_upgrade build -m vboxvfs -v %{version}
-/usr/sbin/dkms --rpm_safe_upgrade install -m vboxvfs -v %{version}
+/usr/sbin/dkms --rpm_safe_upgrade add -m vboxvfs -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade build -m vboxvfs -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade install -m vboxvfs -v %{version}-%{release}
 :
 
 %preun -n dkms-vboxvfs
 set -x
-/usr/sbin/dkms --rpm_safe_upgrade remove -m vboxvfs -v %{version} --all
+/usr/sbin/dkms --rpm_safe_upgrade remove -m vboxvfs -v %{version}-%{release} --all
 :
 %endif
 
@@ -347,8 +347,8 @@ set -x
 
 %files -n dkms-%{name}
 %defattr(-,root,root)
-%dir %{_usr}/src/%{name}-%{version}
-%{_usr}/src/%{name}-%{version}/*
+%dir %{_usr}/src/%{name}-%{version}-%{release}
+%{_usr}/src/%{name}-%{version}-%{release}/*
 
 %if %{build_additions}
 %files guest-additions
@@ -371,11 +371,11 @@ set -x
 
 %files -n dkms-vboxadd
 %defattr(-,root,root)
-%dir %{_usr}/src/vboxadd-%{version}
-%{_usr}/src/vboxadd-%{version}/*
+%dir %{_usr}/src/vboxadd-%{version}-%{release}
+%{_usr}/src/vboxadd-%{version}-%{release}/*
 
 %files -n dkms-vboxvfs
 %defattr(-,root,root)
-%dir %{_usr}/src/vboxvfs-%{version}
-%{_usr}/src/vboxvfs-%{version}/*
+%dir %{_usr}/src/vboxvfs-%{version}-%{release}
+%{_usr}/src/vboxvfs-%{version}-%{release}/*
 %endif
