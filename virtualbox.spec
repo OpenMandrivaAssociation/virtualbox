@@ -1,6 +1,6 @@
 
 %define ver	1.5.0
-%define rel	5
+%define rel	6
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -135,6 +135,7 @@ The X.org driver for video in VirtualBox guests
 %prep
 %setup -q -n %{distname}
 %patch0 -p1 -b .mdvconfig
+%patch1 -p1 -b .misc_register
 %patch2 -p1 -b .futex
 %patch3 -p0 -b .keyboards
 
