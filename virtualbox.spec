@@ -39,7 +39,7 @@ Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
 Patch0:		VirtualBox-1.5.0_OSE-mdvconfig.patch
 Patch1:		VirtualBox-1.5.2_OSE-libpath.patch
-Patch2:		VirtualBox-1.5.0_OSE-kernelrelease.patch
+Patch2:		VirtualBox-1.5.2_OSE-kernelrelease.patch
 # (blino) use misc_register() to register vboxadd device
 #         so that /dev/vboxadd gets created automatically by udev
 Patch3:		VirtualBox-1.5.0_OSE-misc_register.patch
