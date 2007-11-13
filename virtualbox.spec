@@ -44,9 +44,6 @@ Patch2:		VirtualBox-1.5.2_OSE-kernelrelease.patch
 #         so that /dev/vboxadd gets created automatically by udev
 Patch3:		VirtualBox-1.5.0_OSE-misc_register.patch
 Patch4:		VirtualBox-OSE-1.4.0-futex.patch
-# (from upstream SVN r4574)
-# Linux host keyboard handler: fixed support for Brazilian, Belgian, US intl and US dvorak keyboards.  Added support for multimedia keys.
-Patch5:		virtualbox-1.5.0-keyboards.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -141,7 +138,6 @@ The X.org driver for video in VirtualBox guests
 %patch2 -p1 -b .kernelrelease
 %patch3 -p1 -b .misc_register
 %patch4 -p1 -b .futex
-%patch5 -p0 -b .keyboards
 
 %build
 export LIBPATH_LIB="%{_lib}"
