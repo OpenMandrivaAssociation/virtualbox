@@ -141,9 +141,6 @@ The X.org driver for video in VirtualBox guests
 
 %build
 export LIBPATH_LIB="%{_lib}"
-%if %{mdkversion} < 200700
-export VBOX_LIBPATH_X11="/usr/X11R6/%{_lib}"
-%endif
 ./configure
 %if !%{build_additions}
 sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
