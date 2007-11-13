@@ -38,6 +38,8 @@ Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
 Patch0:		VirtualBox-1.5.0_OSE-mdvconfig.patch
+Patch1:		VirtualBox-1.5.0_OSE-libpath.patch
+Patch2:		VirtualBox-1.5.0_OSE-kernelrelease.patch
 # (blino) use misc_register() to register vboxadd device
 #         so that /dev/vboxadd gets created automatically by udev
 Patch3:		VirtualBox-1.5.0_OSE-misc_register.patch
@@ -135,6 +137,8 @@ The X.org driver for video in VirtualBox guests
 %prep
 %setup -q -n %{distname}
 %patch0 -p1 -b .mdvconfig
+%patch1 -p1 -b .libpath
+%patch2 -p1 -b .kernelrelease
 %patch3 -p1 -b .misc_register
 %patch4 -p1 -b .futex
 %patch5 -p0 -b .keyboards
