@@ -1,6 +1,6 @@
 
 %define ver	1.5.2
-%define rel	1
+%define rel	2
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -44,6 +44,7 @@ Patch2:		VirtualBox-1.5.2_OSE-kernelrelease.patch
 #         so that /dev/vboxadd gets created automatically by udev
 Patch3:		VirtualBox-1.5.0_OSE-misc_register.patch
 Patch4:		VirtualBox-OSE-1.4.0-futex.patch
+Patch5:		virtualbox-1.5.2-2.6.24.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -138,6 +139,7 @@ The X.org driver for video in VirtualBox guests
 %patch2 -p1 -b .kernelrelease
 %patch3 -p1 -b .misc_register
 %patch4 -p1 -b .futex
+%patch5 -p1 -b .2.6.24
 
 %build
 export LIBPATH_LIB="%{_lib}"
