@@ -256,7 +256,7 @@ cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 Name=VirtualBox OSE
 Comment=Full virtualizer for x86 hardware
 Exec=%{_bindir}/VirtualBox
-Icon=%{name}.png
+Icon=%{name}
 Type=Application
 Terminal=false
 Categories=X-MandrivaLinux-MoreApplications-Emulators;Emulator;
