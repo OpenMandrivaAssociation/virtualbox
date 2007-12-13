@@ -1,6 +1,5 @@
-
 %define ver	1.5.2
-%define rel	4
+%define rel	5
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -53,7 +52,11 @@ ExclusiveArch:	%{ix86} x86_64
 Requires(post):   rpm-helper
 Requires(preun):  rpm-helper
 Requires(postun): rpm-helper
+%if %{mdkversion} >= 200800
 Requires:	kmod(vboxdrv) = %{version}
+%else
+Requires:	dkms-%{name} = %{version}-%{release}
+%endif
 Conflicts:	dkms-%{name} <= 1.5.0-%{mkrel 4}
 BuildRequires:	dev86, iasl
 BuildRequires:	zlib-devel
@@ -85,8 +88,13 @@ Kernel support for VirtualBox OSE.
 %package 	guest-additions
 Summary:	Additions for VirtualBox OSE guest systems
 Group:		Emulators
+%if %{mdkversion} >= 200800
 Requires:	kmod(vboxadd)
 Requires:	kmod(vboxvfs)
+%else
+Requires:	dkms-vboxadd = %{version}-%{release}
+Requires:	dkms-vboxvfs = %{version}-%{release}
+%endif
 Requires:	x11-driver-input-vboxmouse
 Requires:	x11-driver-video-vboxvideo
 Requires(post):   rpm-helper
@@ -139,7 +147,9 @@ The X.org driver for video in VirtualBox guests
 %patch2 -p1 -b .kernelrelease
 %patch3 -p1 -b .misc_register
 %patch4 -p1 -b .futex
+%if %{mdkversion} > 200800
 %patch5 -p1 -b .2.6.24
+%endif
 
 %build
 export LIBPATH_LIB="%{_lib}"
