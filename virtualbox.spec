@@ -69,7 +69,11 @@ BuildRequires:	SDL-devel, libqt-devel
 BuildRequires:	libIDL-devel, libext2fs-devel
 BuildRequires:	libxslt-proc, libxerces-c-devel, libxalan-c-devel >= 1.10
 BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
+%if %{mdkversion} >= 200800
 BuildRequires:	kernel-source-latest
+%else
+BuildRequires:	kernel-source
+%endif
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
