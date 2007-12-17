@@ -47,7 +47,6 @@ Patch5:		virtualbox-1.5.2-2.6.24.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 ExclusiveArch:	%{ix86} x86_64
 Requires(post):   rpm-helper
 Requires(preun):  rpm-helper
