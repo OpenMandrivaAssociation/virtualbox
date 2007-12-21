@@ -1,5 +1,5 @@
 %define ver	1.5.2
-%define rel	5
+%define rel	6
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -43,7 +43,7 @@ Patch2:		VirtualBox-1.5.2_OSE-kernelrelease.patch
 #         so that /dev/vboxadd gets created automatically by udev
 Patch3:		VirtualBox-1.5.0_OSE-misc_register.patch
 Patch4:		VirtualBox-OSE-1.4.0-futex.patch
-Patch5:		virtualbox-1.5.2-2.6.24.patch
+Patch5:		12-kcompat-2.6.24.dpatch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
