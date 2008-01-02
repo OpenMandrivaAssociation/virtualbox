@@ -47,6 +47,7 @@ Patch5:		12-kcompat-2.6.24.dpatch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 ExclusiveArch:	%{ix86} x86_64
 Requires(post):   rpm-helper
 Requires(preun):  rpm-helper
