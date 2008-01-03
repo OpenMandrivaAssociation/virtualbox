@@ -43,7 +43,6 @@ Patch2:		VirtualBox-1.5.2_OSE-kernelrelease.patch
 #         so that /dev/vboxadd gets created automatically by udev
 Patch3:		VirtualBox-1.5.0_OSE-misc_register.patch
 Patch4:		VirtualBox-OSE-1.4.0-futex.patch
-Patch5:		12-kcompat-2.6.24.dpatch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -151,9 +150,6 @@ The X.org driver for video in VirtualBox guests
 %patch2 -p1 -b .kernelrelease
 %patch3 -p1 -b .misc_register
 %patch4 -p1 -b .futex
-%if %{mdkversion} > 200800
-%patch5 -p1 -b .2.6.24
-%endif
 
 %build
 export LIBPATH_LIB="%{_lib}"
