@@ -163,33 +163,33 @@ sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
 kmk %_smp_mflags all
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 # install vbox components
-mkdir -p $RPM_BUILD_ROOT%{vboxdir}
+mkdir -p %{buildroot}%{vboxdir}
 (cd out/%{vbox_platform}/release/bin && tar cf - --exclude=additions .) | \
-(cd $RPM_BUILD_ROOT%{vboxdir} && tar xf -)
+(cd %{buildroot}%{vboxdir} && tar xf -)
 
 # install service
-mkdir -p $RPM_BUILD_ROOT%{_initrddir}
-install -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_initrddir}/%{name}
+mkdir -p %{buildroot}%{_initrddir}
+install -m755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 
 # install wrappers
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/vbox
-cat > $RPM_BUILD_ROOT%{_sysconfdir}/vbox/vbox.cfg << EOF
+mkdir -p %{buildroot}%{_sysconfdir}/vbox
+cat > %{buildroot}%{_sysconfdir}/vbox/vbox.cfg << EOF
 # VirtualBox installation directory
 INSTALL_DIR="%{vboxdir}"
 EOF
-install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{vboxdir}/vbox-run.sh
-mkdir -p $RPM_BUILD_ROOT%{_bindir}
-ln -s %{vboxdir}/vbox-run.sh $RPM_BUILD_ROOT%{_bindir}/VirtualBox
-ln -s %{vboxdir}/vbox-run.sh $RPM_BUILD_ROOT%{_bindir}/VBoxManage
-ln -s %{vboxdir}/vbox-run.sh $RPM_BUILD_ROOT%{_bindir}/VBoxSDL
+install -m755 %{SOURCE1} %{buildroot}%{vboxdir}/vbox-run.sh
+mkdir -p %{buildroot}%{_bindir}
+ln -s %{vboxdir}/vbox-run.sh %{buildroot}%{_bindir}/VirtualBox
+ln -s %{vboxdir}/vbox-run.sh %{buildroot}%{_bindir}/VBoxManage
+ln -s %{vboxdir}/vbox-run.sh %{buildroot}%{_bindir}/VBoxSDL
 
 # install dkms sources
-mkdir -p $RPM_BUILD_ROOT%{_usr}/src/%{name}-%{version}-%{release}
-mv $RPM_BUILD_ROOT%{vboxdir}/src/* $RPM_BUILD_ROOT%{_usr}/src/%{name}-%{version}-%{release}/
-cat > $RPM_BUILD_ROOT%{_usr}/src/%{name}-%{version}-%{release}/dkms.conf << EOF
+mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
+mv %{buildroot}%{vboxdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
+cat > %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/dkms.conf << EOF
 PACKAGE_NAME=%{name}
 PACKAGE_VERSION=%{version}-%{release}
 DEST_MODULE_LOCATION[0]=/kernel/3rdparty/vbox
@@ -198,39 +198,39 @@ AUTOINSTALL=yes
 EOF
 
 # install udev rules
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d/
-cat > $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d/%{name}.rules << EOF
+mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
+cat > %{buildroot}%{_sysconfdir}/udev/rules.d/%{name}.rules << EOF
 KERNEL=="%{kname}", MODE="0666"
 EOF
 
 # install additions
 %if %{build_additions}
-install -m755 src/VBox/Additions/linux/installer/vboxadd-timesync.sh $RPM_BUILD_ROOT%{_initrddir}/vboxadd-timesync
+install -m755 src/VBox/Additions/linux/installer/vboxadd-timesync.sh %{buildroot}%{_initrddir}/vboxadd-timesync
 
 pushd out/%{vbox_platform}/release/bin/additions
-  install -d $RPM_BUILD_ROOT/sbin $RPM_BUILD_ROOT%{_sbindir}
-  install -m755 mountvboxsf $RPM_BUILD_ROOT/sbin/mount.vboxsf
-  install -m755 vboxadd-timesync $RPM_BUILD_ROOT%{_sbindir}
+  install -d %{buildroot}/sbin %{buildroot}%{_sbindir}
+  install -m755 mountvboxsf %{buildroot}/sbin/mount.vboxsf
+  install -m755 vboxadd-timesync %{buildroot}%{_sbindir}
 
-  install -d $RPM_BUILD_ROOT%{_sysconfdir}/security/console.perms.d/
-  install -m644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/security/console.perms.d/
+  install -d %{buildroot}%{_sysconfdir}/security/console.perms.d/
+  install -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/security/console.perms.d/
 
-  install -d $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit.d
-  install -m755 vboxadd-xclient $RPM_BUILD_ROOT%{_bindir}
-  install -m755 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit.d
+  install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
+  install -m755 vboxadd-xclient %{buildroot}%{_bindir}
+  install -m755 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xinit.d
 
-  install -d $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.preload.d
-  cat > $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
+  install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
+  cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
 vboxadd
 vboxvfs
 EOF
-  install -d $RPM_BUILD_ROOT%{_libdir}/xorg/modules/{input,drivers}
-  install vboxmouse_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/input/vboxmouse_drv.so
-  install vboxvideo_drv_71.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+  install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
+  install vboxmouse_drv_71.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+  install vboxvideo_drv_71.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
   for kmod in vboxadd vboxvfs; do
-    mkdir -p $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}-%{release}
-    cp -a src/$kmod/* $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}-%{release}/
-    cat > $RPM_BUILD_ROOT%{_usr}/src/$kmod-%{version}-%{release}/dkms.conf << EOF
+    mkdir -p %{buildroot}%{_usr}/src/$kmod-%{version}-%{release}
+    cp -a src/$kmod/* %{buildroot}%{_usr}/src/$kmod-%{version}-%{release}/
+    cat > %{buildroot}%{_usr}/src/$kmod-%{version}-%{release}/dkms.conf << EOF
 PACKAGE_NAME=$kmod
 PACKAGE_VERSION=%{version}-%{release}
 DEST_MODULE_LOCATION[0]=/kernel/3rdparty/vbox
@@ -241,16 +241,16 @@ popd
 %endif
 
 # install icons
-mkdir -p $RPM_BUILD_ROOT%{_iconsdir}
-install -m644 %{SOURCE10} $RPM_BUILD_ROOT%{_iconsdir}/%{name}.png
-mkdir -p $RPM_BUILD_ROOT%{_miconsdir}
-install -m644 %{SOURCE11} $RPM_BUILD_ROOT%{_miconsdir}/%{name}.png
-mkdir -p $RPM_BUILD_ROOT%{_liconsdir}
-install -m644 %{SOURCE12} $RPM_BUILD_ROOT%{_liconsdir}/%{name}.png
+mkdir -p %{buildroot}%{_iconsdir}
+install -m644 %{SOURCE10} %{buildroot}%{_iconsdir}/%{name}.png
+mkdir -p %{buildroot}%{_miconsdir}
+install -m644 %{SOURCE11} %{buildroot}%{_miconsdir}/%{name}.png
+mkdir -p %{buildroot}%{_liconsdir}
+install -m644 %{SOURCE12} %{buildroot}%{_liconsdir}/%{name}.png
 
 # install menu entries
-mkdir -p $RPM_BUILD_ROOT%{_menudir}
-cat > $RPM_BUILD_ROOT%{_menudir}/%{name} << EOF
+mkdir -p %{buildroot}%{_menudir}
+cat > %{buildroot}%{_menudir}/%{name} << EOF
 ?package(%{name}): \
  needs="x11" \
  section="More Applications/Emulators" \
@@ -261,8 +261,8 @@ cat > $RPM_BUILD_ROOT%{_menudir}/%{name} << EOF
  xdg="true"
 EOF
 
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
-cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
+mkdir -p %{buildroot}%{_datadir}/applications
+cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
 Name=VirtualBox OSE
 Comment=Full virtualizer for x86 hardware
@@ -274,11 +274,11 @@ Categories=X-MandrivaLinux-MoreApplications-Emulators;Emulator;
 EOF
 
 # remove unpackaged files
-rm -rf $RPM_BUILD_ROOT%{vboxdir}/{src,sdk,testcase}
-rm  -f $RPM_BUILD_ROOT%{vboxdir}/tst*
+rm -rf %{buildroot}%{vboxdir}/{src,sdk,testcase}
+rm  -f %{buildroot}%{vboxdir}/tst*
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %post
 %update_menus
