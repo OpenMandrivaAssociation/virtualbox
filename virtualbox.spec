@@ -156,7 +156,11 @@ The X.org driver for video in VirtualBox guests
 
 %build
 export LIBPATH_LIB="%{_lib}"
-./configure
+./configure \
+%if %{mdkversion} <= 200800 
+ --disable-pulse
+%endif
+
 %if !%{build_additions}
 sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
 %endif
