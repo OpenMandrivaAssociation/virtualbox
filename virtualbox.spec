@@ -1,5 +1,5 @@
 %define ver	1.5.4
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -68,7 +68,9 @@ BuildRequires:	SDL-devel, libqt-devel
 BuildRequires:	libIDL-devel, libext2fs-devel
 BuildRequires:	libxslt-proc, libxerces-c-devel, libxalan-c-devel >= 1.10
 BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
+%if %{mdkversion} >= 200810
 BuildRequires:	pulseaudio-devel
+%endif
 %if %{mdkversion} >= 200800
 BuildRequires:	kernel-source-latest
 %else
@@ -225,8 +227,17 @@ vboxadd
 vboxvfs
 EOF
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
+%if %{mdkversion} >= 200810
+  install vboxmouse_drv_14.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+  install vboxvideo_drv_14.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+%else
   install vboxmouse_drv_71.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+ %if %{mdkversion} >= 200800
+  install vboxvideo_drv_13.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+ %else
   install vboxvideo_drv_71.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+ %endif
+%endif
   for kmod in vboxadd vboxvfs; do
     mkdir -p %{buildroot}%{_usr}/src/$kmod-%{version}-%{release}
     cp -a src/$kmod/* %{buildroot}%{_usr}/src/$kmod-%{version}-%{release}/
