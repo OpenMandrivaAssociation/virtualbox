@@ -264,17 +264,6 @@ mkdir -p %{buildroot}%{_liconsdir}
 install -m644 %{SOURCE12} %{buildroot}%{_liconsdir}/%{name}.png
 
 # install menu entries
-mkdir -p %{buildroot}%{_menudir}
-cat > %{buildroot}%{_menudir}/%{name} << EOF
-?package(%{name}): \
- needs="x11" \
- section="More Applications/Emulators" \
- title="VirtualBox OSE" \
- longtitle="Full virtualizer for x86 hardware" \
- command="VirtualBox" \
- icon="%{name}.png"\
- xdg="true"
-EOF
 
 mkdir -p %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
@@ -365,7 +354,6 @@ set -x
 %{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
 # desktop integration
-%{_menudir}/%{name}
 %{_iconsdir}/*.png
 %{_miconsdir}/*.png
 %{_liconsdir}/*.png
