@@ -1,5 +1,5 @@
 %define ver	1.5.6
-%define rel	1
+%define rel	2
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -252,6 +252,7 @@ EOF
 PACKAGE_NAME=$kmod
 PACKAGE_VERSION=%{version}-%{release}
 DEST_MODULE_LOCATION[0]=/kernel/3rdparty/vbox
+BUILT_MODULE_NAME[0]=$kmod
 AUTOINSTALL=yes
 EOF
   done
