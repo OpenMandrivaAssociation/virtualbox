@@ -43,7 +43,7 @@ Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 # (blino) use misc_register() to register vboxadd device
 #         so that /dev/vboxadd gets created automatically by udev
 Patch3:		VirtualBox-1.6.0_OSE-misc_register.patch
-Patch4:		VirtualBox-OSE-1.4.0-futex.patch
+Patch4:		VirtualBox-1.6.0_OSE-futex.patch
 Patch5:		VirtualBox-1.5.4_OSE-fix-timesync-req.patch
 License:	GPL
 Group:		Emulators
