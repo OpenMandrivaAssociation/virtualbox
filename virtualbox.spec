@@ -1,10 +1,10 @@
-%define ver	1.5.6
+%define ver	1.6.0
 %define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
-%define srcname_156	VirtualBox-%{version}-1_OSE
+%define srcname	VirtualBox-%{version}-OSE
 %define distname	VirtualBox-%{version}_OSE
 %define dirname vbox-ose
 %define pkgver	%{ver}%{?svndate:-%{svndate}}
@@ -29,7 +29,7 @@ Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	%{version}
 Release:	%{release}
-Source0:	http://virtualbox.org/download/%ver/%{srcname_156}.tar.bz2
+Source0:	http://virtualbox.org/download/%ver/%{srcname}.tar.bz2
 Source1:	virtualbox.run
 Source2:	virtualbox.init
 Source3:	98vboxadd-xclient
