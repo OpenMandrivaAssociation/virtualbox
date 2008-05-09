@@ -68,7 +68,7 @@ BuildRequires:	X11-devel
 %endif
 BuildRequires:	SDL-devel, libqt-devel
 BuildRequires:	libIDL-devel, libext2fs-devel
-BuildRequires:	libxslt-proc, libxerces-c-devel, libxalan-c-devel >= 1.10
+BuildRequires:	libxslt-proc, libxslt-devel, libxerces-c-devel, libxalan-c-devel >= 1.10
 BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
 %if %{mdkversion} >= 200810
 BuildRequires:	pulseaudio-devel
