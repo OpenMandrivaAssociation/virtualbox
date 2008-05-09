@@ -166,6 +166,7 @@ export LIBPATH_LIB="%{_lib}"
 
 %if !%{build_additions}
 sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
+echo VBOX_WITHOUT_ADDITIONS=1 > LocalConfig.kmk
 %endif
 
 . ./env.sh
