@@ -225,7 +225,7 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/security/console.perms.d/
 
   install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
-  install -m755 vboxadd-xclient %{buildroot}%{_bindir}
+  install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xinit.d
 
   install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
@@ -373,7 +373,7 @@ set -x
 /sbin/mount.vboxsf
 %{_initrddir}/vboxadd-timesync
 %{_sbindir}/vboxadd-timesync
-%{_bindir}/vboxadd-xclient
+%{_bindir}/VBoxClient
 %{_sysconfdir}/security/console.perms.d/60-vboxadd.perms
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
