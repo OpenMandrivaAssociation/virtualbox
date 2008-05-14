@@ -1,5 +1,5 @@
 %define ver	1.6.0
-%define rel	1
+%define rel	2
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -30,7 +30,6 @@ Name:		virtualbox
 Version:	%{version}
 Release:	%{release}
 Source0:	http://virtualbox.org/download/%ver/%{srcname}.tar.bz2
-Source1:	virtualbox.run
 Source2:	virtualbox.init
 Source3:	98vboxadd-xclient
 Source4:	60-vboxadd.perms
@@ -45,6 +44,8 @@ Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 Patch3:		VirtualBox-1.6.0_OSE-misc_register.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
 Patch5:		VirtualBox-1.5.4_OSE-fix-timesync-req.patch
+# (fc) 1.6.0-2mdv fix initscript name in VBox.sh script
+Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -156,6 +157,7 @@ The X.org driver for video in VirtualBox guests
 %patch3 -p1 -b .misc_register
 %patch4 -p1 -b .futex
 %patch5 -p1 -b .fix-timesync-req
+%patch6 -p1 -b .initscriptname
 
 %build
 export LIBPATH_LIB="%{_lib}"
@@ -190,11 +192,19 @@ cat > %{buildroot}%{_sysconfdir}/vbox/vbox.cfg << EOF
 # VirtualBox installation directory
 INSTALL_DIR="%{vboxdir}"
 EOF
-install -m755 %{SOURCE1} %{buildroot}%{vboxdir}/vbox-run.sh
 mkdir -p %{buildroot}%{_bindir}
-ln -s %{vboxdir}/vbox-run.sh %{buildroot}%{_bindir}/VirtualBox
-ln -s %{vboxdir}/vbox-run.sh %{buildroot}%{_bindir}/VBoxManage
-ln -s %{vboxdir}/vbox-run.sh %{buildroot}%{_bindir}/VBoxSDL
+ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VirtualBox
+ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxManage
+ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxSDL
+ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxHeadless
+
+# move VBoxTunctl to bindir
+mv %{buildroot}%{vboxdir}/VBoxTunctl %{buildroot}%{_bindir}/
+
+# install VBoxAddIF.sh / VBoxDeleteIF.sh
+install -m755 ./src/VBox/Installer/linux/VBoxAddIF.sh %{buildroot}%{_bindir}/VBoxTAP
+ln -s VBoxTAP %{buildroot}/%{_bindir}/VBoxAddIF.sh
+ln -s VBoxTAP %{buildroot}/%{_bindir}/VBoxDeleteIF.sh
 
 # install dkms sources
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
@@ -352,6 +362,11 @@ set -x
 %{_bindir}/VirtualBox
 %{_bindir}/VBoxManage
 %{_bindir}/VBoxSDL
+%{_bindir}/VBoxHeadless
+%{_bindir}/VBoxAddIF.sh
+%{_bindir}/VBoxDeleteIF.sh
+%{_bindir}/VBoxTAP
+%{_bindir}/VBoxTunctl
 %dir %{vboxdir}
 %{vboxdir}/*
 # initscripts integration
