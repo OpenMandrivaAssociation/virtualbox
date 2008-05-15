@@ -1,5 +1,5 @@
 %define ver	1.6.0
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -201,10 +201,10 @@ ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxHeadless
 # move VBoxTunctl to bindir
 mv %{buildroot}%{vboxdir}/VBoxTunctl %{buildroot}%{_bindir}/
 
-# install VBoxAddIF.sh / VBoxDeleteIF.sh
+# install VBoxAddIF / VBoxDeleteIF
 install -m755 ./src/VBox/Installer/linux/VBoxAddIF.sh %{buildroot}%{_bindir}/VBoxTAP
-ln -s VBoxTAP %{buildroot}/%{_bindir}/VBoxAddIF.sh
-ln -s VBoxTAP %{buildroot}/%{_bindir}/VBoxDeleteIF.sh
+ln -s VBoxTAP %{buildroot}/%{_bindir}/VBoxAddIF
+ln -s VBoxTAP %{buildroot}/%{_bindir}/VBoxDeleteIF
 
 # install dkms sources
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
@@ -363,8 +363,8 @@ set -x
 %{_bindir}/VBoxManage
 %{_bindir}/VBoxSDL
 %{_bindir}/VBoxHeadless
-%{_bindir}/VBoxAddIF.sh
-%{_bindir}/VBoxDeleteIF.sh
+%{_bindir}/VBoxAddIF
+%{_bindir}/VBoxDeleteIF
 %{_bindir}/VBoxTAP
 %{_bindir}/VBoxTunctl
 %dir %{vboxdir}
