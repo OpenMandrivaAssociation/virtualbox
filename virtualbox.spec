@@ -1,5 +1,5 @@
 %define ver	1.6.0
-%define rel	3
+%define rel	4
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -226,6 +226,7 @@ EOF
 # install additions
 %if %{build_additions}
 install -m755 src/VBox/Additions/linux/installer/vboxadd-timesync.sh %{buildroot}%{_initrddir}/vboxadd-timesync
+install -m755 src/VBox/Additions/x11/installer/VBoxRandR.sh %{buildroot}%{_bindir}/VBoxRandR
 
 pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir}
@@ -236,6 +237,7 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/security/console.perms.d/
 
   install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
+  install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xinit.d
 
@@ -390,6 +392,7 @@ set -x
 %{_initrddir}/vboxadd-timesync
 %{_sbindir}/vboxadd-timesync
 %{_bindir}/VBoxClient
+%{_bindir}/VBoxRandR
 %{_sysconfdir}/security/console.perms.d/60-vboxadd.perms
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
