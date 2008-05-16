@@ -238,7 +238,6 @@ pushd out/%{vbox_platform}/release/bin/additions
 
   install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
   install -m755 VBoxClient %{buildroot}%{_bindir}
-  install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xinit.d
 
   install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
