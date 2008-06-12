@@ -300,11 +300,15 @@ rm  -f %{buildroot}%{vboxdir}/tst*
 rm -rf %{buildroot}
 
 %post
+%if %mdkversion < 200900
 %update_menus
+%endif
 %_post_service %{name}
 
 %postun
+%if %mdkversion < 200900
 %clean_menus
+%endif
 if [ "$1" -ge "1" ]; then
   /sbin/service %{name} condrestart > /dev/null 2>&1 || :
 fi
