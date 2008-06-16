@@ -1,11 +1,11 @@
-%define ver	1.6.0
-%define rel	4
+%define ver	1.6.2
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
 %define srcname	VirtualBox-%{version}-OSE
-%define distname	VirtualBox-%{version}_OSE
+%define distname	VirtualBox-%{version}
 %define dirname vbox-ose
 %define pkgver	%{ver}%{?svndate:-%{svndate}}
 
@@ -43,7 +43,7 @@ Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 #         so that /dev/vboxadd gets created automatically by udev
 Patch3:		VirtualBox-1.6.0_OSE-misc_register.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
-Patch5:		VirtualBox-1.5.4_OSE-fix-timesync-req.patch
+Patch5:		VirtualBox-1.6.2_OSE-fix-timesync-req.patch
 # (fc) 1.6.0-2mdv fix initscript name in VBox.sh script
 Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
 License:	GPL
