@@ -75,7 +75,7 @@ BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
 BuildRequires:	pulseaudio-devel
 %endif
 %if %{mdkversion} >= 200800
-BuildRequires:	kernel-source-latest
+BuildRequires:	kernel-devel-latest
 %else
 BuildRequires:	kernel-source
 %endif
