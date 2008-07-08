@@ -36,7 +36,7 @@ Source4:	60-vboxadd.perms
 Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
-Patch0:		VirtualBox-1.5.0_OSE-mdvconfig.patch
+Patch0:		VirtualBox-1.6.2-mdvconfig.patch
 Patch1:		VirtualBox-1.5.4_OSE-libpath.patch
 Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 # (blino) use misc_register() to register vboxadd device
