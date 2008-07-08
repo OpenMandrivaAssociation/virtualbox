@@ -159,9 +159,14 @@ The X.org driver for video in VirtualBox guests
 %patch5 -p1 -b .fix-timesync-req
 %patch6 -p1 -b .initscriptname
 
+rm -rf fake-linux/
+cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
+
 %build
+make -C fake-linux prepare
 export LIBPATH_LIB="%{_lib}"
 ./configure \
+ --with-linux=$PWD/fake-linux \
 %if %{mdkversion} <= 200800 
  --disable-pulse
 %endif
