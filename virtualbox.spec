@@ -1,5 +1,5 @@
 %define ver	1.6.2
-%define rel	1
+%define rel	2
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -79,7 +79,9 @@ BuildRequires:	kernel-devel-latest
 %else
 BuildRequires:	kernel-source
 %endif
+%if %{mdkversion} >= 200900
 BuildRequires:	gcc3.3
+%endif
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
@@ -167,7 +169,9 @@ cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
 make -C fake-linux prepare
 export LIBPATH_LIB="%{_lib}"
 ./configure \
+%if %{mdkversion} >= 200900
  --with-gcc-compat=gcc-3.3.6 \
+%endif
  --with-linux=$PWD/fake-linux \
 %if %{mdkversion} <= 200800 
  --disable-pulse
