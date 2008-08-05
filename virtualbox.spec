@@ -162,6 +162,18 @@ The X.org driver for video in VirtualBox guests
 %patch5 -p1 -b .fix-timesync-req
 %patch6 -p1 -b .initscriptname
 
+# 1.6.4 build fix (OSE tarball is missing Makefile.kmk files)
+# by building tunctl:
+#   svn cat http://virtualbox.org/svn/vbox/trunk/src/apps/Makefile.kmk > src/apps/Makefile.kmk
+#   svn cat http://virtualbox.org/svn/vbox/trunk/src/apps/tunctl/Makefile.kmk > src/apps/tunctl/Makefile.kmk
+#   sed -ie s/SUB_DEPTH/DEPTH/ src/apps/Makefile.kmk
+# by removing tunctl
+if [ -e src/apps ]; then
+   [ -e src/apps/Makefile.kmk ] && exit 1
+   rm -rf src/apps
+fi
+# remove this block when updating to > 1.6.4
+
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
 
