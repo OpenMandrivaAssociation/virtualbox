@@ -21,6 +21,9 @@
 %define vbox_platform linux.amd64
 %endif
 
+# remove me for versions > 1.6.4
+%define broken_tunctl 1
+
 # nuke vbox-specific dependencies
 %define _provides_exceptions ^VBox
 %define _requires_exceptions ^VBox
@@ -162,6 +165,7 @@ The X.org driver for video in VirtualBox guests
 %patch5 -p1 -b .fix-timesync-req
 %patch6 -p1 -b .initscriptname
 
+%if %{broken_tunctl}
 # 1.6.4 build fix (OSE tarball is missing Makefile.kmk files)
 # by building tunctl:
 #   svn cat http://virtualbox.org/svn/vbox/trunk/src/apps/Makefile.kmk > src/apps/Makefile.kmk
@@ -172,7 +176,8 @@ if [ -e src/apps ]; then
    [ -e src/apps/Makefile.kmk ] && exit 1
    rm -rf src/apps
 fi
-# remove this block when updating to > 1.6.4
+# remove this block and broken_tunctl hack when updating to > 1.6.4
+%endif
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
@@ -221,8 +226,10 @@ ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxManage
 ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxSDL
 ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxHeadless
 
+%if !%{broken_tunctl}
 # move VBoxTunctl to bindir
 mv %{buildroot}%{vboxdir}/VBoxTunctl %{buildroot}%{_bindir}/
+%endif
 
 # install VBoxAddIF / VBoxDeleteIF
 install -m755 ./src/VBox/Installer/linux/VBoxAddIF.sh %{buildroot}%{_bindir}/VBoxTAP
@@ -394,7 +401,9 @@ set -x
 %{_bindir}/VBoxAddIF
 %{_bindir}/VBoxDeleteIF
 %{_bindir}/VBoxTAP
+%if !%{broken_tunctl}
 %{_bindir}/VBoxTunctl
+%endif
 %dir %{vboxdir}
 %{vboxdir}/*
 # initscripts integration
