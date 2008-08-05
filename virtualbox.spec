@@ -41,7 +41,7 @@ Patch1:		VirtualBox-1.5.4_OSE-libpath.patch
 Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 # (blino) use misc_register() to register vboxadd device
 #         so that /dev/vboxadd gets created automatically by udev
-Patch3:		VirtualBox-1.6.0_OSE-misc_register.patch
+Patch3:		VirtualBox-1.6.4-misc_register.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
 Patch5:		VirtualBox-1.6.2_OSE-fix-timesync-req.patch
 # (fc) 1.6.0-2mdv fix initscript name in VBox.sh script
