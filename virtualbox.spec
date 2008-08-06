@@ -4,8 +4,9 @@
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
-%define srcname	VirtualBox-%{version}-OSE
-%define distname	VirtualBox-%{version}
+%define oname	VirtualBox
+%define srcname	%{oname}-%{version}-OSE
+%define distname	%{oname}-%{version}
 %define dirname vbox-ose
 %define pkgver	%{ver}%{?svndate:-%{svndate}}
 
@@ -224,7 +225,7 @@ cat > %{buildroot}%{_sysconfdir}/vbox/vbox.cfg << EOF
 INSTALL_DIR="%{vboxdir}"
 EOF
 mkdir -p %{buildroot}%{_bindir}
-ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VirtualBox
+ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/%{oname}
 ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxManage
 ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxSDL
 ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxHeadless
@@ -320,7 +321,7 @@ cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
 Name=VirtualBox OSE
 Comment=Full virtualizer for x86 hardware
-Exec=%{_bindir}/VirtualBox
+Exec=%{_bindir}/%{oname}
 Icon=%{name}
 Type=Application
 Terminal=false
@@ -399,7 +400,7 @@ set -x
 %files
 %defattr(-,root,root)
 %config %{_sysconfdir}/vbox/vbox.cfg
-%{_bindir}/VirtualBox
+%{_bindir}/%{oname}
 %{_bindir}/VBoxManage
 %{_bindir}/VBoxSDL
 %{_bindir}/VBoxHeadless
