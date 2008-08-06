@@ -1,5 +1,5 @@
 %define ver	1.6.4
-%define rel	1
+%define rel	2
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -242,6 +242,8 @@ install -m755 ./src/VBox/Installer/linux/VBoxAddIF.sh %{buildroot}%{_bindir}/VBo
 ln -s VBoxTAP %{buildroot}/%{_bindir}/VBoxAddIF
 ln -s VBoxTAP %{buildroot}/%{_bindir}/VBoxDeleteIF
 
+install -d %{buildroot}/var/run/%{oname}
+
 # install dkms sources
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
 mv %{buildroot}%{vboxdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
@@ -413,6 +415,7 @@ set -x
 # initscripts integration
 %{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
+%dir /var/run/%{oname}
 # desktop integration
 %{_iconsdir}/*.png
 %{_miconsdir}/*.png
