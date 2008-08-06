@@ -62,6 +62,9 @@ Requires:	kmod(vboxdrv) = %{version}
 %else
 Requires:	dkms-%{name} = %{version}-%{release}
 %endif
+%if %{broken_tunctl}
+Requires:	tunctl
+%endif
 Conflicts:	dkms-%{name} <= 1.5.0-%{mkrel 4}
 BuildRequires:	dev86, iasl
 BuildRequires:	zlib-devel
@@ -226,7 +229,9 @@ ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxManage
 ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxSDL
 ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxHeadless
 
-%if !%{broken_tunctl}
+%if %{broken_tunctl}
+ln -sf tunctl %{buildroot}%{_bindir}/VBoxTunctl
+%else
 # move VBoxTunctl to bindir
 mv %{buildroot}%{vboxdir}/VBoxTunctl %{buildroot}%{_bindir}/
 %endif
@@ -401,9 +406,7 @@ set -x
 %{_bindir}/VBoxAddIF
 %{_bindir}/VBoxDeleteIF
 %{_bindir}/VBoxTAP
-%if !%{broken_tunctl}
 %{_bindir}/VBoxTunctl
-%endif
 %dir %{vboxdir}
 %{vboxdir}/*
 # initscripts integration
