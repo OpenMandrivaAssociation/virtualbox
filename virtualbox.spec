@@ -87,7 +87,7 @@ BuildRequires:	kernel-devel-latest
 BuildRequires:	kernel-source
 %endif
 %if %{mdkversion} >= 200900
-BuildRequires:	gcc3.3
+BuildRequires:	gcc4.2
 %endif
 
 %description
@@ -191,7 +191,7 @@ make -C fake-linux prepare
 export LIBPATH_LIB="%{_lib}"
 ./configure \
 %if %{mdkversion} >= 200900
- --with-gcc-compat=gcc-3.3.6 \
+ --with-gcc-compat=gcc4.2 \
 %endif
  --with-linux=$PWD/fake-linux \
 %if %{mdkversion} <= 200800 
