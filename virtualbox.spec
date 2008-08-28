@@ -1,5 +1,5 @@
 %define ver	1.6.4
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
