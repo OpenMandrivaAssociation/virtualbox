@@ -1,5 +1,5 @@
-%define ver	1.6.4
-%define rel	4
+%define ver	2.0.0
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -23,7 +23,7 @@
 %endif
 
 # remove me for versions > 1.6.4
-%define broken_tunctl 1
+%define broken_tunctl 0
 
 # nuke vbox-specific dependencies
 %define _provides_exceptions ^VBox
@@ -43,15 +43,10 @@ Source12:	virtualbox.48.png
 Patch0:		VirtualBox-1.6.2-mdvconfig.patch
 Patch1:		VirtualBox-1.5.4_OSE-libpath.patch
 Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
-# (blino) use misc_register() to register vboxadd device
-#         so that /dev/vboxadd gets created automatically by udev
-Patch3:		VirtualBox-1.6.4-misc_register.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
 Patch5:		VirtualBox-1.6.2_OSE-fix-timesync-req.patch
 # (fc) 1.6.0-2mdv fix initscript name in VBox.sh script
 Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
-# (hk) fix build with Linux 2.6.27
-Patch7:		VirtualBox-1.6.4-linux-2.6.27.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -76,7 +71,7 @@ BuildRequires:	libxcursor-devel
 %else
 BuildRequires:	X11-devel
 %endif
-BuildRequires:	SDL-devel, libqt-devel
+BuildRequires:	SDL-devel, libqt4-devel
 BuildRequires:	libIDL-devel, libext2fs-devel
 BuildRequires:	libxslt-proc, libxslt-devel, libxerces-c-devel, libxalan-c-devel >= 1.10
 BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
@@ -166,11 +161,9 @@ The X.org driver for video in VirtualBox guests
 %patch0 -p1 -b .mdvconfig
 %patch1 -p1 -b .libpath
 %patch2 -p1 -b .kernelrelease
-%patch3 -p1 -b .misc_register
 %patch4 -p1 -b .futex
 %patch5 -p1 -b .fix-timesync-req
 %patch6 -p1 -b .initscriptname
-%patch7 -p1 -b .linux-2.6.27
 
 %if %{broken_tunctl}
 # 1.6.4 build fix (OSE tarball is missing Makefile.kmk files)
@@ -192,7 +185,7 @@ cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
 %build
 make -C fake-linux prepare
 export LIBPATH_LIB="%{_lib}"
-./configure \
+./configure --disable-qt3 \
 %if %{mdkversion} >= 200900
  --with-gcc-compat=gcc4.2 \
 %endif
@@ -333,6 +326,9 @@ Terminal=false
 Categories=X-MandrivaLinux-MoreApplications-Emulators;Emulator;
 EOF
 
+# add missing makefile for kernel module
+install -m644 src/VBox/HostDrivers/Support/linux/Makefile %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
+
 # remove unpackaged files
 rm -rf %{buildroot}%{vboxdir}/{src,sdk,testcase}
 rm  -f %{buildroot}%{vboxdir}/tst*
@@ -415,6 +411,9 @@ set -x
 %{_bindir}/VBoxTunctl
 %dir %{vboxdir}
 %{vboxdir}/*
+%attr(4711,root,root) %{vboxdir}/VBoxHeadless
+%attr(4711,root,root) %{vboxdir}/VBoxSDL
+%attr(4711,root,root) %{vboxdir}/VirtualBox
 # initscripts integration
 %{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
