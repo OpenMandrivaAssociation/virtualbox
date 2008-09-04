@@ -68,13 +68,16 @@ BuildRequires:	dev86, iasl
 BuildRequires:	zlib-devel
 %if %{mdkversion} >= 200700
 BuildRequires:	libxcursor-devel
+BuildRequires:	libxmu-devel
 %else
 BuildRequires:	X11-devel
 %endif
 BuildRequires:	SDL-devel, libqt4-devel
+BuildRequires:  qt4-linguist
 BuildRequires:	libIDL-devel, libext2fs-devel
 BuildRequires:	libxslt-proc, libxslt-devel, libxerces-c-devel, libxalan-c-devel >= 1.10
 BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
+BuildRequires:  python-devel
 %if %{mdkversion} >= 200810
 BuildRequires:	pulseaudio-devel
 %endif
