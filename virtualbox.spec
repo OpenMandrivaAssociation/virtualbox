@@ -1,5 +1,5 @@
 %define ver	2.0.0
-%define rel	1
+%define rel	2
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -47,6 +47,8 @@ Patch4:		VirtualBox-1.6.0_OSE-futex.patch
 Patch5:		VirtualBox-1.6.2_OSE-fix-timesync-req.patch
 # (fc) 1.6.0-2mdv fix initscript name in VBox.sh script
 Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
+# (fc) 2.0.0-2mdv fix QT4 detection on x86-64 on Mdv 2008.1
+Patch7:		VirtualBox-2.0.0-mdv20081.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -167,6 +169,9 @@ The X.org driver for video in VirtualBox guests
 %patch4 -p1 -b .futex
 %patch5 -p1 -b .fix-timesync-req
 %patch6 -p1 -b .initscriptname
+%if %{mdkversion} < 200900
+%patch7 -p1 -b .mdv20081
+%endif
 
 %if %{broken_tunctl}
 # 1.6.4 build fix (OSE tarball is missing Makefile.kmk files)
