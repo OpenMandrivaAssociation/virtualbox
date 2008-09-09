@@ -1,5 +1,5 @@
 %define ver	2.0.0
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -12,11 +12,10 @@
 
 %define vboxdir	%{_libdir}/%{name}
 
-%define build_additions 0
+%define build_additions 1
 
 %ifarch %{ix86}
 %define vbox_platform linux.x86
-%define build_additions 1
 %endif
 %ifarch x86_64
 %define vbox_platform linux.amd64
