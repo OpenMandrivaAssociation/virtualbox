@@ -1,5 +1,5 @@
 %define ver	2.0.2
-%define rel	1
+%define rel	2
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -48,6 +48,8 @@ Patch5:		VirtualBox-1.6.2_OSE-fix-timesync-req.patch
 Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
 # (fc) 2.0.0-2mdv fix QT4 detection on x86-64 on Mdv 2008.1
 Patch7:		VirtualBox-2.0.0-mdv20081.patch
+# (fc) 2.0.2-2mdv disable version check at startup
+Patch8:		VirtualBox-2.0.0-disableversioncheck.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -171,6 +173,7 @@ The X.org driver for video in VirtualBox guests
 %if %{mdkversion} < 200900
 %patch7 -p1 -b .mdv20081
 %endif
+%patch8 -p1 -b .versioncheck
 
 %if %{broken_tunctl}
 # 1.6.4 build fix (OSE tarball is missing Makefile.kmk files)
