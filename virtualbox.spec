@@ -1,4 +1,4 @@
-%define ver	2.0.4
+%define ver	2.0.6
 %define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
