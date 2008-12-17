@@ -1,5 +1,5 @@
-%define ver	2.0.6
-%define rel	2
+%define ver	2.1.0
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -40,7 +40,7 @@ Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
 Patch0:		VirtualBox-1.6.2-mdvconfig.patch
-Patch1:		VirtualBox-1.5.4_OSE-libpath.patch
+Patch1:		VirtualBox-2.1.0-libpath.patch
 Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
 Patch5:		VirtualBox-1.6.2_OSE-fix-timesync-req.patch
@@ -81,6 +81,7 @@ BuildRequires:	libIDL-devel, libext2fs-devel
 BuildRequires:	libxslt-proc, libxslt-devel, libxerces-c-devel, libxalan-c-devel >= 1.10
 BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
 BuildRequires:  python-devel
+BuildRequires:  libcap-devel
 %if %{mdkversion} >= 200810
 BuildRequires:	pulseaudio-devel
 %endif
