@@ -39,7 +39,6 @@ Source4:	60-vboxadd.perms
 Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
-Patch0:		VirtualBox-1.6.2-mdvconfig.patch
 Patch1:		VirtualBox-2.1.0-libpath.patch
 Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
@@ -165,7 +164,6 @@ The X.org driver for video in VirtualBox guests
 
 %prep
 %setup -q -n %{distname}
-%patch0 -p1 -b .mdvconfig
 %patch1 -p1 -b .libpath
 %patch2 -p1 -b .kernelrelease
 %patch4 -p1 -b .futex
@@ -243,11 +241,6 @@ ln -sf tunctl %{buildroot}%{_bindir}/VBoxTunctl
 # move VBoxTunctl to bindir
 mv %{buildroot}%{vboxdir}/VBoxTunctl %{buildroot}%{_bindir}/
 %endif
-
-# install VBoxAddIF / VBoxDeleteIF
-install -m755 ./src/VBox/Installer/linux/VBoxAddIF.sh %{buildroot}%{_bindir}/VBoxTAP
-ln -s VBoxTAP %{buildroot}/%{_bindir}/VBoxAddIF
-ln -s VBoxTAP %{buildroot}/%{_bindir}/VBoxDeleteIF
 
 install -d %{buildroot}/var/run/%{oname}
 
@@ -416,9 +409,6 @@ set -x
 %{_bindir}/VBoxManage
 %{_bindir}/VBoxSDL
 %{_bindir}/VBoxHeadless
-%{_bindir}/VBoxAddIF
-%{_bindir}/VBoxDeleteIF
-%{_bindir}/VBoxTAP
 %{_bindir}/VBoxTunctl
 %dir %{vboxdir}
 %{vboxdir}/*
