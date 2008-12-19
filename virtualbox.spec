@@ -248,10 +248,15 @@ install -d %{buildroot}/var/run/%{oname}
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
 mv %{buildroot}%{vboxdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
 cat > %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/dkms.conf << EOF
+MAKE[0]="droot=\\\$(pwd); for driver in %{kname} vboxnetflt; do cd \\\$droot/\\\$driver; make KERN_DIR=\$kernel_source_dir; done"
 PACKAGE_NAME=%{name}
 PACKAGE_VERSION=%{version}-%{release}
 DEST_MODULE_LOCATION[0]=/kernel/3rdparty/vbox
+BUILT_MODULE_LOCATION[0]=%{kname}/
 BUILT_MODULE_NAME[0]=%{kname}
+DEST_MODULE_LOCATION[1]=/kernel/3rdparty/vbox
+BUILT_MODULE_LOCATION[1]=vboxnetflt/
+BUILT_MODULE_NAME[1]=vboxnetflt
 AUTOINSTALL=yes
 EOF
 
