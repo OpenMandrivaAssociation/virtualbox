@@ -1,5 +1,5 @@
 %define ver	2.1.0
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -268,8 +268,10 @@ EOF
 
 # install additions
 %if %{build_additions}
+mkdir -p %{buildroot}%{_datadir}/hal/fdi/information/20thirdparty
 install -m755 src/VBox/Additions/linux/installer/vboxadd-timesync.sh %{buildroot}%{_initrddir}/vboxadd-timesync
 install -m755 src/VBox/Additions/x11/installer/VBoxRandR.sh %{buildroot}%{_bindir}/VBoxRandR
+install -m755 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/information/20thirdparty/90-vboxguest.fdi
 
 pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir}
@@ -289,15 +291,20 @@ vboxadd
 vboxvfs
 EOF
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
-%if %{mdkversion} >= 200810
+%if %{mdkversion} >= 200910
+  install vboxmouse_drv_15.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+  install vboxvideo_drv_15.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+%else
+ %if %{mdkversion} >= 200810
   install vboxmouse_drv_14.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
   install vboxvideo_drv_14.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
-%else
-  install vboxmouse_drv_71.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
- %if %{mdkversion} >= 200800
-  install vboxvideo_drv_13.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
  %else
-  install vboxvideo_drv_71.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+  install vboxmouse_drv_71.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+  %if %{mdkversion} >= 200800
+   install vboxvideo_drv_13.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+  %else
+   install vboxvideo_drv_71.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+  %endif
  %endif
 %endif
   for kmod in vboxadd vboxvfs; do
@@ -450,6 +457,7 @@ set -x
 %files -n x11-driver-input-vboxmouse
 %defattr(-,root,root)
 %{_libdir}/xorg/modules/input/vboxmouse_drv.so
+%{_datadir}/hal/fdi/information/20thirdparty/90-vboxguest.fdi
 
 %files -n x11-driver-video-vboxvideo
 %defattr(-,root,root)
