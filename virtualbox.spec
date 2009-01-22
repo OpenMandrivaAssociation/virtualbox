@@ -194,10 +194,10 @@ cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
 %build
 make -C fake-linux prepare
 export LIBPATH_LIB="%{_lib}"
-./configure --disable-qt3 \
 %if %{mdkversion} >= 200900
- --with-gcc-compat=gcc4.2 \
+ CC="%{_bindir}/gcc4.2" \
 %endif
+./configure --disable-qt3 \
  --with-linux=$PWD/fake-linux \
 %if %{mdkversion} <= 200800 
  --disable-pulse
