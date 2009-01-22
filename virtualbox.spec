@@ -1,12 +1,12 @@
-%define ver	2.1.0
-%define rel	5
+%define ver	2.1.2
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
 %define oname	VirtualBox
 %define srcname	%{oname}-%{version}-OSE
-%define distname	%{oname}-%{version}
+%define distname	%{oname}-%{version}_OSE
 %define dirname vbox-ose
 %define pkgver	%{ver}%{?svndate:-%{svndate}}
 
@@ -39,7 +39,7 @@ Source4:	60-vboxadd.perms
 Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
-Patch1:		VirtualBox-2.1.0-libpath.patch
+Patch1:		VirtualBox-2.1.2-libpath.patch
 Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
 Patch5:		VirtualBox-1.6.2_OSE-fix-timesync-req.patch
