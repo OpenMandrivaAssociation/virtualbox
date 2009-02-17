@@ -1,5 +1,5 @@
-%define ver	2.1.2
-%define rel	2
+%define ver	2.1.4
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -32,7 +32,7 @@ Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	%{version}
 Release:	%{release}
-Source0:	http://virtualbox.org/download/%ver/%{srcname}.tar.bz2
+Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source2:	virtualbox.init
 Source3:	98vboxadd-xclient
 Source4:	60-vboxadd.perms
