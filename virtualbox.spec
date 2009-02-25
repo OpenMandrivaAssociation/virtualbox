@@ -1,5 +1,5 @@
 %define ver	2.1.4
-%define rel	1
+%define rel	2
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -49,6 +49,10 @@ Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
 Patch7:		VirtualBox-2.0.0-mdv20081.patch
 # (fc) 2.0.2-2mdv disable version check at startup
 Patch8:		VirtualBox-2.0.0-disableversioncheck.patch
+# (hk) https://qa.mandriva.com/show_bug.cgi?id=48096
+Patch9:		VirtualBox-2.1.4_OSE-vbox_use_insert_page.patch
+# (hk) fix build kernel-headers-2.6.29*
+Patch10:	VirtualBox-2.1.4_OSE-kernel-headers-2.6.29.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -173,6 +177,8 @@ The X.org driver for video in VirtualBox guests
 %patch7 -p1 -b .mdv20081
 %endif
 %patch8 -p1 -b .versioncheck
+%patch9 -p1 -b .vbox_use_insert_page
+%patch10 -p1 -b .kernel-headers-2.6.29
 
 %if %{broken_tunctl}
 # 1.6.4 build fix (OSE tarball is missing Makefile.kmk files)
