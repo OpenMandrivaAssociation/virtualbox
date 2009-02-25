@@ -1,5 +1,5 @@
 %define ver	2.1.4
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -252,9 +252,20 @@ install -d %{buildroot}/var/run/%{oname}
 
 # install dkms sources
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
+cat > vboxbuild << EOF
+#!/bin/sh
+set -e
+droot=\$(pwd)
+cd \$droot/%{kname}
+make KERN_DIR=\$1
+cp -f \$droot/%{kname}/Module.symvers \$droot/vboxnetflt
+cd \$droot/vboxnetflt
+make KERN_DIR=\$1
+EOF
+install -m 0755 vboxbuild %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
 mv %{buildroot}%{vboxdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
 cat > %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/dkms.conf << EOF
-MAKE[0]="droot=\\\$(pwd); for driver in %{kname} vboxnetflt; do cd \\\$droot/\\\$driver; make KERN_DIR=\$kernel_source_dir; done"
+MAKE[0]="./vboxbuild \$kernel_source_dir"
 PACKAGE_NAME=%{name}
 PACKAGE_VERSION=%{version}-%{release}
 DEST_MODULE_LOCATION[0]=/kernel/3rdparty/vbox
