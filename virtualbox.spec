@@ -1,5 +1,5 @@
 %define ver	2.1.4
-%define rel	4
+%define rel	5
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -144,6 +144,7 @@ Kernel module for VirtualBox OSE additions.
 Summary:	Kernel module for VirtualBox OSE VFS
 Group:		System/Kernel and hardware
 Requires(post):	  dkms
+Requires(post):	dkms-vboxadd = %{version}-%{release}
 Requires(preun):  dkms
 
 %description -n dkms-vboxvfs
