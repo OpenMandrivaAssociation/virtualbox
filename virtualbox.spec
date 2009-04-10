@@ -1,5 +1,5 @@
-%define ver	2.1.4
-%define rel	5
+%define ver	2.2.0
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -21,9 +21,6 @@
 %define vbox_platform linux.amd64
 %endif
 
-# remove me for versions > 1.6.4
-%define broken_tunctl 0
-
 # nuke vbox-specific dependencies
 %define _provides_exceptions ^VBox
 %define _requires_exceptions ^VBox
@@ -34,12 +31,11 @@ Version:	%{version}
 Release:	%{release}
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source2:	virtualbox.init
-Source3:	98vboxadd-xclient
 Source4:	60-vboxadd.perms
 Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
-Patch1:		VirtualBox-2.1.2-libpath.patch
+Patch1:		VirtualBox-libpath.patch
 Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
 Patch5:		VirtualBox-1.6.2_OSE-fix-timesync-req.patch
@@ -48,11 +44,15 @@ Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
 # (fc) 2.0.0-2mdv fix QT4 detection on x86-64 on Mdv 2008.1
 Patch7:		VirtualBox-2.0.0-mdv20081.patch
 # (fc) 2.0.2-2mdv disable version check at startup
-Patch8:		VirtualBox-2.0.0-disableversioncheck.patch
-# (hk) https://qa.mandriva.com/show_bug.cgi?id=48096
-Patch9:		VirtualBox-2.1.4_OSE-vbox_use_insert_page.patch
+Patch8:		VirtualBox-disableversioncheck.patch
 # (hk) fix build kernel-headers-2.6.29*
-Patch10:	VirtualBox-2.1.4_OSE-kernel-headers-2.6.29.patch
+Patch10:	VirtualBox-kernel-headers-2.6.29.patch
+# (fc) 2.2.0-1mdv add Wine Direct3D guest additions option (Debian)
+Patch11:	15-wined3d-guest-addition.patch
+# (fc) 2.2.0-1mdv disable update notification (Debian)
+Patch12:	16-no-update.patch
+# (fc) 2.2.0-1mdv make network settings more intuitive (Debian)
+Patch13:	17-nat.patch
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -65,9 +65,6 @@ Requires(postun): rpm-helper
 Requires:	kmod(vboxdrv) = %{version}
 %else
 Requires:	dkms-%{name} = %{version}-%{release}
-%endif
-%if %{broken_tunctl}
-Requires:	tunctl
 %endif
 Conflicts:	dkms-%{name} <= 1.5.0-%{mkrel 4}
 BuildRequires:	dev86, iasl
@@ -93,9 +90,8 @@ BuildRequires:	kernel-devel-latest
 %else
 BuildRequires:	kernel-source
 %endif
-%if %{mdkversion} >= 200900
-BuildRequires:	gcc4.2
-%endif
+BuildRequires:  mesaglu-devel mesagl-devel libxmu-devel
+BuildRequires:  gsoap
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
@@ -117,12 +113,16 @@ Group:		Emulators
 %if %{mdkversion} >= 200800
 Requires:	kmod(vboxadd)
 Requires:	kmod(vboxvfs)
+Requires:	kmod(vboxvideo)
 %else
 Requires:	dkms-vboxadd = %{version}-%{release}
 Requires:	dkms-vboxvfs = %{version}-%{release}
+Requires:	dkms-vboxvideo = %{version}-%{release}
 %endif
 Requires:	x11-driver-input-vboxmouse
 Requires:	x11-driver-video-vboxvideo
+Requires:	xrandr
+Requires:	xrefresh
 Requires(post):   rpm-helper
 Requires(preun):  rpm-helper
 
@@ -136,19 +136,13 @@ Summary:	Kernel module for VirtualBox OSE additions
 Group:		System/Kernel and hardware
 Requires(post):	  dkms
 Requires(preun):  dkms
+Provides:	dkms-vboxvfs = %{version}-%{release}
+Obsoletes:	dkms-vboxvfs < %{version}-%{release}
+Provides:	dkms-vboxvideo = %{version}-%{release}
+Obsoletes:	dkms-vboxvideo < %{version}-%{release}
 
 %description -n dkms-vboxadd
 Kernel module for VirtualBox OSE additions.
-
-%package -n	dkms-vboxvfs
-Summary:	Kernel module for VirtualBox OSE VFS
-Group:		System/Kernel and hardware
-Requires(post):	  dkms
-Requires(post):	dkms-vboxadd = %{version}-%{release}
-Requires(preun):  dkms
-
-%description -n dkms-vboxvfs
-Kernel module for VirtualBox OSE VFS.
 
 %package -n	x11-driver-input-vboxmouse
 Summary:	The X.org driver for mouse in VirtualBox guests
@@ -178,33 +172,20 @@ The X.org driver for video in VirtualBox guests
 %patch7 -p1 -b .mdv20081
 %endif
 %patch8 -p1 -b .versioncheck
-%patch9 -p1 -b .vbox_use_insert_page
 %patch10 -p1 -b .kernel-headers-2.6.29
-
-%if %{broken_tunctl}
-# 1.6.4 build fix (OSE tarball is missing Makefile.kmk files)
-# by building tunctl:
-#   svn cat http://virtualbox.org/svn/vbox/trunk/src/apps/Makefile.kmk > src/apps/Makefile.kmk
-#   svn cat http://virtualbox.org/svn/vbox/trunk/src/apps/tunctl/Makefile.kmk > src/apps/tunctl/Makefile.kmk
-#   sed -ie s/SUB_DEPTH/DEPTH/ src/apps/Makefile.kmk
-# by removing tunctl
-if [ -e src/apps ]; then
-   [ -e src/apps/Makefile.kmk ] && exit 1
-   rm -rf src/apps
-fi
-# remove this block and broken_tunctl hack when updating to > 1.6.4
-%endif
+%patch11 -p1 -b .wined3d
+%patch12 -p1 -b .disable-update
+%patch13 -p1 -b .nat
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
 
+sed -i -e 's,$$ORIGIN,%{vboxdir},g' Config.kmk
+
 %build
 make -C fake-linux prepare
 export LIBPATH_LIB="%{_lib}"
-%if %{mdkversion} >= 200900
- CC="%{_bindir}/gcc4.2" \
-%endif
-./configure --disable-qt3 \
+./configure --enable-webservice \
  --with-linux=$PWD/fake-linux \
 %if %{mdkversion} <= 200800 
  --disable-pulse
@@ -242,12 +223,8 @@ ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxManage
 ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxSDL
 ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxHeadless
 
-%if %{broken_tunctl}
-ln -sf tunctl %{buildroot}%{_bindir}/VBoxTunctl
-%else
 # move VBoxTunctl to bindir
 mv %{buildroot}%{vboxdir}/VBoxTunctl %{buildroot}%{_bindir}/
-%endif
 
 install -d %{buildroot}/var/run/%{oname}
 
@@ -286,10 +263,13 @@ EOF
 
 # install additions
 %if %{build_additions}
-mkdir -p %{buildroot}%{_datadir}/hal/fdi/information/20thirdparty
+mkdir -p %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty
 install -m755 src/VBox/Additions/linux/installer/vboxadd-timesync.sh %{buildroot}%{_initrddir}/vboxadd-timesync
-install -m755 src/VBox/Additions/x11/installer/VBoxRandR.sh %{buildroot}%{_bindir}/VBoxRandR
-install -m755 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/information/20thirdparty/90-vboxguest.fdi
+install -m755 src/VBox/Additions/x11/Installer/VBoxRandR.sh %{buildroot}%{_bindir}/VBoxRandR
+install -m755 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
+
+install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
+install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
 
 pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir}
@@ -299,9 +279,11 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}%{_sysconfdir}/security/console.perms.d/
   install -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/security/console.perms.d/
 
-  install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
   install -m755 VBoxClient %{buildroot}%{_bindir}
-  install -m755 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xinit.d
+  install -m755 VBoxControl %{buildroot}%{_bindir}
+
+  install -m755 VBoxOGLcrutil.so %{buildroot}%{_libdir}
+  install -m755 VBoxOGLerrorspu.so %{buildroot}%{_libdir}
 
   install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
   cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
@@ -325,16 +307,34 @@ EOF
   %endif
  %endif
 %endif
-  for kmod in vboxadd vboxvfs; do
-    mkdir -p %{buildroot}%{_usr}/src/$kmod-%{version}-%{release}
-    cp -a src/$kmod/* %{buildroot}%{_usr}/src/$kmod-%{version}-%{release}/
-    cat > %{buildroot}%{_usr}/src/$kmod-%{version}-%{release}/dkms.conf << EOF
-PACKAGE_NAME=$kmod
+  mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
+  cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
+PACKAGE_NAME=vboxadditions
 PACKAGE_VERSION=%{version}-%{release}
-DEST_MODULE_LOCATION[0]=/kernel/3rdparty/vbox
+MAKE[0]="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxadd &&
+cp \$dkms_tree/\$module/\$module_version/build/vboxadd/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxvfs &&
+make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvfs &&
+cp \$dkms_tree/\$module/\$module_version/build/vboxvfs/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxvideo &&
+make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvideo"
+EOF
+  i=0
+  cp -arf src/vboxvideo_drm src/vboxvideo
+  for kmod in vboxadd vboxvfs vboxvideo; do
+    mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod
+    cp -a src/$kmod/* %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod/
+    cat >> %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
+DEST_MODULE_LOCATION[$i]=/kernel/3rdparty/vbox
+BUILT_MODULE_LOCATION[$i]=$kmod/
+BUILT_MODULE_NAME[$i]=$kmod
+EOF
+    i=$((i+1))
+  done
+  cat >> %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
+CLEAN="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxadd clean && 
+make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvfs clean && 
+make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvideo clean "
 AUTOINSTALL=yes
 EOF
-  done
 popd
 %endif
 
@@ -366,6 +366,9 @@ install -m644 src/VBox/HostDrivers/Support/linux/Makefile %{buildroot}%{_usr}/sr
 # remove unpackaged files
 rm -rf %{buildroot}%{vboxdir}/{src,sdk,testcase}
 rm  -f %{buildroot}%{vboxdir}/tst*
+rm  -f %{buildroot}%{vboxdir}/vboxkeyboard.tar.gz
+rm  -f %{buildroot}%{vboxdir}/SUP*
+rm  -f %{buildroot}%{vboxdir}/xpidl
 
 %clean
 rm -rf %{buildroot}
@@ -393,9 +396,11 @@ set -x
 /usr/sbin/dkms --rpm_safe_upgrade build -m %{name} -v %{version}-%{release}
 /usr/sbin/dkms --rpm_safe_upgrade install -m %{name} -v %{version}-%{release}
 /sbin/modprobe %{kname} >/dev/null 2>&1 || :
+/sbin/modprobe vboxnetflt >/dev/null 2>&1 || :
 
 %preun -n dkms-%{name}
 # rmmod can fail
+/sbin/rmmod vboxnetflt >/dev/null 2>&1
 /sbin/rmmod %{kname} >/dev/null 2>&1
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade remove -m %{name} -v %{version}-%{release} --all || :
@@ -409,27 +414,16 @@ set -x
 
 %post -n dkms-vboxadd
 set -x
-/usr/sbin/dkms --rpm_safe_upgrade add -m vboxadd -v %{version}-%{release}
-/usr/sbin/dkms --rpm_safe_upgrade build -m vboxadd -v %{version}-%{release}
-/usr/sbin/dkms --rpm_safe_upgrade install -m vboxadd -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade add -m vboxadditions -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade build -m vboxadditions -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade install -m vboxadditions -v %{version}-%{release}
 :
 
 %preun -n dkms-vboxadd
 set -x
-/usr/sbin/dkms --rpm_safe_upgrade remove -m vboxadd -v %{version}-%{release} --all
+/usr/sbin/dkms --rpm_safe_upgrade remove -m vboxadditions -v %{version}-%{release} --all
 :
 
-%post -n dkms-vboxvfs
-set -x
-/usr/sbin/dkms --rpm_safe_upgrade add -m vboxvfs -v %{version}-%{release}
-/usr/sbin/dkms --rpm_safe_upgrade build -m vboxvfs -v %{version}-%{release}
-/usr/sbin/dkms --rpm_safe_upgrade install -m vboxvfs -v %{version}-%{release}
-:
-
-%preun -n dkms-vboxvfs
-set -x
-/usr/sbin/dkms --rpm_safe_upgrade remove -m vboxvfs -v %{version}-%{release} --all
-:
 %endif
 
 %files
@@ -440,11 +434,14 @@ set -x
 %{_bindir}/VBoxSDL
 %{_bindir}/VBoxHeadless
 %{_bindir}/VBoxTunctl
-%dir %{vboxdir}
-%{vboxdir}/*
+%{vboxdir}
 %attr(4711,root,root) %{vboxdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxdir}/VBoxSDL
 %attr(4711,root,root) %{vboxdir}/VirtualBox
+%attr(4711,root,root) %{vboxdir}/VBoxNetAdpCtl
+%attr(4711,root,root) %{vboxdir}/VBoxNetDHCP
+%attr(644,root,root) %{vboxdir}/*.gc
+%attr(644,root,root) %{vboxdir}/*.r0
 # initscripts integration
 %{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
@@ -457,8 +454,7 @@ set -x
 
 %files -n dkms-%{name}
 %defattr(-,root,root)
-%dir %{_usr}/src/%{name}-%{version}-%{release}
-%{_usr}/src/%{name}-%{version}-%{release}/*
+%{_usr}/src/%{name}-%{version}-%{release}
 
 %if %{build_additions}
 %files guest-additions
@@ -467,15 +463,17 @@ set -x
 %{_initrddir}/vboxadd-timesync
 %{_sbindir}/vboxadd-timesync
 %{_bindir}/VBoxClient
+%{_bindir}/VBoxControl
 %{_bindir}/VBoxRandR
 %{_sysconfdir}/security/console.perms.d/60-vboxadd.perms
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
+%{_libdir}/VBoxOGL*
 
 %files -n x11-driver-input-vboxmouse
 %defattr(-,root,root)
 %{_libdir}/xorg/modules/input/vboxmouse_drv.so
-%{_datadir}/hal/fdi/information/20thirdparty/90-vboxguest.fdi
+%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
 
 %files -n x11-driver-video-vboxvideo
 %defattr(-,root,root)
@@ -483,11 +481,6 @@ set -x
 
 %files -n dkms-vboxadd
 %defattr(-,root,root)
-%dir %{_usr}/src/vboxadd-%{version}-%{release}
-%{_usr}/src/vboxadd-%{version}-%{release}/*
+%{_usr}/src/vbox*-%{version}-%{release}
 
-%files -n dkms-vboxvfs
-%defattr(-,root,root)
-%dir %{_usr}/src/vboxvfs-%{version}-%{release}
-%{_usr}/src/vboxvfs-%{version}-%{release}/*
 %endif
