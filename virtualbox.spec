@@ -1,5 +1,5 @@
 %define ver	2.2.0
-%define rel	1
+%define rel	2
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -10,7 +10,8 @@
 %define dirname vbox-ose
 %define pkgver	%{ver}%{?svndate:-%{svndate}}
 
-%define vboxdir	%{_libdir}/%{name}
+%define vboxlibdir	%{_libdir}/%{name}
+%define vboxdatadir	%{_datadir}/%{name}
 
 %define build_additions 1
 
@@ -53,6 +54,9 @@ Patch11:	15-wined3d-guest-addition.patch
 Patch12:	16-no-update.patch
 # (fc) 2.2.0-1mdv make network settings more intuitive (Debian)
 Patch13:	17-nat.patch
+# (fc) 2.2.0-2mdv fix OpenGL support in Linux Guest Additions (Sun)
+Patch14:	VirtualBox-2.2.0-guestopengl.patch
+
 License:	GPL
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -156,6 +160,7 @@ The X.org driver for mouse in VirtualBox guests
 Summary:	The X.org driver for video in VirtualBox guests
 Group:		System/X11
 Suggests:	virtualbox-guest-additions
+Conflicts:	virtualbox-guest-additions < 2.2.0-2mdv
 
 %description -n x11-driver-video-vboxvideo
 The X.org driver for video in VirtualBox guests
@@ -176,11 +181,19 @@ The X.org driver for video in VirtualBox guests
 %patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
 %patch13 -p1 -b .nat
+%patch14 -p1 -b .openglguest
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
 
-sed -i -e 's,$$ORIGIN,%{vboxdir},g' Config.kmk
+cat << EOF > LocalConfig.kmk
+VBOX_PATH_APP_PRIVATE_ARCH:=%{vboxlibdir}
+VBOX_WITH_ORIGIN:=
+VBOX_WITH_RUNPATH:=%{vboxlibdir}
+VBOX_PATH_APP_PRIVATE:=%{vboxdatadir}
+VBOX_WITH_TESTCASE:=
+VBOX_WITH_TESTSUITE:=
+EOF
 
 %build
 make -C fake-linux prepare
@@ -193,7 +206,7 @@ export LIBPATH_LIB="%{_lib}"
 
 %if !%{build_additions}
 sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
-echo VBOX_WITHOUT_ADDITIONS=1 > LocalConfig.kmk
+echo VBOX_WITHOUT_ADDITIONS=1 >> LocalConfig.kmk
 %endif
 
 . ./env.sh
@@ -203,9 +216,13 @@ kmk %_smp_mflags all
 rm -rf %{buildroot}
 
 # install vbox components
-mkdir -p %{buildroot}%{vboxdir}
+mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir} 
+
 (cd out/%{vbox_platform}/release/bin && tar cf - --exclude=additions .) | \
-(cd %{buildroot}%{vboxdir} && tar xf -)
+(cd %{buildroot}%{vboxlibdir} && tar xf -)
+
+# move noarch files to vboxdatadir
+mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,*.desktop,*.png} %{buildroot}%{vboxdatadir}
 
 # install service
 mkdir -p %{buildroot}%{_initrddir}
@@ -215,16 +232,16 @@ install -m755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 mkdir -p %{buildroot}%{_sysconfdir}/vbox
 cat > %{buildroot}%{_sysconfdir}/vbox/vbox.cfg << EOF
 # VirtualBox installation directory
-INSTALL_DIR="%{vboxdir}"
+INSTALL_DIR="%{vboxlibdir}"
 EOF
 mkdir -p %{buildroot}%{_bindir}
-ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/%{oname}
-ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxManage
-ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxSDL
-ln -s %{vboxdir}/VBox.sh %{buildroot}%{_bindir}/VBoxHeadless
+ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/%{oname}
+ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/VBoxManage
+ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/VBoxSDL
+ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/VBoxHeadless
 
 # move VBoxTunctl to bindir
-mv %{buildroot}%{vboxdir}/VBoxTunctl %{buildroot}%{_bindir}/
+mv %{buildroot}%{vboxlibdir}/VBoxTunctl %{buildroot}%{_bindir}/
 
 install -d %{buildroot}/var/run/%{oname}
 
@@ -241,7 +258,7 @@ cd \$droot/vboxnetflt
 make KERN_DIR=\$1
 EOF
 install -m 0755 vboxbuild %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
-mv %{buildroot}%{vboxdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
+mv %{buildroot}%{vboxlibdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
 cat > %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/dkms.conf << EOF
 MAKE[0]="./vboxbuild \$kernel_source_dir"
 PACKAGE_NAME=%{name}
@@ -272,7 +289,7 @@ install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
 
 pushd out/%{vbox_platform}/release/bin/additions
-  install -d %{buildroot}/sbin %{buildroot}%{_sbindir}
+  install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri
   install -m755 mountvboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 vboxadd-timesync %{buildroot}%{_sbindir}
 
@@ -282,8 +299,8 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 VBoxControl %{buildroot}%{_bindir}
 
-  install -m755 VBoxOGLcrutil.so %{buildroot}%{_libdir}
-  install -m755 VBoxOGLerrorspu.so %{buildroot}%{_libdir}
+  install -m755 VBoxOGL*.so %{buildroot}%{_libdir}
+  ln -s -f ../VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
 
   install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
   cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
@@ -364,11 +381,11 @@ EOF
 install -m644 src/VBox/HostDrivers/Support/linux/Makefile %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
 
 # remove unpackaged files
-rm -rf %{buildroot}%{vboxdir}/{src,sdk,testcase}
-rm  -f %{buildroot}%{vboxdir}/tst*
-rm  -f %{buildroot}%{vboxdir}/vboxkeyboard.tar.gz
-rm  -f %{buildroot}%{vboxdir}/SUP*
-rm  -f %{buildroot}%{vboxdir}/xpidl
+rm -rf %{buildroot}%{vboxlibdir}/{src,sdk,testcase}
+rm  -f %{buildroot}%{vboxlibdir}/tst*
+rm  -f %{buildroot}%{vboxlibdir}/vboxkeyboard.tar.gz
+rm  -f %{buildroot}%{vboxlibdir}/SUP*
+rm  -f %{buildroot}%{vboxlibdir}/xpidl
 
 %clean
 rm -rf %{buildroot}
@@ -434,14 +451,15 @@ set -x
 %{_bindir}/VBoxSDL
 %{_bindir}/VBoxHeadless
 %{_bindir}/VBoxTunctl
-%{vboxdir}
-%attr(4711,root,root) %{vboxdir}/VBoxHeadless
-%attr(4711,root,root) %{vboxdir}/VBoxSDL
-%attr(4711,root,root) %{vboxdir}/VirtualBox
-%attr(4711,root,root) %{vboxdir}/VBoxNetAdpCtl
-%attr(4711,root,root) %{vboxdir}/VBoxNetDHCP
-%attr(644,root,root) %{vboxdir}/*.gc
-%attr(644,root,root) %{vboxdir}/*.r0
+%{vboxlibdir}
+%attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
+%attr(4711,root,root) %{vboxlibdir}/VBoxSDL
+%attr(4711,root,root) %{vboxlibdir}/VirtualBox
+%attr(4711,root,root) %{vboxlibdir}/VBoxNetAdpCtl
+%attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
+%attr(644,root,root) %{vboxlibdir}/*.gc
+%attr(644,root,root) %{vboxlibdir}/*.r0
+%{vboxdatadir}
 # initscripts integration
 %{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
@@ -468,7 +486,6 @@ set -x
 %{_sysconfdir}/security/console.perms.d/60-vboxadd.perms
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
-%{_libdir}/VBoxOGL*
 
 %files -n x11-driver-input-vboxmouse
 %defattr(-,root,root)
@@ -477,7 +494,9 @@ set -x
 
 %files -n x11-driver-video-vboxvideo
 %defattr(-,root,root)
+%{_libdir}/VBoxOGL*
 %{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+%{_libdir}/dri/vboxvideo_dri.so
 
 %files -n dkms-vboxadd
 %defattr(-,root,root)
