@@ -1,5 +1,5 @@
 %define ver	2.2.0
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -356,6 +356,7 @@ make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvi
 AUTOINSTALL=yes
 EOF
 popd
+  sed 's/^\(.package.*-kernel-\)\(.*-latest\)\(.*\)$/\1\2\3 Obsoletes: vboxvfs-kernel-\2 vboxvideo-kernel-\2\\n/' /etc/dkms/template-dkms-mkrpm.spec > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/vboxadditions-dkms-mkrpm.spec
 %endif
 
 # install icons
