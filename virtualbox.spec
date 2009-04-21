@@ -98,6 +98,7 @@ BuildRequires:	kernel-source
 %endif
 BuildRequires:  mesaglu-devel mesagl-devel libxmu-devel
 BuildRequires:  gsoap
+BuildRequires:	dkms-minimal
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
