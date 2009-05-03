@@ -1,5 +1,5 @@
-%define ver	2.2.0
-%define rel	4
+%define ver	2.2.2
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -184,7 +184,7 @@ The X.org driver for video in VirtualBox guests
 %patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
 %patch13 -p1 -b .nat
-%patch14 -p1 -b .openglguest
+#patch14 -p1 -b .openglguest
 %patch15 -p1 -b .killvboxclient
 
 rm -rf fake-linux/
