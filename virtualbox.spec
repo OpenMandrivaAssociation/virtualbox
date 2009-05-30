@@ -52,8 +52,6 @@ Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 Patch11:	15-wined3d-guest-addition.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
 Patch12:	16-no-update.patch
-# (fc) 2.2.0-1mdv make network settings more intuitive (Debian)
-Patch13:	17-nat.patch
 # (fc) 2.2.0-3mdv kill vboxclient if leftover from previous X11 session
 Patch15:	VirtualBox-2.2.0-killvboxclient.patch
 
@@ -181,7 +179,6 @@ The X.org driver for video in VirtualBox guests
 %patch10 -p1 -b .kernel-headers-2.6.29
 %patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
-%patch13 -p1 -b .nat
 %patch15 -p1 -b .killvboxclient
 
 rm -rf fake-linux/
