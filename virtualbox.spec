@@ -1,4 +1,4 @@
-%define ver	2.2.2
+%define ver	2.2.4
 %define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
@@ -54,8 +54,6 @@ Patch11:	15-wined3d-guest-addition.patch
 Patch12:	16-no-update.patch
 # (fc) 2.2.0-1mdv make network settings more intuitive (Debian)
 Patch13:	17-nat.patch
-# (fc) 2.2.0-2mdv fix OpenGL support in Linux Guest Additions (Sun)
-Patch14:	VirtualBox-2.2.0-guestopengl.patch
 # (fc) 2.2.0-3mdv kill vboxclient if leftover from previous X11 session
 Patch15:	VirtualBox-2.2.0-killvboxclient.patch
 
@@ -184,7 +182,6 @@ The X.org driver for video in VirtualBox guests
 %patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
 %patch13 -p1 -b .nat
-#patch14 -p1 -b .openglguest
 %patch15 -p1 -b .killvboxclient
 
 rm -rf fake-linux/
