@@ -1,4 +1,4 @@
-%define ver	2.2.4
+%define ver	3.0.2
 %define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
@@ -39,7 +39,7 @@ Source12:	virtualbox.48.png
 Patch1:		VirtualBox-libpath.patch
 Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
-Patch5:		VirtualBox-1.6.2_OSE-fix-timesync-req.patch
+Patch5:		virtualbox-fix-vboxadd-req.patch
 # (fc) 1.6.0-2mdv fix initscript name in VBox.sh script
 Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
 # (fc) 2.0.0-2mdv fix QT4 detection on x86-64 on Mdv 2008.1
@@ -54,6 +54,8 @@ Patch11:	15-wined3d-guest-addition.patch
 Patch12:	16-no-update.patch
 # (fc) 2.2.0-3mdv kill vboxclient if leftover from previous X11 session
 Patch15:	VirtualBox-2.2.0-killvboxclient.patch
+# (ah) build with current pulseaudio
+Patch16:	virtualbox-fix-pulseaudio.patch
 
 License:	GPL
 Group:		Emulators
@@ -94,6 +96,8 @@ BuildRequires:	kernel-source
 %endif
 BuildRequires:  mesaglu-devel mesagl-devel libxmu-devel
 BuildRequires:  gsoap
+BuildRequires:	openssl-devel
+BuildRequires:	curl-devel
 BuildRequires:	dkms-minimal
 
 %description
@@ -180,6 +184,7 @@ The X.org driver for video in VirtualBox guests
 %patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
 %patch15 -p1 -b .killvboxclient
+%patch16 -p1 -b .pulsefix
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
@@ -248,12 +253,11 @@ mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
 cat > vboxbuild << EOF
 #!/bin/sh
 set -e
-droot=\$(pwd)
-cd \$droot/%{kname}
-make KERN_DIR=\$1
-cp -f \$droot/%{kname}/Module.symvers \$droot/vboxnetflt
-cd \$droot/vboxnetflt
-make KERN_DIR=\$1
+make -C %{kname} KERN_DIR=\$1
+cp -f %{kname}/Module.symvers vboxnetflt
+cp -f %{kname}/Module.symvers vboxnetadp
+make -C vboxnetflt KERN_DIR=\$1
+make -C vboxnetadp KERN_DIR=\$1
 EOF
 install -m 0755 vboxbuild %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
 mv %{buildroot}%{vboxlibdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
@@ -267,6 +271,9 @@ BUILT_MODULE_NAME[0]=%{kname}
 DEST_MODULE_LOCATION[1]=/kernel/3rdparty/vbox
 BUILT_MODULE_LOCATION[1]=vboxnetflt/
 BUILT_MODULE_NAME[1]=vboxnetflt
+DEST_MODULE_LOCATION[2]=/kernel/3rdparty/vbox
+BUILT_MODULE_LOCATION[2]=vboxnetadp/
+BUILT_MODULE_NAME[2]=vboxnetadp
 AUTOINSTALL=yes
 EOF
 
@@ -275,11 +282,16 @@ mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
 cat > %{buildroot}%{_sysconfdir}/udev/rules.d/%{name}.rules << EOF
 KERNEL=="%{kname}", MODE="0666"
 EOF
+cat > %{buildroot}%{_sysconfdir}/udev/rules.d/vbox-additions.rules << EOF
+KERNEL=="vboxadd|vboxuser", ENV{ACL_MANAGE}="1"
+EOF
 
 # install additions
 %if %{build_additions}
 mkdir -p %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty
-install -m755 src/VBox/Additions/linux/installer/vboxadd-timesync.sh %{buildroot}%{_initrddir}/vboxadd-timesync
+# vboxadd-timesync should probably be renamed vboxadd now, but renaming initscripts
+# cleanly is hacky business
+install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}%{_initrddir}/vboxadd-timesync
 install -m755 src/VBox/Additions/x11/Installer/VBoxRandR.sh %{buildroot}%{_bindir}/VBoxRandR
 install -m755 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
 
@@ -289,10 +301,12 @@ install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_
 pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri
   install -m755 mountvboxsf %{buildroot}/sbin/mount.vboxsf
-  install -m755 vboxadd-timesync %{buildroot}%{_sbindir}
+  install -m755 VBoxService %{buildroot}%{_sbindir}
 
+%if %{mdkversion} <= 200910
   install -d %{buildroot}%{_sysconfdir}/security/console.perms.d/
   install -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/security/console.perms.d/
+%endif
 
   install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 VBoxControl %{buildroot}%{_bindir}
@@ -409,15 +423,22 @@ fi
 %post -n dkms-%{name}
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade add -m %{name} -v %{version}-%{release}
-/usr/sbin/dkms --rpm_safe_upgrade build -m %{name} -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade build -m %{name} -v %{version}-%{release} &&
 /usr/sbin/dkms --rpm_safe_upgrade install -m %{name} -v %{version}-%{release}
-/sbin/modprobe %{kname} >/dev/null 2>&1 || :
-/sbin/modprobe vboxnetflt >/dev/null 2>&1 || :
+/sbin/rmmod vboxnetflt &>/dev/null
+/sbin/rmmod vboxnetadp &>/dev/null
+/sbin/rmmod %{kname} &>/dev/null
+/sbin/modprobe %{kname} &>/dev/null
+/sbin/modprobe vboxnetflt &>/dev/null
+/sbin/modprobe vboxnetadp &>/dev/null
+:
 
 %preun -n dkms-%{name}
-# rmmod can fail
-/sbin/rmmod vboxnetflt >/dev/null 2>&1
-/sbin/rmmod %{kname} >/dev/null 2>&1
+if [ "$1" = "0" ]; then
+	/sbin/rmmod vboxnetadp >/dev/null 2>&1
+	/sbin/rmmod vboxnetflt >/dev/null 2>&1
+	/sbin/rmmod %{kname} >/dev/null 2>&1
+fi
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade remove -m %{name} -v %{version}-%{release} --all || :
 
@@ -431,7 +452,7 @@ set -x
 %post -n dkms-vboxadd
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade add -m vboxadditions -v %{version}-%{release}
-/usr/sbin/dkms --rpm_safe_upgrade build -m vboxadditions -v %{version}-%{release}
+/usr/sbin/dkms --rpm_safe_upgrade build -m vboxadditions -v %{version}-%{release} &&
 /usr/sbin/dkms --rpm_safe_upgrade install -m vboxadditions -v %{version}-%{release}
 :
 
@@ -478,11 +499,14 @@ set -x
 %defattr(-,root,root)
 /sbin/mount.vboxsf
 %{_initrddir}/vboxadd-timesync
-%{_sbindir}/vboxadd-timesync
+%{_sbindir}/VBoxService
 %{_bindir}/VBoxClient
 %{_bindir}/VBoxControl
 %{_bindir}/VBoxRandR
+%if %{mdkversion} <= 200910
 %{_sysconfdir}/security/console.perms.d/60-vboxadd.perms
+%endif
+%{_sysconfdir}/udev/rules.d/vbox-additions.rules
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
 
