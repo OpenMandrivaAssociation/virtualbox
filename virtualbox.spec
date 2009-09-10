@@ -1,4 +1,4 @@
-%define ver	3.0.4
+%define ver	3.0.6
 %define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
@@ -52,12 +52,8 @@ Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 Patch11:	15-wined3d-guest-addition.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
 Patch12:	16-no-update.patch
-# (fc) 2.2.0-3mdv kill vboxclient if leftover from previous X11 session
-Patch15:	VirtualBox-2.2.0-killvboxclient.patch
-# (ah) build with current pulseaudio
-Patch16:	virtualbox-fix-pulseaudio.patch
 
-License:	GPL
+License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -82,7 +78,7 @@ BuildRequires:	X11-devel
 BuildRequires:	SDL-devel, libqt4-devel
 BuildRequires:  qt4-linguist
 BuildRequires:	libIDL-devel, libext2fs-devel
-BuildRequires:	libxslt-proc, libxslt-devel, libxerces-c-devel, libxalan-c-devel >= 1.10
+BuildRequires:	libxslt-proc, libxslt-devel 
 BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
 BuildRequires:  python-devel
 BuildRequires:  libcap-devel
@@ -183,8 +179,6 @@ The X.org driver for video in VirtualBox guests
 %patch10 -p1 -b .kernel-headers-2.6.29
 %patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
-%patch15 -p1 -b .killvboxclient
-%patch16 -p1 -b .pulsefix
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
