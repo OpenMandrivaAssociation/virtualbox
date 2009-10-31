@@ -1,4 +1,4 @@
-%define ver	3.0.8
+%define ver	3.0.10
 %define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
@@ -193,7 +193,7 @@ VBOX_WITH_TESTSUITE:=
 EOF
 
 %build
-make -C fake-linux prepare
+#make -C fake-linux prepare
 export LIBPATH_LIB="%{_lib}"
 ./configure --enable-webservice \
  --with-linux=$PWD/fake-linux \
