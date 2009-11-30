@@ -295,7 +295,7 @@ install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_
 
 pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri
-  install -m755 mountvboxsf %{buildroot}/sbin/mount.vboxsf
+#  install -m755 mountvboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 VBoxService %{buildroot}%{_sbindir}/vboxadd-service
 
 %if %{mdkversion} <= 200910
