@@ -343,6 +343,7 @@ make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvi
 EOF
   i=0
   # cp -arf src/vboxvideo_drm src/vboxvideo
+  cp -arf src/VBox/Additions/linux/drm /src/vboxvideo
   for kmod in vboxadd vboxvfs vboxvideo; do
     mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod
     cp -a src/$kmod/* %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod/
