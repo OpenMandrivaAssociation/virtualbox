@@ -52,6 +52,7 @@ Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 Patch11:	15-wined3d-guest-addition.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
 Patch12:	16-no-update.patch
+Patch13:	VirtualBox-3.1-libpath.patch
 
 License:	GPLv2
 Group:		Emulators
@@ -167,7 +168,7 @@ The X.org driver for video in VirtualBox guests
 
 %prep
 %setup -q -n %{distname}
-%patch1 -p1 -b .libpath
+%patch13 -p1 -b .libpath-3.1
 %patch2 -p1 -b .kernelrelease
 %patch4 -p1 -b .futex
 %patch5 -p1 -b .fix-timesync-req
