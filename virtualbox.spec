@@ -179,7 +179,7 @@ The X.org driver for video in VirtualBox guests
 %patch8 -p1 -b .versioncheck
 %patch10 -p1 -b .kernel-headers-2.6.29
 ##%patch11 -p1 -b .wined3d
-%patch12 -p1 -b .disable-update
+##%patch12 -p1 -b .disable-update
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
