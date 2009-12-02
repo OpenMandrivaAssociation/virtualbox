@@ -295,7 +295,7 @@ install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_
 
 pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri
-#  install -m755 mountvboxsf %{buildroot}/sbin/mount.vboxsf
+  install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 VBoxService %{buildroot}%{_sbindir}/vboxadd-service
 
 %if %{mdkversion} <= 200910
@@ -343,8 +343,8 @@ make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvi
 EOF
   i=0
   # cp -arf src/vboxvideo_drm src/vboxvideo
-  cp -arf src/VBox/Additions/linux/drm /src/vboxvideo
-  for kmod in vboxadd vboxvfs vboxvideo; do
+  cp -arf ../../../../../src/VBox/Additions/linux/drm src/vboxvideo
+  for kmod in vboxguest vboxvfs vboxvideo; do
     mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod
     cp -a src/$kmod/* %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod/
     cat >> %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
