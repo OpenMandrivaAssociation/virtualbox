@@ -1,5 +1,5 @@
 %define ver	3.1.2
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -53,6 +53,7 @@ Patch11:	15-wined3d-guest-addition.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
 Patch12:	16-no-update.patch
 Patch13:	VirtualBox-3.1-libpath.patch
+Patch14:	vbox-pulse-rewrite-0.1.patch
 
 License:	GPLv2
 Group:		Emulators
@@ -180,6 +181,7 @@ The X.org driver for video in VirtualBox guests
 %patch10 -p1 -b .kernel-headers-2.6.29
 ##%patch11 -p1 -b .wined3d
 ##%patch12 -p1 -b .disable-update
+%patch14 -p1 -b .pulse-rewrite
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
