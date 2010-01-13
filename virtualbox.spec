@@ -1,5 +1,5 @@
 %define ver	3.1.2
-%define rel	3
+%define rel	4
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -116,7 +116,7 @@ Kernel support for VirtualBox OSE.
 Summary:	Additions for VirtualBox OSE guest systems
 Group:		Emulators
 %if %{mdkversion} >= 200800
-Requires:	kmod(vboxadd)
+Requires:	kmod(vboxguest)
 Requires:	kmod(vboxvfs)
 Requires:	kmod(vboxvideo)
 %else
@@ -342,8 +342,8 @@ EOF
   cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
 PACKAGE_NAME=vboxadditions
 PACKAGE_VERSION=%{version}-%{release}
-MAKE[0]="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxadd &&
-cp \$dkms_tree/\$module/\$module_version/build/vboxadd/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxvfs &&
+MAKE[0]="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxguest &&
+cp \$dkms_tree/\$module/\$module_version/build/vboxguest/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxvfs &&
 make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvfs &&
 cp \$dkms_tree/\$module/\$module_version/build/vboxvfs/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxvideo &&
 make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvideo"
@@ -362,7 +362,7 @@ EOF
     i=$((i+1))
   done
   cat >> %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
-CLEAN="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxadd clean && 
+CLEAN="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxguest clean && 
 make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvfs clean && 
 make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvideo clean "
 AUTOINSTALL=yes
