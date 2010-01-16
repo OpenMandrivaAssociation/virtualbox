@@ -119,9 +119,7 @@ Requires:	kmod(vboxguest)
 Requires:	kmod(vboxvfs)
 Requires:	kmod(vboxvideo)
 %else
-Requires:	dkms-vboxadd = %{version}-%{release}
-Requires:	dkms-vboxvfs = %{version}-%{release}
-Requires:	dkms-vboxvideo = %{version}-%{release}
+Requires:	dkms-vboxadditions = %{version}-%{release}
 %endif
 Requires:	x11-driver-input-vboxmouse
 Requires:	x11-driver-video-vboxvideo
@@ -135,17 +133,18 @@ This packages contains additions for VirtualBox OSE guest systems.
 It allows to share files with the host system, copy/paste between
 guest and host, and sync time with host.
 
-%package -n	dkms-vboxadd
+%package -n	dkms-vboxadditions
 Summary:	Kernel module for VirtualBox OSE additions
 Group:		System/Kernel and hardware
 Requires(post):	  dkms
 Requires(preun):  dkms
+Obsoletes:	dkms-vboxadd < %{version}-%{release}
 Provides:	dkms-vboxvfs = %{version}-%{release}
 Obsoletes:	dkms-vboxvfs < %{version}-%{release}
 Provides:	dkms-vboxvideo = %{version}-%{release}
 Obsoletes:	dkms-vboxvideo < %{version}-%{release}
 
-%description -n dkms-vboxadd
+%description -n dkms-vboxadditions
 Kernel module for VirtualBox OSE additions.
 
 %package -n	x11-driver-input-vboxmouse
@@ -451,14 +450,14 @@ set -x
 %preun guest-additions
 %_preun_service vboxadd-timesync
 
-%post -n dkms-vboxadd
+%post -n dkms-vboxadditions
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade add -m vboxadditions -v %{version}-%{release}
 /usr/sbin/dkms --rpm_safe_upgrade build -m vboxadditions -v %{version}-%{release} &&
 /usr/sbin/dkms --rpm_safe_upgrade install -m vboxadditions -v %{version}-%{release}
 :
 
-%preun -n dkms-vboxadd
+%preun -n dkms-vboxadditions
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade remove -m vboxadditions -v %{version}-%{release} --all
 :
@@ -523,7 +522,7 @@ set -x
 %{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 %{_libdir}/dri/vboxvideo_dri.so
 
-%files -n dkms-vboxadd
+%files -n dkms-vboxadditions
 %defattr(-,root,root)
 %{_usr}/src/vbox*-%{version}-%{release}
 
