@@ -278,7 +278,7 @@ cat > %{buildroot}%{_sysconfdir}/udev/rules.d/%{name}.rules << EOF
 KERNEL=="%{kname}", MODE="0666"
 EOF
 cat > %{buildroot}%{_sysconfdir}/udev/rules.d/vbox-additions.rules << EOF
-KERNEL=="vboxadd|vboxuser", ENV{ACL_MANAGE}="1"
+KERNEL=="vboxguest|vboxuser", ENV{ACL_MANAGE}="1"
 EOF
 
 # install additions
