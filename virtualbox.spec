@@ -53,6 +53,7 @@ Patch11:	15-wined3d-guest-addition.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
 Patch12:	16-no-update.patch
 Patch14:	vbox-pulse-rewrite-0.1.patch
+Patch15:	VirtualBox-build-on-kernel-2.6.33.patch
 
 License:	GPLv2
 Group:		Emulators
@@ -180,6 +181,7 @@ The X.org driver for video in VirtualBox guests
 %patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
 %patch14 -p1 -b .pulse-rewrite
+%patch15 -p0 -b .kernel-2.6.33
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
