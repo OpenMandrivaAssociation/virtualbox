@@ -237,9 +237,12 @@ ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/%{oname}
 ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/VBoxManage
 ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/VBoxSDL
 ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/VBoxHeadless
+ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/vboxwebsrv
 
-# move VBoxTunctl to bindir
-mv %{buildroot}%{vboxlibdir}/VBoxTunctl %{buildroot}%{_bindir}/
+# provide network control tools in bindir
+ln -s %{vboxlibdir}/VBoxTunctl %{buildroot}%{_bindir}/VBoxTunctl
+ln -s %{vboxlibdir}/VBoxNetAdpCtl %{buildroot}%{_bindir}/VBoxNetAdpCtl
+ln -s %{vboxlibdir}/VBoxNetDHCP %{buildroot}%{_bindir}/VBoxNetDHCP
 
 install -d %{buildroot}/var/run/%{oname}
 
@@ -470,6 +473,9 @@ set -x
 %{_bindir}/VBoxSDL
 %{_bindir}/VBoxHeadless
 %{_bindir}/VBoxTunctl
+%{_bindir}/VBoxNetAdpCtl
+%{_bindir}/VBoxNetDHCP
+%{_bindir}/vboxwebsrv
 %{vboxlibdir}
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
