@@ -1,5 +1,5 @@
 %define ver	3.1.2
-%define rel	6
+%define rel	7
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -301,7 +301,7 @@ install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_
 pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
-  install -m755 VBoxService %{buildroot}%{_sbindir}/vboxadd-service
+  install -m755 VBoxService %{buildroot}%{_sbindir}
 
 %if %{mdkversion} <= 200910
   install -d %{buildroot}%{_sysconfdir}/security/console.perms.d/
@@ -506,7 +506,7 @@ set -x
 %defattr(-,root,root)
 /sbin/mount.vboxsf
 %{_initrddir}/vboxadd-timesync
-%{_sbindir}/vboxadd-service
+%{_sbindir}/VBoxService
 %{_bindir}/VBoxClient
 %{_bindir}/VBoxControl
 %{_bindir}/VBoxRandR
