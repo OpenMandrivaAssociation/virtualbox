@@ -1,5 +1,5 @@
-%define ver	3.1.2
-%define rel	7
+%define ver	3.1.4
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -180,8 +180,8 @@ The X.org driver for video in VirtualBox guests
 %patch10 -p1 -b .kernel-headers-2.6.29
 %patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
-%patch14 -p1 -b .pulse-rewrite
-%patch15 -p0 -b .kernel-2.6.33
+#patch14 -p1 -b .pulse-rewrite
+#patch15 -p0 -b .kernel-2.6.33
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
