@@ -1,5 +1,5 @@
 %define ver	3.1.4
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -97,7 +97,6 @@ BuildRequires:  gsoap
 BuildRequires:	openssl-devel
 BuildRequires:	curl-devel
 BuildRequires:	dkms-minimal
-Suggests:	virtualbox-kde-runner
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
