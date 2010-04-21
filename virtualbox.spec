@@ -1,5 +1,5 @@
 %define ver	3.1.6
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -314,7 +314,7 @@ pushd out/%{vbox_platform}/release/bin/additions
 
   install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
   cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
-vboxadd
+vboxguest
 vboxvfs
 EOF
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
