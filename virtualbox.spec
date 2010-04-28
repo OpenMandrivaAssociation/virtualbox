@@ -1,5 +1,5 @@
 %define ver	3.1.6
-%define rel	4
+%define rel	5
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -53,6 +53,7 @@ Patch11:	15-wined3d-guest-addition.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
 Patch12:	16-no-update.patch
 Patch15:	VirtualBox-build-on-kernel-2.6.33.patch
+Patch16:	virtualbox-default-to-mandriva.patch
 
 License:	GPLv2
 Group:		Emulators
@@ -180,6 +181,7 @@ The X.org driver for video in VirtualBox guests
 %patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
 #patch15 -p0 -b .kernel-2.6.33
+%patch16 -p1 -b .default-to-mandriva
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
