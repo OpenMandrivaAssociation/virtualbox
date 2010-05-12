@@ -1,5 +1,5 @@
-%define ver	3.1.6
-%define rel	5
+%define ver	3.1.8
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -44,15 +44,12 @@ Patch5:		virtualbox-fix-vboxadd-req.patch
 Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
 # (fc) 2.0.0-2mdv fix QT4 detection on x86-64 on Mdv 2008.1
 Patch7:		VirtualBox-2.0.0-mdv20081.patch
-# (fc) 2.0.2-2mdv disable version check at startup
-Patch8:		VirtualBox-disableversioncheck.patch
 # (hk) fix build kernel-headers-2.6.29*
 Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 # (fc) 2.2.0-1mdv add Wine Direct3D guest additions option (Debian)
 Patch11:	15-wined3d-guest-addition.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
 Patch12:	16-no-update.patch
-Patch15:	VirtualBox-build-on-kernel-2.6.33.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 
 License:	GPLv2
@@ -117,7 +114,7 @@ Summary:	Additions for VirtualBox OSE guest systems
 Group:		Emulators
 %if %{mdkversion} >= 200800
 Requires:	kmod(vboxguest)
-Requires:	kmod(vboxvfs)
+Requires:	kmod(vboxsf)
 Requires:	kmod(vboxvideo)
 %else
 Requires:	dkms-vboxadditions = %{version}-%{release}
@@ -142,6 +139,8 @@ Requires(preun):  dkms
 Obsoletes:	dkms-vboxadd < %{version}-%{release}
 Provides:	dkms-vboxvfs = %{version}-%{release}
 Obsoletes:	dkms-vboxvfs < %{version}-%{release}
+Provides:	dkms-vboxsf = %{version}-%{release}
+Obsoletes:	dkms-vboxsf < %{version}-%{release}
 Provides:	dkms-vboxvideo = %{version}-%{release}
 Obsoletes:	dkms-vboxvideo < %{version}-%{release}
 
@@ -176,11 +175,9 @@ The X.org driver for video in VirtualBox guests
 %if %{mdkversion} < 200900
 %patch7 -p1 -b .mdv20081
 %endif
-%patch8 -p1 -b .versioncheck
 %patch10 -p1 -b .kernel-headers-2.6.29
 %patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
-#patch15 -p0 -b .kernel-2.6.33
 %patch16 -p1 -b .default-to-mandriva
 
 rm -rf fake-linux/
@@ -292,7 +289,6 @@ mkdir -p %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty
 # vboxadd-timesync should probably be renamed vboxadd now, but renaming initscripts
 # cleanly is hacky business
 install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}%{_initrddir}/vboxadd-timesync
-install -m755 src/VBox/Additions/x11/Installer/VBoxRandR.sh %{buildroot}%{_bindir}/VBoxRandR
 install -m755 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
 
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
@@ -317,7 +313,6 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
   cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
 vboxguest
-vboxvfs
 EOF
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
 %if %{mdkversion} >= 201010
@@ -346,13 +341,13 @@ EOF
 PACKAGE_NAME=vboxadditions
 PACKAGE_VERSION=%{version}-%{release}
 MAKE[0]="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxguest &&
-cp \$dkms_tree/\$module/\$module_version/build/vboxguest/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxvfs &&
-make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvfs &&
-cp \$dkms_tree/\$module/\$module_version/build/vboxvfs/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxvideo &&
+cp \$dkms_tree/\$module/\$module_version/build/vboxguest/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxsf &&
+make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxsf &&
+cp \$dkms_tree/\$module/\$module_version/build/vboxsf/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxvideo &&
 make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvideo"
 EOF
   i=0
-  for kmod in vboxguest vboxvfs vboxvideo; do
+  for kmod in vboxguest vboxsf vboxvideo; do
     mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod
     cp -a src/$kmod/* %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod/
     cat >> %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
@@ -364,12 +359,12 @@ EOF
   done
   cat >> %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
 CLEAN="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxguest clean && 
-make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvfs clean && 
+make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxsf clean && 
 make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvideo clean "
 AUTOINSTALL=yes
 EOF
 popd
-  sed 's/^\(.package.*-kernel-\)\(.*-latest\)\(.*\)\\$/\1\2\3Obsoletes: vboxvfs-kernel-\2 vboxvideo-kernel-\2\\n\\/' /etc/dkms/template-dkms-mkrpm.spec > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/vboxadditions-dkms-mkrpm.spec
+  sed 's/^\(.package.*-kernel-\)\(.*-latest\)\(.*\)\\$/\1\2\3Obsoletes: vboxsf-kernel-\2 vboxvideo-kernel-\2\\n\\/' /etc/dkms/template-dkms-mkrpm.spec > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/vboxadditions-dkms-mkrpm.spec
 %endif
 
 # install icons
@@ -509,7 +504,6 @@ set -x
 %{_sbindir}/VBoxService
 %{_bindir}/VBoxClient
 %{_bindir}/VBoxControl
-%{_bindir}/VBoxRandR
 %if %{mdkversion} <= 200910
 %{_sysconfdir}/security/console.perms.d/60-vboxadd.perms
 %endif
