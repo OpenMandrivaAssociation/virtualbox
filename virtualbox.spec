@@ -122,8 +122,6 @@ Requires:	dkms-vboxadditions = %{version}-%{release}
 %endif
 Requires:	x11-driver-input-vboxmouse
 Requires:	x11-driver-video-vboxvideo
-Requires:	xrandr
-Requires:	xrefresh
 Requires(post):   rpm-helper
 Requires(preun):  rpm-helper
 
