@@ -1,5 +1,5 @@
 %define ver	3.1.8
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -46,8 +46,6 @@ Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
 Patch7:		VirtualBox-2.0.0-mdv20081.patch
 # (hk) fix build kernel-headers-2.6.29*
 Patch10:	VirtualBox-kernel-headers-2.6.29.patch
-# (fc) 2.2.0-1mdv add Wine Direct3D guest additions option (Debian)
-Patch11:	15-wined3d-guest-addition.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
 Patch12:	16-no-update.patch
 Patch16:	virtualbox-default-to-mandriva.patch
@@ -175,7 +173,6 @@ The X.org driver for video in VirtualBox guests
 %patch7 -p1 -b .mdv20081
 %endif
 %patch10 -p1 -b .kernel-headers-2.6.29
-%patch11 -p1 -b .wined3d
 %patch12 -p1 -b .disable-update
 %patch16 -p1 -b .default-to-mandriva
 
