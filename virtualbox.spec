@@ -1,5 +1,5 @@
-%define ver	3.1.8
-%define rel	3
+%define ver	3.2.6
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -164,7 +164,7 @@ The X.org driver for video in VirtualBox guests
 
 %prep
 %setup -q -n %{distname}
-%patch1 -p1 -b .libpath-3.1
+%patch1 -b .libpath-3.1
 %patch2 -p1 -b .kernelrelease
 %patch4 -p1 -b .futex
 %patch5 -p1 -b .fix-timesync-req
