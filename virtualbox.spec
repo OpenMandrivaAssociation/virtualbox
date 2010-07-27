@@ -79,7 +79,7 @@ BuildRequires:	libxslt-proc, libxslt-devel
 BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
 BuildRequires:  python-devel
 BuildRequires:  libcap-devel
-BuildRequires:  libxrandr-devel
+BuildRequires:  libxrandr-devel libxinerama-devel
 %if %{mdkversion} >= 200810
 BuildRequires:	pulseaudio-devel
 %endif
