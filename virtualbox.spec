@@ -103,6 +103,7 @@ Summary:	VirtualBox OSE kernel module
 Group:		System/Kernel and hardware
 Requires(post):	  dkms
 Requires(preun):  dkms
+Conflicts:	dkms-vboxadditions
 
 %description -n dkms-%{name}
 Kernel support for VirtualBox OSE.
@@ -140,6 +141,7 @@ Provides:	dkms-vboxsf = %{version}-%{release}
 Obsoletes:	dkms-vboxsf < %{version}-%{release}
 Provides:	dkms-vboxvideo = %{version}-%{release}
 Obsoletes:	dkms-vboxvideo < %{version}-%{release}
+Conflicts:	dkms-%{name}
 
 %description -n dkms-vboxadditions
 Kernel module for VirtualBox OSE additions.
@@ -164,7 +166,7 @@ The X.org driver for video in VirtualBox guests
 
 %prep
 %setup -q -n %{distname}
-%patch1 -b .libpath-3.1
+%patch1 -p1 -b .libpath-3.2.6
 %patch2 -p1 -b .kernelrelease
 %patch4 -p1 -b .futex
 %patch5 -p1 -b .fix-timesync-req
