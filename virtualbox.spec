@@ -93,6 +93,7 @@ BuildRequires:  gsoap
 BuildRequires:	openssl-devel
 BuildRequires:	curl-devel
 BuildRequires:	dkms-minimal
+BuildRequires:	libpam-devel
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
@@ -397,6 +398,9 @@ rm  -f %{buildroot}%{vboxlibdir}/vboxkeyboard.tar.gz
 rm  -f %{buildroot}%{vboxlibdir}/SUP*
 rm  -f %{buildroot}%{vboxlibdir}/xpidl
 
+# install PAM module:
+install -D out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
+
 %clean
 rm -rf %{buildroot}
 
@@ -497,6 +501,7 @@ set -x
 %if %{build_additions}
 %files guest-additions
 %defattr(-,root,root)
+/%{_lib}/security/pam_vbox.so
 /sbin/mount.vboxsf
 %{_initrddir}/vboxadd-timesync
 %{_sbindir}/VBoxService
