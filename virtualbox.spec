@@ -1,5 +1,5 @@
-%define ver	3.2.8
-%define rel	2
+%define ver	3.2.10
+%define rel	1
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -49,10 +49,6 @@ Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
 Patch12:	16-no-update.patch
 Patch16:	virtualbox-default-to-mandriva.patch
-# add upstream patches to fix build with kernel-2.6.36
-# http://vbox.innotek.de/pipermail/vbox-dev/2010-August/003143.html
-Patch17:	virtualbox-3.2.8-fix-build-vboxnetadp-kernel-2.6.36.patch
-Patch18:	virtualbox-3.2.8-fix-build-vboxsf-kernel-2.6.36.patch
 
 License:	GPLv2
 Group:		Emulators
@@ -182,8 +178,6 @@ The X.org driver for video in VirtualBox guests
 %patch10 -p1 -b .kernel-headers-2.6.29
 %patch12 -p1 -b .disable-update
 %patch16 -p1 -b .default-to-mandriva
-%patch17 -p1 -b .fix-build-vboxnetadp-kernel-2.6.36
-%patch18 -p1 -b .fix-build-vboxsf-kernel-2.6.36
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
