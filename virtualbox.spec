@@ -1,5 +1,5 @@
 %define ver	3.2.10
-%define rel	2
+%define rel	3
 #define svndate	20070209
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
@@ -315,23 +315,28 @@ pushd out/%{vbox_platform}/release/bin/additions
 vboxguest
 EOF
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
-%if %{mdkversion} >= 201010
- install vboxmouse_drv_17.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
- install vboxvideo_drv_17.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+%if %{mdkversion} >= 201100
+ install vboxmouse_drv_19.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+ install vboxvideo_drv_19.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 %else
- %if %{mdkversion} >= 200910
-  install vboxmouse_drv_16.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
-  install vboxvideo_drv_16.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+ %if %{mdkversion} >= 201010
+  install vboxmouse_drv_17.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+  install vboxvideo_drv_17.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
  %else
-  %if %{mdkversion} >= 200810
-   install vboxmouse_drv_14.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
-   install vboxvideo_drv_14.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+  %if %{mdkversion} >= 200910
+   install vboxmouse_drv_16.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+   install vboxvideo_drv_16.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
   %else
-   install vboxmouse_drv_71.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
-   %if %{mdkversion} >= 200800
-    install vboxvideo_drv_13.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+   %if %{mdkversion} >= 200810
+    install vboxmouse_drv_14.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+    install vboxvideo_drv_14.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
    %else
-    install vboxvideo_drv_71.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+    install vboxmouse_drv_71.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
+    %if %{mdkversion} >= 200800
+     install vboxvideo_drv_13.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+    %else
+     install vboxvideo_drv_71.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+    %endif
    %endif
   %endif
  %endif
