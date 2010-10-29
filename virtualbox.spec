@@ -96,6 +96,7 @@ BuildRequires:	curl-devel
 BuildRequires:	dkms-minimal
 BuildRequires:	libpam-devel
 BuildRequires:	gawk
+BuildRequires:	x11-server-devel
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
