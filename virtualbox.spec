@@ -1,5 +1,5 @@
 %define ver	3.2.10
-%define rel	4
+%define rel	5
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
@@ -285,6 +285,8 @@ EOF
 cat > %{buildroot}%{_sysconfdir}/udev/rules.d/vbox-additions.rules << EOF
 KERNEL=="vboxguest|vboxuser", ENV{ACL_MANAGE}="1"
 EOF
+# install udev rule for vboxmouse
+install -m644 src/VBox/Additions/linux/installer/70-xorg-vboxmouse.rules %{buildroot}%{_sysconfdir}/udev/rules.d/
 
 # install additions
 %if %{build_additions}
@@ -512,6 +514,7 @@ set -x
 %defattr(-,root,root)
 %{_libdir}/xorg/modules/input/vboxmouse_drv.so
 %{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
+%{_sysconfdir}/udev/rules.d/70-xorg-vboxmouse.rules
 
 %files -n x11-driver-video-vboxvideo
 %defattr(-,root,root)
