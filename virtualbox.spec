@@ -1,5 +1,5 @@
 %define ver	3.2.10
-%define rel	5
+%define rel	6
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
@@ -154,6 +154,7 @@ Kernel module for VirtualBox OSE additions.
 Summary:	The X.org driver for mouse in VirtualBox guests
 Group:		System/X11
 Suggests:	virtualbox-guest-additions
+Requires: x11-server-common %(xserver-sdk-abi-requires xinput)
 
 %description -n x11-driver-input-vboxmouse
 The X.org driver for mouse in VirtualBox guests
@@ -163,6 +164,8 @@ Summary:	The X.org driver for video in VirtualBox guests
 Group:		System/X11
 Suggests:	virtualbox-guest-additions
 Conflicts:	virtualbox-guest-additions < 2.2.0-2mdv
+Requires: x11-server-common %(xserver-sdk-abi-requires videodrv)
+
 
 %description -n x11-driver-video-vboxvideo
 The X.org driver for video in VirtualBox guests
