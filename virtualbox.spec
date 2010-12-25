@@ -99,6 +99,7 @@ BuildRequires:	libpam-devel
 BuildRequires:	gawk
 BuildRequires:	x11-server-devel
 BuildRequires:	java-rpmbuild
+BuildRequires:	makeself
 # for building the user manual pdf file
 BuildRequires:	texlive-latex
 
