@@ -13,6 +13,7 @@
 %define vboxdatadir	%{_datadir}/%{name}
 
 %define build_additions 1
+%define build_doc 0
 
 %ifarch %{ix86}
 %define vbox_platform linux.x86
@@ -100,8 +101,10 @@ BuildRequires:	gawk
 BuildRequires:	x11-server-devel
 BuildRequires:	java-rpmbuild
 BuildRequires:	makeself
+%if %build_doc
 # for building the user manual pdf file
 BuildRequires:	texlive-latex
+%endif
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
@@ -176,12 +179,14 @@ Requires: x11-server-common %(xserver-sdk-abi-requires videodrv)
 The X.org driver for video in VirtualBox guests
 %endif
 
+%if %build_doc
 %package doc
 Summary:	The user manual PDF file for %{name}
 Group:		System/X11
 
 %description doc
 This package contains the user manual PDF file for %{name}.
+%endif
 
 %prep
 %setup -q -n %{distname}
@@ -208,6 +213,9 @@ VBOX_PATH_APP_PRIVATE:=%{vboxdatadir}
 VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
 VBOX_JAVA_HOME := %{java_home}
+%if ! %build_doc
+VBOX_WITH_DOCS :=
+%endif
 EOF
 
 %build
@@ -552,6 +560,8 @@ set -x
 
 %endif
 
+%if %build_doc
 %files doc
 %defattr(-,root,root)
 %{vboxlibdir}/UserManual.pdf
+%endif
