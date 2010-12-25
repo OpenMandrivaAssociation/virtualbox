@@ -1,10 +1,10 @@
-%define ver	3.2.10
-%define rel	6
+%define ver	4.0.0
+%define rel	1
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
 %define oname	VirtualBox
-%define srcname	%{oname}-%{version}-OSE
+%define srcname	%{oname}-%{version}
 %define distname	%{oname}-%{version}_OSE
 %define dirname vbox-ose
 %define pkgver	%{ver}%{?svndate:-%{svndate}}
@@ -65,6 +65,7 @@ Requires:	kmod(vboxdrv) = %{version}
 Requires:	dkms-%{name} = %{version}-%{release}
 %endif
 Conflicts:	dkms-%{name} <= 1.5.0-%{mkrel 4}
+Suggests:	%{name}-doc
 BuildRequires:	dev86, iasl
 BuildRequires:	zlib-devel
 %if %{mdkversion} >= 200700
@@ -73,7 +74,7 @@ BuildRequires:	libxmu-devel
 %else
 BuildRequires:	X11-devel
 %endif
-BuildRequires:	SDL-devel, libqt4-devel
+BuildRequires:	SDL-devel, libqt4-devel >= 4.4.0
 BuildRequires:  qt4-linguist
 BuildRequires:	libIDL-devel, libext2fs-devel
 BuildRequires:	libxslt-proc, libxslt-devel 
@@ -97,6 +98,9 @@ BuildRequires:	dkms-minimal
 BuildRequires:	libpam-devel
 BuildRequires:	gawk
 BuildRequires:	x11-server-devel
+BuildRequires:	java-rpmbuild
+# for building the user manual pdf file
+BuildRequires:	texlive-latex
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
@@ -171,6 +175,13 @@ Requires: x11-server-common %(xserver-sdk-abi-requires videodrv)
 The X.org driver for video in VirtualBox guests
 %endif
 
+%package doc
+Summary:	The user manual PDF file for %{name}
+Group:		System/X11
+
+%description doc
+This package contains the user manual PDF file for %{name}.
+
 %prep
 %setup -q -n %{distname}
 %patch1 -p1 -b .libpath-3.2.6
@@ -195,7 +206,7 @@ VBOX_WITH_RUNPATH:=%{vboxlibdir}
 VBOX_PATH_APP_PRIVATE:=%{vboxdatadir}
 VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
-VBOX_WITH_WARNINGS_AS_ERRORS :=
+VBOX_JAVA_HOME := %{java_home}
 EOF
 
 %build
@@ -288,8 +299,6 @@ EOF
 cat > %{buildroot}%{_sysconfdir}/udev/rules.d/vbox-additions.rules << EOF
 KERNEL=="vboxguest|vboxuser", ENV{ACL_MANAGE}="1"
 EOF
-# install udev rule for vboxmouse
-install -m644 src/VBox/Additions/linux/installer/70-xorg-vboxmouse.rules %{buildroot}%{_sysconfdir}/udev/rules.d/
 
 # install additions
 %if %{build_additions}
@@ -297,7 +306,14 @@ mkdir -p %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty
 # vboxadd-timesync should probably be renamed vboxadd now, but renaming initscripts
 # cleanly is hacky business
 install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}%{_initrddir}/vboxadd-timesync
+
+# install .fdi file for releases older than 2011.0 and the udev rule file for
+# newer releases as now Xserver >= 1.9 is built with udev support
+%if %{mdvver} < 201100
 install -m755 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
+%else
+install -m644 src/VBox/Additions/linux/installer/70-xorg-vboxmouse.rules %{buildroot}%{_sysconfdir}/udev/rules.d/
+%endif
 
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
@@ -398,7 +414,7 @@ rm  -f %{buildroot}%{vboxlibdir}/SUP*
 rm  -f %{buildroot}%{vboxlibdir}/xpidl
 
 # install PAM module:
-install -D out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
+install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
 
 %clean
 rm -rf %{buildroot}
@@ -482,6 +498,7 @@ set -x
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
 %attr(644,root,root) %{vboxlibdir}/*.gc
 %attr(644,root,root) %{vboxlibdir}/*.r0
+%exclude %{vboxlibdir}/UserManual.pdf
 %{vboxdatadir}
 # initscripts integration
 %{_initrddir}/%{name}
@@ -516,8 +533,11 @@ set -x
 %files -n x11-driver-input-vboxmouse
 %defattr(-,root,root)
 %{_libdir}/xorg/modules/input/vboxmouse_drv.so
+%if %{mdvver} < 201100
 %{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
+%else
 %{_sysconfdir}/udev/rules.d/70-xorg-vboxmouse.rules
+%endif
 
 %files -n x11-driver-video-vboxvideo
 %defattr(-,root,root)
@@ -530,3 +550,7 @@ set -x
 %{_usr}/src/vbox*-%{version}-%{release}
 
 %endif
+
+%files doc
+%defattr(-,root,root)
+%{vboxlibdir}/UserManual.pdf
