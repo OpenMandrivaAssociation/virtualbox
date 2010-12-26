@@ -13,7 +13,7 @@
 %define vboxdatadir	%{_datadir}/%{name}
 
 %define build_additions 1
-%define build_doc 0
+%define build_doc 1
 
 %ifarch %{ix86}
 %define vbox_platform linux.x86
@@ -51,6 +51,8 @@ Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
 Patch12:	16-no-update.patch
 Patch16:	virtualbox-default-to-mandriva.patch
+
+Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
 
 License:	GPLv2
 Group:		Emulators
@@ -103,7 +105,7 @@ BuildRequires:	java-rpmbuild
 BuildRequires:	makeself
 %if %build_doc
 # for building the user manual pdf file
-BuildRequires:	texlive-latex
+BuildRequires:	tetex-latex
 %endif
 
 %description
@@ -201,6 +203,7 @@ This package contains the user manual PDF file for %{name}.
 %patch10 -p1 -b .kernel-headers-2.6.29
 %patch12 -p1 -b .disable-update
 %patch16 -p1 -b .default-to-mandriva
+%patch17 -p1 -b .courier
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
@@ -507,7 +510,9 @@ set -x
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
 %attr(644,root,root) %{vboxlibdir}/*.gc
 %attr(644,root,root) %{vboxlibdir}/*.r0
+%if %build_doc
 %exclude %{vboxlibdir}/UserManual.pdf
+%endif
 %{vboxdatadir}
 # initscripts integration
 %{_initrddir}/%{name}
