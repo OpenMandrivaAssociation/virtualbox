@@ -105,7 +105,11 @@ BuildRequires:	java-rpmbuild
 BuildRequires:	makeself
 %if %build_doc
 # for building the user manual pdf file
+%if %{mdvver} < 201100
 BuildRequires:	tetex-latex
+%else
+BuildRequires:	tetex-latex >= 3.0-53
+%endif
 %endif
 
 %description
@@ -203,7 +207,12 @@ This package contains the user manual PDF file for %{name}.
 %patch10 -p1 -b .kernel-headers-2.6.29
 %patch12 -p1 -b .disable-update
 %patch16 -p1 -b .default-to-mandriva
+
+%if %build_doc
+%if %{mdvver} < 201100
 %patch17 -p1 -b .courier
+%endif
+%endif
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
