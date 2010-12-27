@@ -52,7 +52,13 @@ Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 Patch12:	16-no-update.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 
+# use courier font instead of beramono for older releases where beramono isn't
+# available in tetex-latex (it's available since only tetex-latex-3.0-53mdv2011.0)
 Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
+# don't check for:
+# mkisofs: we're not going to build the additions .iso file
+# makeself: we're not going to create the stanalone .run installers
+Patch18:	virtualbox-4.0.0-dont-check-for-mkisofs-or-makeself.patch
 
 License:	GPLv2
 Group:		Emulators
@@ -102,7 +108,6 @@ BuildRequires:	libpam-devel
 BuildRequires:	gawk
 BuildRequires:	x11-server-devel
 BuildRequires:	java-rpmbuild
-BuildRequires:	makeself
 %if %build_doc
 # for building the user manual pdf file
 %if %{mdvver} < 201100
@@ -214,6 +219,8 @@ This package contains the user manual PDF file for %{name}.
 %endif
 %endif
 
+%patch18 -p1 -b .mkisofs-makeself
+
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
 
@@ -225,9 +232,7 @@ VBOX_PATH_APP_PRIVATE:=%{vboxdatadir}
 VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
 VBOX_JAVA_HOME := %{java_home}
-%if ! %build_doc
-VBOX_WITH_DOCS :=
-%endif
+VBOX_WITHOUT_ADDITIONS_ISO := 1
 EOF
 
 %build
@@ -236,7 +241,10 @@ export LIBPATH_LIB="%{_lib}"
 ./configure --enable-webservice \
  --with-linux=$PWD/fake-linux \
 %if %{mdkversion} <= 200800 
- --disable-pulse
+ --disable-pulse \
+%endif
+%if ! %build_doc
+  --disable-docs
 %endif
 
 %if !%{build_additions}
