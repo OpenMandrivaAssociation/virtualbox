@@ -116,6 +116,7 @@ BuildRequires:	tetex-latex
 BuildRequires:	tetex-latex >= 3.0-53
 %endif
 %endif
+BuildRequires:	libxslt-devel
 
 %description
 VirtualBox Open Source Edition (OSE) is a general-purpose full
