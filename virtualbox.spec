@@ -337,12 +337,13 @@ mkdir -p %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty
 # cleanly is hacky business
 install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}%{_initrddir}/vboxadd-timesync
 
-# install .fdi file for releases older than 2011.0 and the udev rule file for
-# newer releases as now Xserver >= 1.9 is built with udev support
+# install .fdi file for releases older than 2011.0; and the udev rule and
+# 50-vboxmouse.conf for newer releases with Xserver >= 1.9
 %if %{mdvver} < 201100
 install -m755 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
 %else
 install -m644 src/VBox/Additions/linux/installer/70-xorg-vboxmouse.rules %{buildroot}%{_sysconfdir}/udev/rules.d/
+install -Dm644 src/VBox/Additions/x11/Installer/50-vboxmouse.conf %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/50-vboxmouse.conf
 %endif
 
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
@@ -569,6 +570,7 @@ set -x
 %{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
 %else
 %{_sysconfdir}/udev/rules.d/70-xorg-vboxmouse.rules
+%{_sysconfdir}/X11/xorg.conf.d/50-vboxmouse.conf
 %endif
 
 %files -n x11-driver-video-vboxvideo
