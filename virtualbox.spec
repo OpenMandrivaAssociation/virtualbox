@@ -1,5 +1,5 @@
 %define ver	4.0.0
-%define rel	1
+%define rel	2
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
@@ -324,15 +324,15 @@ EOF
 # install udev rules
 mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
 cat > %{buildroot}%{_sysconfdir}/udev/rules.d/%{name}.rules << EOF
-KERNEL=="%{kname}", MODE="0666"
+KERNEL=="%{kname}", MODE="0600"
 EOF
 cat > %{buildroot}%{_sysconfdir}/udev/rules.d/vbox-additions.rules << EOF
-KERNEL=="vboxguest|vboxuser", ENV{ACL_MANAGE}="1"
+KERNEL=="vboxguest", NAME="vboxguest", OWNER="root", MODE="0660"
+KERNEL=="vboxuser", NAME="vboxuser", OWNER="root", MODE="0666"
 EOF
 
 # install additions
 %if %{build_additions}
-mkdir -p %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty
 # vboxadd-timesync should probably be renamed vboxadd now, but renaming initscripts
 # cleanly is hacky business
 install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}%{_initrddir}/vboxadd-timesync
@@ -340,10 +340,10 @@ install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}
 # install .fdi file for releases older than 2011.0; and the udev rule and
 # 50-vboxmouse.conf for newer releases with Xserver >= 1.9
 %if %{mdvver} < 201100
-install -m755 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
+install -D -m644 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
 %else
 install -m644 src/VBox/Additions/linux/installer/70-xorg-vboxmouse.rules %{buildroot}%{_sysconfdir}/udev/rules.d/
-install -Dm644 src/VBox/Additions/x11/Installer/50-vboxmouse.conf %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/50-vboxmouse.conf
+install -D -m644 src/VBox/Additions/x11/Installer/50-vboxmouse.conf %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/50-vboxmouse.conf
 %endif
 
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
