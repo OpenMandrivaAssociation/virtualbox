@@ -1,5 +1,5 @@
-%define ver	4.0.0
-%define rel	2
+%define ver	4.0.2
+%define rel	1
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
