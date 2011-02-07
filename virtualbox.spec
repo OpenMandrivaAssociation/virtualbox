@@ -1,5 +1,5 @@
 %define ver	4.0.2
-%define rel	1
+%define rel	2
 %define version	%{ver}%{?svndate:.%{svndate}}
 %define release	%mkrel %{rel}
 %define kname	vboxdrv
@@ -168,7 +168,8 @@ Obsoletes:	dkms-vboxvideo < %{version}-%{release}
 Conflicts:	dkms-%{name}
 
 %description -n dkms-vboxadditions
-Kernel module for VirtualBox OSE additions.
+Kernel module for VirtualBox OSE additions (ideally only needs to be installed
+on the guest OS not on the host OS).
 
 %package -n	x11-driver-input-vboxmouse
 Summary:	The X.org driver for mouse in VirtualBox guests
@@ -195,6 +196,7 @@ The X.org driver for video in VirtualBox guests
 %package doc
 Summary:	The user manual PDF file for %{name}
 Group:		System/X11
+BuildArch:	noarch
 
 %description doc
 This package contains the user manual PDF file for %{name}.
