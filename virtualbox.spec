@@ -1,7 +1,3 @@
-%define ver	4.0.4
-%define rel	2
-%define version	%{ver}%{?svndate:.%{svndate}}
-%define release	%mkrel %{rel}
 %define kname	vboxdrv
 %define oname	VirtualBox
 %define srcname	%{oname}-%{version}
@@ -30,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	%{version}
-Release:	%{release}
+Version:	3
+Release:	4.0.4%{?svndate:.%{svndate}}
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
@@ -137,9 +133,9 @@ Kernel support for VirtualBox OSE.
 Summary:	Additions for VirtualBox OSE guest systems
 Group:		Emulators
 %if %{mdkversion} >= 200800
-Requires:	kmod(vboxguest)
-Requires:	kmod(vboxsf)
-Requires:	kmod(vboxvideo)
+Requires:	kmod(vboxguest) = %{version}
+Requires:	kmod(vboxsf) = %{version}
+Requires:	kmod(vboxvideo) = %{version}
 %else
 Requires:	dkms-vboxadditions = %{version}-%{release}
 %endif
