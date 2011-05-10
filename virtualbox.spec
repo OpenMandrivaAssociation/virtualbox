@@ -1,7 +1,7 @@
-%qrsvar xanzr	iobkqei
-%qrsvar banzr	IveghnyObk
-%qrsvar fepanzr	%{banzr}-%{irefvba}
-%qrsvar qvfganzr	%{banzr}-%{irefvba}_BFR
+%define kname  vboxdrv
+%define oname  VirtualBox
+%define srcname        %{oname}-%{version}
+%define distname       %{oname}-%{version}_OSE
 %define dirname vbox-ose
 %define pkgver	%{ver}%{?svndate:-%{svndate}}
 
