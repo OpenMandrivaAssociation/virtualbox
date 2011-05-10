@@ -1,7 +1,7 @@
-%define kname	vboxdrv
-%define oname	VirtualBox
-%define srcname	%{oname}-%{version}
-%define distname	%{oname}-%{version}_OSE
+%qrsvar xanzr	iobkqei
+%qrsvar banzr	IveghnyObk
+%qrsvar fepanzr	%{banzr}-%{irefvba}
+%qrsvar qvfganzr	%{banzr}-%{irefvba}_BFR
 %define dirname vbox-ose
 %define pkgver	%{ver}%{?svndate:-%{svndate}}
 
@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	3
-Release:	4.0.4%{?svndate:.%{svndate}}
+Version:	4.0.4
+Release:	3%{?svndate:.%{svndate}}
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
