@@ -3,7 +3,7 @@
 %define srcname        %{oname}-%{version}
 %define distname       %{oname}-%{version}_OSE
 %define dirname vbox-ose
-%define pkgver	%{ver}%{?svndate:-%{svndate}}
+%define pkgver	%{ver}
 
 %define vboxlibdir	%{_libdir}/%{name}
 %define vboxdatadir	%{_datadir}/%{name}
@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.0.4
-Release:	3%{?svndate:.%{svndate}}
+Version:	4.0.6
+Release:	%mkrel 1
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
@@ -37,6 +37,7 @@ Source12:	virtualbox.48.png
 Patch0:		virtualbox-4.0.4-gcc46.patch
 Patch1:		VirtualBox-libpath.patch
 Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
+Patch3:		virtualbox-4.0.6-bccpath.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
 Patch5:		virtualbox-fix-vboxadd-req.patch
 # (fc) 1.6.0-2mdv fix initscript name in VBox.sh script
@@ -200,10 +201,11 @@ This package contains the user manual PDF file for %{name}.
 %endif
 
 %prep
-%setup -q -n %{distname}
+%setup -qn %{distname}
 %patch0 -p1 -b .gcc46
 %patch1 -p1 -b .libpath-3.2.6
 %patch2 -p1 -b .kernelrelease
+%patch3 -p1 -b .bccpath
 %patch4 -p1 -b .futex
 %patch5 -p1 -b .fix-timesync-req
 %patch6 -p1 -b .initscriptname
@@ -226,6 +228,7 @@ rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
 
 cat << EOF > LocalConfig.kmk
+VBOX_WITH_WARNINGS_AS_ERRORS:=
 VBOX_PATH_APP_PRIVATE_ARCH:=%{vboxlibdir}
 VBOX_WITH_ORIGIN:=
 VBOX_WITH_RUNPATH:=%{vboxlibdir}
