@@ -111,8 +111,10 @@ BuildRequires:	java-rpmbuild
 %if %{mdvver} < 201100
 BuildRequires:	tetex-latex
 %else
-BuildRequires:	tetex-latex >= 3.0-53
+BuildRequires:	texlive
+BuildRequires:	texlive-fontsextra
 %endif
+BuildRequires:	docbook-dtd44-xml
 %endif
 BuildRequires:	libxslt-devel
 
