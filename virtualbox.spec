@@ -34,6 +34,7 @@ Source4:	60-vboxadd.perms
 Source10:	virtualbox.png
 Source11:	virtualbox.16.png
 Source12:	virtualbox.48.png
+Patch0:		virtualbox-4.0.4-gcc46.patch
 Patch1:		VirtualBox-libpath.patch
 Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
@@ -200,6 +201,7 @@ This package contains the user manual PDF file for %{name}.
 
 %prep
 %setup -q -n %{distname}
+%patch0 -p1 -b .gcc46
 %patch1 -p1 -b .libpath-3.2.6
 %patch2 -p1 -b .kernelrelease
 %patch4 -p1 -b .futex
