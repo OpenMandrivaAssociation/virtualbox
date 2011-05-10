@@ -27,17 +27,14 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.0.6
-Release:	%mkrel 1
+Release:	%mkrel 2
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
-Source10:	virtualbox.png
-Source11:	virtualbox.16.png
-Source12:	virtualbox.48.png
 Patch0:		virtualbox-4.0.4-gcc46.patch
 Patch1:		VirtualBox-libpath.patch
-Patch2:		VirtualBox-1.5.6_OSE-kernelrelease.patch
+Patch2:		VirtualBox-4.0.6_OSE-kernelrelease.patch
 Patch3:		virtualbox-4.0.6-bccpath.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
 Patch5:		virtualbox-fix-vboxadd-req.patch
@@ -416,14 +413,6 @@ popd
   sed 's/^\(.package.*-kernel-\)\(.*-latest\)\(.*\)\\$/\1\2\3Obsoletes: vboxsf-kernel-\2 vboxvideo-kernel-\2\\n\\/' /etc/dkms/template-dkms-mkrpm.spec > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/vboxadditions-dkms-mkrpm.spec
 %endif
 
-# install icons
-mkdir -p %{buildroot}%{_iconsdir}
-install -m644 %{SOURCE10} %{buildroot}%{_iconsdir}/%{name}.png
-mkdir -p %{buildroot}%{_miconsdir}
-install -m644 %{SOURCE11} %{buildroot}%{_miconsdir}/%{name}.png
-mkdir -p %{buildroot}%{_liconsdir}
-install -m644 %{SOURCE12} %{buildroot}%{_liconsdir}/%{name}.png
-
 # install menu entries
 
 mkdir -p %{buildroot}%{_datadir}/applications
@@ -436,7 +425,23 @@ Icon=%{name}
 Type=Application
 Terminal=false
 Categories=Emulator;
+MimeType=application/x-virtualbox-vbox;application/x-virtualbox-vbox-extpack;application/x-virtualbox-ovf;application/x-virtualbox-ova;
 EOF
+
+# install mime types
+install -D -m644 src/VBox/Installer/common/virtualbox.xml %{buildroot}%{_datadir}/mime/packages/virtualbox.xml
+
+# install shipped icons for apps and mimetypes
+for i in 16 20 32 40 48 64 128; do
+	install -D -m0644 src/VBox/Resources/OSE/virtualbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/virtualbox.png
+done
+
+for i in 16 20 24 32 40 48 64 72 80 96 128 256 512; do
+	install -D -m0644 src/VBox/Resources/other/virtualbox-ova-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-ova.png
+	install -D -m0644 src/VBox/Resources/other/virtualbox-ovf-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-ovf.png
+	install -D -m0644 src/VBox/Resources/other/virtualbox-vbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-vbox.png
+	install -D -m0644 src/VBox/Resources/other/virtualbox-vbox-extpack-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-vbox-extpack.png
+done
 
 # add missing makefile for kernel module
 install -m644 src/VBox/HostDrivers/Support/linux/Makefile %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
@@ -546,10 +551,9 @@ set -x
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
 %dir /var/run/%{oname}
 # desktop integration
-%{_iconsdir}/*.png
-%{_miconsdir}/*.png
-%{_liconsdir}/*.png
+%{_iconsdir}/hicolor/*/*/*
 %{_datadir}/applications/mandriva-%{name}.desktop
+%{_datadir}/mime/packages/virtualbox.xml
 
 %files -n dkms-%{name}
 %defattr(-,root,root)
