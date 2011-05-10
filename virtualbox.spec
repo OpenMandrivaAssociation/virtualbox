@@ -29,6 +29,7 @@ Name:		virtualbox
 Version:	4.0.6
 Release:	%mkrel 1
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
+Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
 Source10:	virtualbox.png
@@ -192,7 +193,6 @@ Requires: x11-server-common %(xserver-sdk-abi-requires videodrv)
 The X.org driver for video in VirtualBox guests
 %endif
 
-%if %build_doc
 %package doc
 Summary:	The user manual PDF file for %{name}
 Group:		System/X11
@@ -200,7 +200,6 @@ BuildArch:	noarch
 
 %description doc
 This package contains the user manual PDF file for %{name}.
-%endif
 
 %prep
 %setup -qn %{distname}
@@ -436,11 +435,15 @@ Exec=%{_bindir}/%{oname}
 Icon=%{name}
 Type=Application
 Terminal=false
-Categories=X-MandrivaLinux-MoreApplications-Emulators;Emulator;
+Categories=Emulator;
 EOF
 
 # add missing makefile for kernel module
 install -m644 src/VBox/HostDrivers/Support/linux/Makefile %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
+
+%if !%build_doc
+install -m644 %{SOURCE1} %{buildroot}%{vboxlibdir}/UserManual.pdf
+%endif
 
 # remove unpackaged files
 rm -rf %{buildroot}%{vboxlibdir}/{src,sdk,testcase}
@@ -590,8 +593,6 @@ set -x
 
 %endif
 
-%if %build_doc
 %files doc
 %defattr(-,root,root)
 %{vboxlibdir}/UserManual.pdf
-%endif
