@@ -26,13 +26,12 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.0.6
-Release:	%mkrel 2
+Version:	4.0.8
+Release:	%mkrel 1
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
-Patch0:		virtualbox-4.0.4-gcc46.patch
 Patch1:		VirtualBox-libpath.patch
 Patch2:		VirtualBox-4.0.6_OSE-kernelrelease.patch
 Patch3:		virtualbox-4.0.6-bccpath.patch
@@ -200,7 +199,6 @@ This package contains the user manual PDF file for %{name}.
 
 %prep
 %setup -qn %{distname}
-%patch0 -p1 -b .gcc46
 %patch1 -p1 -b .libpath-3.2.6
 %patch2 -p1 -b .kernelrelease
 %patch3 -p1 -b .bccpath
