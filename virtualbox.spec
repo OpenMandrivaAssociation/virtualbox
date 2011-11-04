@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.0.8
-Release:	%mkrel 3
+Release:	%mkrel 4
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
@@ -408,7 +408,7 @@ make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvi
 AUTOINSTALL=yes
 EOF
 popd
-  sed 's/^\(.package.*-kernel-\)\(.*-latest\)\(.*\)\\$/\1\2\3Obsoletes: vboxsf-kernel-\2 vboxvideo-kernel-\2\\n\\/' /etc/dkms/template-dkms-mkrpm.spec > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/vboxadditions-dkms-mkrpm.spec
+
 %endif
 
 # install menu entries
