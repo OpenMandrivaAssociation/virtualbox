@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.0.8
-Release:	%mkrel 4
+Version:	4.1.6
+Release:	%mkrel 0
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
