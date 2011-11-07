@@ -122,15 +122,13 @@ Group:		Emulators
 Requires:	kmod(vboxguest) = %{version}
 Requires:	kmod(vboxsf) = %{version}
 Requires:	kmod(vboxvideo) = %{version}
-Requires:	x11-driver-input-vboxmouse
 Requires:	x11-driver-video-vboxvideo
 Requires(post):   rpm-helper
 Requires(preun):  rpm-helper
 
 %description    guest-additions
 This packages contains additions for VirtualBox OSE guest systems.
-It allows to share files with the host system, copy/paste between
-guest and host, and sync time with host.
+It allows to share files with the host system and sync time with host.
 
 %package -n	dkms-vboxadditions
 Summary:	Kernel module for VirtualBox OSE additions
@@ -149,15 +147,6 @@ Conflicts:	dkms-%{name}
 %description -n dkms-vboxadditions
 Kernel module for VirtualBox OSE additions (ideally only needs to be installed
 on the guest OS not on the host OS).
-
-%package -n	x11-driver-input-vboxmouse
-Summary:	The X.org driver for mouse in VirtualBox guests
-Group:		System/X11
-Suggests:	virtualbox-guest-additions
-Requires: x11-server-common %(xserver-sdk-abi-requires xinput)
-
-%description -n x11-driver-input-vboxmouse
-The X.org driver for mouse in VirtualBox guests
 
 %package -n	x11-driver-video-vboxvideo
 Summary:	The X.org driver for video in VirtualBox guests
@@ -316,9 +305,6 @@ install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}
 # 50-vboxmouse.conf for newer releases with Xserver >= 1.9
 %if %{mdvver} < 201100
 install -D -m644 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
-%else
-install -m644 src/VBox/Additions/linux/installer/70-xorg-vboxmouse.rules %{buildroot}%{_sysconfdir}/udev/rules.d/
-install -D -m644 src/VBox/Additions/x11/Installer/50-vboxmouse.conf %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/50-vboxmouse.conf
 %endif
 
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
@@ -341,7 +327,6 @@ vboxguest
 EOF
 
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
-  install vboxmouse_drv_%{x11_server_majorver}.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
   install vboxvideo_drv_%{x11_server_majorver}.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
@@ -527,16 +512,6 @@ set -x
 %{_sysconfdir}/udev/rules.d/vbox-additions.rules
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
-
-%files -n x11-driver-input-vboxmouse
-%defattr(-,root,root)
-%{_libdir}/xorg/modules/input/vboxmouse_drv.so
-%if %{mdvver} < 201100
-%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
-%else
-%{_sysconfdir}/udev/rules.d/70-xorg-vboxmouse.rules
-%{_sysconfdir}/X11/xorg.conf.d/50-vboxmouse.conf
-%endif
 
 %files -n x11-driver-video-vboxvideo
 %defattr(-,root,root)
