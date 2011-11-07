@@ -9,7 +9,7 @@
 %define vboxdatadir	%{_datadir}/%{name}
 
 %define build_additions 1
-%define build_doc 1
+%define build_doc 0
 
 %ifarch %{ix86}
 %define vbox_platform linux.x86
