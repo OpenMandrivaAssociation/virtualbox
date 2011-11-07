@@ -63,21 +63,13 @@ ExclusiveArch:	%{ix86} x86_64
 Requires(post):   rpm-helper
 Requires(preun):  rpm-helper
 Requires(postun): rpm-helper
-%if %{mdkversion} >= 200800
 Requires:	kmod(vboxdrv) = %{version}
-%else
-Requires:	dkms-%{name} = %{version}-%{release}
-%endif
 Conflicts:	dkms-%{name} <= 1.5.0-%{mkrel 4}
 Suggests:	%{name}-doc
 BuildRequires:	dev86, iasl
 BuildRequires:	zlib-devel
-%if %{mdkversion} >= 200700
 BuildRequires:	libxcursor-devel
 BuildRequires:	libxmu-devel
-%else
-BuildRequires:	X11-devel
-%endif
 BuildRequires:	SDL-devel, libqt4-devel >= 4.4.0
 BuildRequires:  qt4-linguist
 BuildRequires:	libIDL-devel, libext2fs-devel
@@ -86,14 +78,8 @@ BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
 BuildRequires:  python-devel
 BuildRequires:  libcap-devel
 BuildRequires:  libxrandr-devel libxinerama-devel
-%if %{mdkversion} >= 200810
 BuildRequires:	pulseaudio-devel
-%endif
-%if %{mdkversion} >= 200800
 BuildRequires:	kernel-devel-latest
-%else
-BuildRequires:	kernel-source
-%endif
 BuildRequires:  mesaglu-devel mesagl-devel libxmu-devel
 BuildRequires:  gsoap
 BuildRequires:	openssl-devel
@@ -133,13 +119,9 @@ Kernel support for VirtualBox OSE.
 %package 	guest-additions
 Summary:	Additions for VirtualBox OSE guest systems
 Group:		Emulators
-%if %{mdkversion} >= 200800
 Requires:	kmod(vboxguest) = %{version}
 Requires:	kmod(vboxsf) = %{version}
 Requires:	kmod(vboxvideo) = %{version}
-%else
-Requires:	dkms-vboxadditions = %{version}-%{release}
-%endif
 Requires:	x11-driver-input-vboxmouse
 Requires:	x11-driver-video-vboxvideo
 Requires(post):   rpm-helper
@@ -205,9 +187,6 @@ This package contains the user manual PDF file for %{name}.
 %patch4 -p1 -b .futex
 %patch5 -p1 -b .fix-timesync-req
 %patch6 -p1 -b .initscriptname
-%if %{mdkversion} < 200900
-%patch7 -p1 -b .mdv20081
-%endif
 %patch10 -p1 -b .kernel-headers-2.6.29
 %patch12 -p1 -b .disable-update
 %patch16 -p1 -b .default-to-mandriva
@@ -240,9 +219,6 @@ EOF
 export LIBPATH_LIB="%{_lib}"
 ./configure --enable-webservice \
  --with-linux=$PWD/fake-linux \
-%if %{mdkversion} <= 200800 
- --disable-pulse \
-%endif
 %if ! %build_doc
   --disable-docs
 %endif
@@ -353,11 +329,6 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 VBoxService %{buildroot}%{_sbindir}
 
-%if %{mdkversion} <= 200910
-  install -d %{buildroot}%{_sysconfdir}/security/console.perms.d/
-  install -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/security/console.perms.d/
-%endif
-
   install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 VBoxControl %{buildroot}%{_bindir}
 
@@ -368,18 +339,11 @@ pushd out/%{vbox_platform}/release/bin/additions
   cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
 vboxguest
 EOF
+
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
-%if %{mdkversion} >= 200810
   install vboxmouse_drv_%{x11_server_majorver}.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
   install vboxvideo_drv_%{x11_server_majorver}.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
-%else
-  install vboxmouse_drv_71.so %{buildroot}%{_libdir}/xorg/modules/input/vboxmouse_drv.so
-  %if %{mdkversion} >= 200800
-    install vboxvideo_drv_13.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
-  %else
-    install vboxvideo_drv_71.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
-  %endif
-%endif
+
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
   cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
 PACKAGE_NAME=vboxadditions
@@ -462,15 +426,9 @@ install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildr
 rm -rf %{buildroot}
 
 %post
-%if %mdkversion < 200900
-%update_menus
-%endif
 %_post_service %{name}
 
 %postun
-%if %mdkversion < 200900
-%clean_menus
-%endif
 if [ "$1" -ge "1" ]; then
   /sbin/service %{name} condrestart > /dev/null 2>&1 || :
 fi
@@ -566,9 +524,6 @@ set -x
 %{_sbindir}/VBoxService
 %{_bindir}/VBoxClient
 %{_bindir}/VBoxControl
-%if %{mdkversion} <= 200910
-%{_sysconfdir}/security/console.perms.d/60-vboxadd.perms
-%endif
 %{_sysconfdir}/udev/rules.d/vbox-additions.rules
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
