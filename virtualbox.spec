@@ -2,7 +2,6 @@
 %define oname  VirtualBox
 %define srcname        %{oname}-%{version}
 %define distname       %{oname}-%{version}_OSE
-%define dirname vbox-ose
 %define pkgver	%{ver}
 
 %define vboxlibdir	%{_libdir}/%{name}
@@ -102,22 +101,21 @@ BuildRequires:	docbook-dtd44-xml
 BuildRequires:	libxslt-devel
 
 %description
-VirtualBox Open Source Edition (OSE) is a general-purpose full
-virtualizer for x86 hardware.
+VirtualBox is a general-purpose full virtualizer for x86 hardware.
 
 %package -n	dkms-%{name}
-Summary:	VirtualBox OSE kernel module
+Summary:	VirtualBox kernel module
 Group:		System/Kernel and hardware
 Requires(post):	  dkms
 Requires(preun):  dkms
 Conflicts:	dkms-vboxadditions
 
 %description -n dkms-%{name}
-Kernel support for VirtualBox OSE.
+Kernel support for VirtualBox.
 
 %if %{build_additions}
 %package 	guest-additions
-Summary:	Additions for VirtualBox OSE guest systems
+Summary:	Additions for VirtualBox guest systems
 Group:		Emulators
 Requires:	kmod(vboxguest) = %{version}
 Requires:	kmod(vboxsf) = %{version}
@@ -127,11 +125,11 @@ Requires(post):   rpm-helper
 Requires(preun):  rpm-helper
 
 %description    guest-additions
-This packages contains additions for VirtualBox OSE guest systems.
+This package contains additions for VirtualBox guest systems.
 It allows to share files with the host system and sync time with host.
 
 %package -n	dkms-vboxadditions
-Summary:	Kernel module for VirtualBox OSE additions
+Summary:	Kernel module for VirtualBox additions
 Group:		System/Kernel and hardware
 Requires(post):	  dkms
 Requires(preun):  dkms
@@ -145,7 +143,7 @@ Obsoletes:	dkms-vboxvideo < %{version}-%{release}
 Conflicts:	dkms-%{name}
 
 %description -n dkms-vboxadditions
-Kernel module for VirtualBox OSE additions (ideally only needs to be installed
+Kernel module for VirtualBox additions (ideally only needs to be installed
 on the guest OS not on the host OS).
 
 %package -n	x11-driver-video-vboxvideo
@@ -201,6 +199,7 @@ VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
 VBOX_JAVA_HOME := %{java_home}
 VBOX_WITHOUT_ADDITIONS_ISO := 1
+VBOX_VERSION_STRING = $(VBOX_VERSION_STRING_RAW)-%{release}
 EOF
 
 %build
@@ -365,7 +364,7 @@ popd
 mkdir -p %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
-Name=VirtualBox OSE
+Name=VirtualBox
 Comment=Full virtualizer for x86 hardware
 Exec=%{_bindir}/%{oname}
 Icon=%{name}
