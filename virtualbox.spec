@@ -84,7 +84,7 @@ BuildRequires:  gsoap
 BuildRequires:	openssl-devel
 BuildRequires:	curl-devel
 BuildRequires:	dkms-minimal
-BuildRequires:	libpam-devel
+BuildRequires:	pam-devel
 BuildRequires:	gawk
 BuildRequires:	x11-server-devel
 BuildRequires:	java-rpmbuild
