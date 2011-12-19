@@ -26,7 +26,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.1.6
-Release:	%mkrel 0
+Release:	%mkrel 1
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
@@ -88,6 +88,7 @@ BuildRequires:	libpam-devel
 BuildRequires:	gawk
 BuildRequires:	x11-server-devel
 BuildRequires:	java-rpmbuild
+BuildRequires:  libvncserver-devel
 %if %build_doc
 # for building the user manual pdf file
 %if %{mdvver} < 201100
@@ -195,6 +196,7 @@ VBOX_PATH_APP_PRIVATE_ARCH:=%{vboxlibdir}
 VBOX_WITH_ORIGIN:=
 VBOX_WITH_RUNPATH:=%{vboxlibdir}
 VBOX_PATH_APP_PRIVATE:=%{vboxdatadir}
+VBOX_WITH_VNC:=1
 VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
 VBOX_JAVA_HOME := %{java_home}
