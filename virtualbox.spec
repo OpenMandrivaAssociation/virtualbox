@@ -46,6 +46,8 @@ Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 Patch12:	16-no-update.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 
+Patch17:	virtualbox-4.1.6-l10n-ru.patch
+
 # use courier font instead of beramono for older releases where beramono isn't
 # available in tetex-latex (it's available since only tetex-latex-3.0-53mdv2011.0)
 Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
