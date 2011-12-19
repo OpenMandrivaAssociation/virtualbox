@@ -188,6 +188,7 @@ This package contains the user manual PDF file for %{name}.
 %endif
 
 %patch18 -p1 -b .mkisofs-makeself
+%patch19 -p1 -b .l10n-ru
 
 rm -rf fake-linux/
 cp -a $(ls -1dtr /usr/src/linux-* | tail -n 1) fake-linux
