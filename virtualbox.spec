@@ -26,7 +26,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.1.6
-Release:	%mkrel 2
+Release:	%mkrel 3
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
@@ -480,9 +480,7 @@ set -x
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
 %attr(644,root,root) %{vboxlibdir}/*.gc
 %attr(644,root,root) %{vboxlibdir}/*.r0
-%if %build_doc
 %exclude %{vboxlibdir}/UserManual.pdf
-%endif
 %{vboxdatadir}
 # initscripts integration
 %{_initrddir}/%{name}
