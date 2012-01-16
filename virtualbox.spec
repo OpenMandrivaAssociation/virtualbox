@@ -73,7 +73,7 @@ BuildRequires:	libxcursor-devel
 BuildRequires:	libxmu-devel
 BuildRequires:	SDL-devel, libqt4-devel >= 4.4.0
 BuildRequires:  qt4-linguist
-BuildRequires:	libIDL-devel, libext2fs-devel
+BuildRequires:	libIDL-devel, pkgconfig(ext2fs)
 BuildRequires:	libxslt-proc, libxslt-devel
 BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
 BuildRequires:  python-devel
