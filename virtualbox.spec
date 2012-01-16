@@ -25,8 +25,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.1.6
-Release:	%mkrel 3
+Version:	4.1.8
+Release:	%mkrel 0
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
@@ -43,7 +43,7 @@ Patch7:		VirtualBox-2.0.0-mdv20081.patch
 # (hk) fix build kernel-headers-2.6.29*
 Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
-Patch12:	16-no-update.patch
+Patch12:	virtualbox-4.1.8-no-update.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 
 
@@ -74,7 +74,7 @@ BuildRequires:	libxmu-devel
 BuildRequires:	SDL-devel, libqt4-devel >= 4.4.0
 BuildRequires:  qt4-linguist
 BuildRequires:	libIDL-devel, libext2fs-devel
-BuildRequires:	libxslt-proc, libxslt-devel 
+BuildRequires:	libxslt-proc, libxslt-devel
 BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
 BuildRequires:  python-devel
 BuildRequires:  libcap-devel
@@ -187,7 +187,10 @@ This package contains the user manual PDF file for %{name}.
 %endif
 
 %patch18 -p1 -b .mkisofs-makeself
-%patch19 -p1 -b .l10n-ru
+
+# FBH: temporarly disabled due to conflicts with virtualbox 4.1.8
+# integration.
+#%patch19 -p1 -b .l10n-ru
 
 cat << EOF > LocalConfig.kmk
 VBOX_WITH_WARNINGS_AS_ERRORS:=
