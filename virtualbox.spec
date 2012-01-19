@@ -26,7 +26,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.1.8
-Release:	%mkrel 1
+Release:	%mkrel 2
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
@@ -54,7 +54,7 @@ Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
 # mkisofs: we're not going to build the additions .iso file
 # makeself: we're not going to create the stanalone .run installers
 Patch18:	virtualbox-4.0.0-dont-check-for-mkisofs-or-makeself.patch
-Patch19:	virtualbox-4.1.6-l10n-ru.patch
+Patch19:	virtualbox-4.1.8-l10n-ru.patch
 
 License:	GPLv2
 Group:		Emulators
@@ -187,10 +187,7 @@ This package contains the user manual PDF file for %{name}.
 %endif
 
 %patch18 -p1 -b .mkisofs-makeself
-
-# FBH: temporarly disabled due to conflicts with virtualbox 4.1.8
-# integration.
-#%patch19 -p1 -b .l10n-ru
+%patch19 -p1 -b .l10n-ru
 
 cat << EOF > LocalConfig.kmk
 VBOX_WITH_WARNINGS_AS_ERRORS:=
