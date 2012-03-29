@@ -1,3 +1,4 @@
+%define _build_pkgcheck_srpm 0
 %define kname  vboxdrv
 %define oname  VirtualBox
 %define srcname        %{oname}-%{version}
