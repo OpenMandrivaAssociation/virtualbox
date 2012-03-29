@@ -26,7 +26,10 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.1.8
-Release:	%mkrel 2
+Release:	3
+License:	GPLv2
+Group:		Emulators
+Url:		http://www.virtualbox.org/
 Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
@@ -46,7 +49,6 @@ Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 Patch12:	virtualbox-4.1.8-no-update.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 
-
 # use courier font instead of beramono for older releases where beramono isn't
 # available in tetex-latex (it's available since only tetex-latex-3.0-53mdv2011.0)
 Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
@@ -56,41 +58,38 @@ Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
 Patch18:	virtualbox-4.0.0-dont-check-for-mkisofs-or-makeself.patch
 Patch19:	virtualbox-4.1.8-l10n-ru.patch
 
-License:	GPLv2
-Group:		Emulators
-Url:		http://www.virtualbox.org/
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 ExclusiveArch:	%{ix86} x86_64
-Requires(post):   rpm-helper
-Requires(preun):  rpm-helper
-Requires(postun): rpm-helper
-Requires:	kmod(vboxdrv) = %{version}
-Conflicts:	dkms-%{name} <= 1.5.0-%{mkrel 4}
-Suggests:	%{name}-doc
-BuildRequires:	dev86, iasl
-BuildRequires:	zlib-devel
-BuildRequires:	libxcursor-devel
-BuildRequires:	libxmu-devel
-BuildRequires:	SDL-devel, libqt4-devel >= 4.4.0
-BuildRequires:  qt4-linguist
-BuildRequires:	libIDL-devel, pkgconfig(ext2fs)
-BuildRequires:	libxslt-proc, libxslt-devel
-BuildRequires:	hal-devel, libxt-devel, libstdc++-static-devel
-BuildRequires:  python-devel
-BuildRequires:  libcap-devel
-BuildRequires:  libxrandr-devel libxinerama-devel
-BuildRequires:	pulseaudio-devel
-BuildRequires:  mesaglu-devel mesagl-devel libxmu-devel
-BuildRequires:  gsoap
-BuildRequires:	openssl-devel
-BuildRequires:	curl-devel
+BuildRequires:	dev86
 BuildRequires:	dkms-minimal
-BuildRequires:	pam-devel
 BuildRequires:	gawk
-BuildRequires:	x11-server-devel
+BuildRequires:	gsoap
+BuildRequires:	iasl
 BuildRequires:	java-rpmbuild
-BuildRequires:  libvncserver-devel
-%if %build_doc
+BuildRequires:	qt4-linguist
+BuildRequires:	xsltproc
+BuildRequires:	libcap-devel
+BuildRequires:	libstdc++-static-devel
+BuildRequires:	openssl-devel
+BuildRequires:	pam-devel
+BuildRequires:	pkgconfig(ext2fs)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(libcurl)
+BuildRequires:	pkgconfig(libIDL-2.0)
+BuildRequires:	pkgconfig(libpulse)
+BuildRequires:	pkgconfig(libvncserver)
+BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(QtCore)
+BuildRequires:	pkgconfig(sdl)
+BuildRequires:	pkgconfig(xcursor)
+BuildRequires:	pkgconfig(xinerama)
+BuildRequires:	pkgconfig(xmu)
+BuildRequires:	pkgconfig(xorg-server)
+BuildRequires:	pkgconfig(xslt)
+BuildRequires:	pkgconfig(xrandr)
+BuildRequires:	pkgconfig(xt)
+BuildRequires:	pkgconfig(zlib)
+%if %{build_doc}
 # for building the user manual pdf file
 %if %{mdvver} < 201100
 BuildRequires:	tetex-latex
@@ -100,7 +99,10 @@ BuildRequires:	texlive-fontsextra
 %endif
 BuildRequires:	docbook-dtd44-xml
 %endif
-BuildRequires:	libxslt-devel
+
+Requires(post,preun,postun): rpm-helper
+Requires:	kmod(vboxdrv) = %{version}
+Suggests:	%{name}-doc
 
 %description
 VirtualBox is a general-purpose full virtualizer for x86 hardware.
@@ -108,9 +110,8 @@ VirtualBox is a general-purpose full virtualizer for x86 hardware.
 %package -n	dkms-%{name}
 Summary:	VirtualBox kernel module
 Group:		System/Kernel and hardware
-Requires(post):	  dkms
-Requires(preun):  dkms
-Conflicts:	dkms-vboxadditions
+Requires(post,preun): dkms
+Conflicts:	dkms-vboxadditions < 4.1.8
 
 %description -n dkms-%{name}
 Kernel support for VirtualBox.
@@ -123,8 +124,7 @@ Requires:	kmod(vboxguest) = %{version}
 Requires:	kmod(vboxsf) = %{version}
 Requires:	kmod(vboxvideo) = %{version}
 Requires:	x11-driver-video-vboxvideo
-Requires(post):   rpm-helper
-Requires(preun):  rpm-helper
+Requires(post,preun): rpm-helper
 
 %description    guest-additions
 This package contains additions for VirtualBox guest systems.
@@ -133,16 +133,12 @@ It allows to share files with the host system and sync time with host.
 %package -n	dkms-vboxadditions
 Summary:	Kernel module for VirtualBox additions
 Group:		System/Kernel and hardware
-Requires(post):	  dkms
-Requires(preun):  dkms
+Requires(post,preun): dkms
 Obsoletes:	dkms-vboxadd < %{version}-%{release}
-Provides:	dkms-vboxvfs = %{version}-%{release}
-Obsoletes:	dkms-vboxvfs < %{version}-%{release}
-Provides:	dkms-vboxsf = %{version}-%{release}
-Obsoletes:	dkms-vboxsf < %{version}-%{release}
-Provides:	dkms-vboxvideo = %{version}-%{release}
-Obsoletes:	dkms-vboxvideo < %{version}-%{release}
-Conflicts:	dkms-%{name}
+%rename		dkms-vboxvfs
+%rename		dkms-vboxsf
+%rename		dkms-vboxvideo = %{version}-%{release}
+Conflicts:	dkms-%{name} < 4.1.8
 
 %description -n dkms-vboxadditions
 Kernel module for VirtualBox additions (ideally only needs to be installed
@@ -151,10 +147,9 @@ on the guest OS not on the host OS).
 %package -n	x11-driver-video-vboxvideo
 Summary:	The X.org driver for video in VirtualBox guests
 Group:		System/X11
+Requires:	x11-server-common %(xserver-sdk-abi-requires videodrv)
 Suggests:	virtualbox-guest-additions
-Conflicts:	virtualbox-guest-additions < 2.2.0-2mdv
-Requires: x11-server-common %(xserver-sdk-abi-requires videodrv)
-
+Conflicts:	virtualbox-guest-additions < 2.2.0-2
 
 %description -n x11-driver-video-vboxvideo
 The X.org driver for video in VirtualBox guests
@@ -180,7 +175,7 @@ This package contains the user manual PDF file for %{name}.
 %patch12 -p1 -b .disable-update
 %patch16 -p1 -b .default-to-mandriva
 
-%if %build_doc
+%if %{build_doc}
 %if %{mdvver} < 201100
 %patch17 -p1 -b .courier
 %endif
@@ -204,9 +199,11 @@ EOF
 
 %build
 export LIBPATH_LIB="%{_lib}"
-./configure --enable-webservice --disable-kmods \
-%if ! %build_doc
-  --disable-docs
+./configure \
+	--enable-webservice \
+	--disable-kmods \
+%if ! %{build_doc}
+	--disable-docs
 %endif
 
 %if !%{build_additions}
@@ -218,8 +215,6 @@ echo VBOX_WITHOUT_ADDITIONS=1 >> LocalConfig.kmk
 kmk %_smp_mflags all
 
 %install
-rm -rf %{buildroot}
-
 # install vbox components
 mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir} 
 
@@ -358,7 +353,6 @@ popd
 %endif
 
 # install menu entries
-
 mkdir -p %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
@@ -390,7 +384,7 @@ done
 # add missing makefile for kernel module
 install -m644 src/VBox/HostDrivers/Support/linux/Makefile %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
 
-%if !%build_doc
+%if !%{build_doc}
 install -m644 %{SOURCE1} %{buildroot}%{vboxlibdir}/UserManual.pdf
 %endif
 
@@ -403,9 +397,6 @@ rm  -f %{buildroot}%{vboxlibdir}/xpidl
 
 # install PAM module:
 install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
-
-%clean
-rm -rf %{buildroot}
 
 %post
 %_post_service %{name}
@@ -462,7 +453,6 @@ set -x
 %endif
 
 %files
-%defattr(-,root,root)
 %config %{_sysconfdir}/vbox/vbox.cfg
 %{_bindir}/%{oname}
 %{_bindir}/VBoxManage
@@ -492,12 +482,10 @@ set -x
 %{_datadir}/mime/packages/virtualbox.xml
 
 %files -n dkms-%{name}
-%defattr(-,root,root)
 %{_usr}/src/%{name}-%{version}-%{release}
 
 %if %{build_additions}
 %files guest-additions
-%defattr(-,root,root)
 /%{_lib}/security/pam_vbox.so
 /sbin/mount.vboxsf
 %{_initrddir}/vboxadd-timesync
@@ -509,17 +497,14 @@ set -x
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
 
 %files -n x11-driver-video-vboxvideo
-%defattr(-,root,root)
 %{_libdir}/VBoxOGL*
 %{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 %{_libdir}/dri/vboxvideo_dri.so
 
 %files -n dkms-vboxadditions
-%defattr(-,root,root)
 %{_usr}/src/vbox*-%{version}-%{release}
-
 %endif
 
 %files doc
-%defattr(-,root,root)
 %{vboxlibdir}/UserManual.pdf
+
