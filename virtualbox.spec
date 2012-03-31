@@ -1,8 +1,13 @@
-%define _build_pkgcheck_srpm 0
+#define _build_pkgcheck_srpm 0
+## disabled, failing srpm_recreate because of:
+## wrote: /home/alex/BuildSystem/virtualbox/SRPMS/virtualbox-4.1.10-1.src.rpm
+## Executing "0 /home/alex/BuildSystem/virtualbox/SRPMS/virtualbox-4.1.10-1.src.rpm":
+## sh: 0 : command not found
+## error: Execution of "0 /home/alex/BuildSystem/virtualbox/SRPMS/virtualbox-4.1.10-1.src.rpm" failed.
 %define kname  vboxdrv
 %define oname  VirtualBox
-%define srcname        %{oname}-%{version}
-%define distname       %{oname}-%{version}
+%define srcname	%{oname}-%{version}
+%define distname	%{oname}-%{version}
 %define pkgver	%{ver}
 
 %define vboxlibdir	%{_libdir}/%{name}
@@ -19,8 +24,9 @@
 %endif
 
 # nuke vbox-specific dependencies
-%define _provides_exceptions ^VBox
-%define _requires_exceptions ^VBox
+#define _provides_exceptions ^VBox
+#define _requires_exceptions ^VBox
+## Disabled: see rpmlint -I external-depfilter-with-internal-depgen
 
 %define x11_server_majorver %(pkg-config --modversion xorg-server|awk -F. '{print $1$2}')
 
@@ -236,6 +242,7 @@ cat > %{buildroot}%{_sysconfdir}/vbox/vbox.cfg << EOF
 # VirtualBox installation directory
 INSTALL_DIR="%{vboxlibdir}"
 EOF
+
 mkdir -p %{buildroot}%{_bindir}
 ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/%{oname}
 ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/VBoxManage
