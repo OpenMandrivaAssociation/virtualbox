@@ -473,13 +473,13 @@ set -x
 %{_bindir}/VBoxNetDHCP
 %{_bindir}/vboxwebsrv
 %{vboxlibdir}
-%attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
-%attr(4711,root,root) %{vboxlibdir}/VBoxSDL
-%attr(4711,root,root) %{vboxlibdir}/VirtualBox
-%attr(4711,root,root) %{vboxlibdir}/VBoxNetAdpCtl
-%attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
-%attr(644,root,root) %{vboxlibdir}/*.gc
-%attr(644,root,root) %{vboxlibdir}/*.r0
+##attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
+##attr(4711,root,root) %{vboxlibdir}/VBoxSDL
+##attr(4711,root,root) %{vboxlibdir}/VirtualBox
+##attr(4711,root,root) %{vboxlibdir}/VBoxNetAdpCtl
+##attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
+##attr(644,root,root) %{vboxlibdir}/*.gc
+##attr(644,root,root) %{vboxlibdir}/*.r0
 %exclude %{vboxlibdir}/UserManual.pdf
 %{vboxdatadir}
 # initscripts integration
