@@ -2,7 +2,7 @@
 %define kname  vboxdrv
 %define oname  VirtualBox
 %define srcname        %{oname}-%{version}
-%define distname       %{oname}-%{version}_OSE
+%define distname       %{oname}-%{version}
 %define pkgver	%{ver}
 
 %define vboxlibdir	%{_libdir}/%{name}
@@ -26,12 +26,12 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.1.8
-Release:	4
+Version:	4.1.10
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
-Source0:	http://download.virtualbox.org/virtualbox/%ver/%{srcname}.tar.bz2
+Source0:	http://download.virtualbox.org/virtualbox/%{version}/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
@@ -57,7 +57,7 @@ Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
 # mkisofs: we're not going to build the additions .iso file
 # makeself: we're not going to create the stanalone .run installers
 Patch18:	virtualbox-4.0.0-dont-check-for-mkisofs-or-makeself.patch
-Patch19:	virtualbox-4.1.8-l10n-ru.patch
+#Patch19:	virtualbox-4.1.8-l10n-ru.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
@@ -183,7 +183,7 @@ This package contains the user manual PDF file for %{name}.
 %endif
 
 %patch18 -p1 -b .mkisofs-makeself
-%patch19 -p1 -b .l10n-ru
+#patch19 -p1 -b .l10n-ru
 
 cat << EOF > LocalConfig.kmk
 VBOX_WITH_WARNINGS_AS_ERRORS:=
