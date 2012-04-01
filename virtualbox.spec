@@ -78,7 +78,6 @@ BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pam-devel
-BuildRequires:	x11-server-devel
 BuildRequires:	pkgconfig(ext2fs)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glu)
@@ -93,8 +92,7 @@ BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xmu)
 BuildRequires:	pkgconfig(xorg-server)
-## Non existent Provide ?
-#BuildRequires:	pkgconfig(xslt)
+BuildRequires:	pkgconfig(libxslt)
 BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xt)
 BuildRequires:	pkgconfig(zlib)
