@@ -32,7 +32,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.1.10
+Version:	4.1.12
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -41,6 +41,7 @@ Source0:	http://download.virtualbox.org/virtualbox/%{version}/%{srcname}.tar.bz2
 Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
+Source100:	virtualbox.rpmlintrc
 Patch1:		VirtualBox-libpath.patch
 Patch2:		VirtualBox-4.0.6_OSE-kernelrelease.patch
 Patch3:		virtualbox-4.0.6-bccpath.patch
