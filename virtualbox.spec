@@ -33,7 +33,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.1.12
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -471,14 +471,34 @@ set -x
 %{_bindir}/VBoxNetAdpCtl
 %{_bindir}/VBoxNetDHCP
 %{_bindir}/vboxwebsrv
-%{vboxlibdir}
-##attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
-##attr(4711,root,root) %{vboxlibdir}/VBoxSDL
-##attr(4711,root,root) %{vboxlibdir}/VirtualBox
-##attr(4711,root,root) %{vboxlibdir}/VBoxNetAdpCtl
-##attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
-##attr(644,root,root) %{vboxlibdir}/*.gc
-##attr(644,root,root) %{vboxlibdir}/*.r0
+%{vboxlibdir}/icons
+%{vboxlibdir}/components
+%{vboxlibdir}/*.so
+%{vboxlibdir}/EfiThunk
+%{vboxlibdir}/VBoxBFE
+%{vboxlibdir}/VBoxBalloonCtrl
+%{vboxlibdir}/VBoxEFI32.fd
+%{vboxlibdir}/VBoxEFI64.fd
+%{vboxlibdir}/VBoxExtPackHelperApp
+%{vboxlibdir}/VBoxManage
+%{vboxlibdir}/VBoxSVC
+%{vboxlibdir}/VBoxTestOGL
+%{vboxlibdir}/VBoxTunctl
+%{vboxlibdir}/VBoxXPCOMIPCD
+%{vboxlibdir}/scm
+%{vboxlibdir}/vboxkeyboard.tar.bz2
+%{vboxlibdir}/vboxshell.py
+%{vboxlibdir}/vboxwebsrv
+%{vboxlibdir}/virtualbox.xml
+%{vboxlibdir}/webtest
+# this files need proper permission
+%attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
+%attr(4711,root,root) %{vboxlibdir}/VBoxSDL
+%attr(4711,root,root) %{vboxlibdir}/VirtualBox
+%attr(4711,root,root) %{vboxlibdir}/VBoxNetAdpCtl
+%attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
+%attr(644,root,root) %{vboxlibdir}/*.gc
+%attr(644,root,root) %{vboxlibdir}/*.r0
 %exclude %{vboxlibdir}/UserManual.pdf
 %{vboxdatadir}
 # initscripts integration
