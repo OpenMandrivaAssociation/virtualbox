@@ -32,7 +32,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.1.18
+Version:	4.2.0
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -42,7 +42,6 @@ Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
 Source100:	virtualbox.rpmlintrc
-Patch1:		VirtualBox-libpath.patch
 Patch2:		VirtualBox-4.0.6_OSE-kernelrelease.patch
 Patch3:		virtualbox-4.0.6-bccpath.patch
 Patch4:		VirtualBox-1.6.0_OSE-futex.patch
@@ -53,8 +52,6 @@ Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
 Patch7:		VirtualBox-2.0.0-mdv20081.patch
 # (hk) fix build kernel-headers-2.6.29*
 Patch10:	VirtualBox-kernel-headers-2.6.29.patch
-# (fc) 2.2.0-1mdv disable update notification (Debian)
-Patch12:	virtualbox-4.1.8-no-update.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 
 # use courier font instead of beramono for older releases where beramono isn't
@@ -173,14 +170,12 @@ This package contains the user manual PDF file for %{name}.
 
 %prep
 %setup -qn %{distname}
-%patch1 -p1 -b .libpath-3.2.6
 %patch2 -p1 -b .kernelrelease
 %patch3 -p1 -b .bccpath
 %patch4 -p1 -b .futex
 %patch5 -p1 -b .fix-timesync-req
 %patch6 -p1 -b .initscriptname
 %patch10 -p1 -b .kernel-headers-2.6.29
-%patch12 -p1 -b .disable-update
 %patch16 -p1 -b .default-to-mandriva
 
 %if %{build_doc}
@@ -471,10 +466,13 @@ set -x
 %{_bindir}/VBoxNetAdpCtl
 %{_bindir}/VBoxNetDHCP
 %{_bindir}/vboxwebsrv
+%{vboxlibdir}/dtrace
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
+%{vboxlibdir}/load.sh
+%{vboxlibdir}/loadall.sh
 %{vboxlibdir}/*.so
-%{vboxlibdir}/EfiThunk
+%{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBFE
 %{vboxlibdir}/VBoxBalloonCtrl
 %{vboxlibdir}/VBoxEFI32.fd
@@ -484,8 +482,8 @@ set -x
 %{vboxlibdir}/VBoxSVC
 %{vboxlibdir}/VBoxTestOGL
 %{vboxlibdir}/VBoxTunctl
+%{vboxlibdir}/VBoxVMMPreload
 %{vboxlibdir}/VBoxXPCOMIPCD
-%{vboxlibdir}/scm
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
 %{vboxlibdir}/vboxwebsrv
