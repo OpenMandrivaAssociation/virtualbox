@@ -55,7 +55,7 @@ Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 # (Debian) Only display warnings about broken USB support when it's actually
 # used (i.e. the machine has USB device filters)
 Patch11: VirtualBox-4.1.8-usb-warning-filters.patch
-# (fc) 2.2.0-1mdv disable update notification (Debian)
+
 Patch16:	virtualbox-default-to-mandriva.patch
 
 # use courier font instead of beramono for older releases where beramono isn't
