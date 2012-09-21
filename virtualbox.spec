@@ -56,7 +56,6 @@ Patch10:	VirtualBox-kernel-headers-2.6.29.patch
 # used (i.e. the machine has USB device filters)
 Patch11: VirtualBox-4.1.8-usb-warning-filters.patch
 # (fc) 2.2.0-1mdv disable update notification (Debian)
-Patch12:	virtualbox-4.1.8-no-update.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 
 # use courier font instead of beramono for older releases where beramono isn't
@@ -186,7 +185,6 @@ This package contains the user manual PDF file for %{name}.
 %patch6 -p1 -b .initscriptname
 %patch10 -p1 -b .kernel-headers-2.6.29
 %patch11 -p1 -b .usb-warnings
-%patch12 -p1 -b .disable-update
 %patch16 -p1 -b .default-to-mandriva
 
 %if %{build_doc}
