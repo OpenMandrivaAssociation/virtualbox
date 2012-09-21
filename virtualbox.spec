@@ -160,7 +160,8 @@ on the guest OS not on the host OS).
 %package -n	x11-driver-video-vboxvideo
 Summary:	The X.org driver for video in VirtualBox guests
 Group:		System/X11
-Requires:	x11-server-common %(xserver-sdk-abi-requires videodrv)
+#Requires:	x11-server-common %(xserver-sdk-abi-requires videodrv)
+Requires:	x11-server-common
 Suggests:	virtualbox-guest-additions
 Conflicts:	virtualbox-guest-additions < 2.2.0-2
 
