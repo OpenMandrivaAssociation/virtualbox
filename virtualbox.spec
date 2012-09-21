@@ -33,7 +33,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.2.0
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -52,6 +52,11 @@ Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
 Patch7:		VirtualBox-2.0.0-mdv20081.patch
 # (hk) fix build kernel-headers-2.6.29*
 Patch10:	VirtualBox-kernel-headers-2.6.29.patch
+# (Debian) Only display warnings about broken USB support when it's actually
+# used (i.e. the machine has USB device filters)
+Patch11: VirtualBox-4.1.8-usb-warning-filters.patch
+# (fc) 2.2.0-1mdv disable update notification (Debian)
+Patch12:	virtualbox-4.1.8-no-update.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 
 # use courier font instead of beramono for older releases where beramono isn't
@@ -84,7 +89,10 @@ BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
 BuildRequires:	pkgconfig(python)
-BuildRequires:	pkgconfig(QtCore)
+# for now requires full qt4-devel
+# as qtcore has been upgraded to qt5
+BuildRequires:	qt4-devel
+#BuildRequires:	pkgconfig(QtCore)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
@@ -176,6 +184,8 @@ This package contains the user manual PDF file for %{name}.
 %patch5 -p1 -b .fix-timesync-req
 %patch6 -p1 -b .initscriptname
 %patch10 -p1 -b .kernel-headers-2.6.29
+%patch11 -p1 -b .usb-warnings
+%patch12 -p1 -b .disable-update
 %patch16 -p1 -b .default-to-mandriva
 
 %if %{build_doc}
@@ -203,7 +213,6 @@ EOF
 %build
 export LIBPATH_LIB="%{_lib}"
 ./configure \
-	--enable-webservice \
 	--disable-kmods \
 %if ! %{build_doc}
 	--disable-docs
@@ -282,9 +291,14 @@ AUTOINSTALL=yes
 EOF
 
 # install udev rules
+# install udev rules
 mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
 cat > %{buildroot}%{_sysconfdir}/udev/rules.d/%{name}.rules << EOF
-KERNEL=="%{kname}", MODE="0600"
+KERNEL=="%{kname}", NAME="vboxdrv", OWNER="root", GROUP="root", MODE="0600"
+SUBSYSTEM=="usb_device", ACTION=="add", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh \$major \$minor \$attr{bDeviceClass} vboxusers"
+SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh \$major \$minor \$attr{bDeviceClass} vboxusers"
+SUBSYSTEM=="usb_device", ACTION=="remove", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh --remove \$major \$minor"
+SUBSYSTEM=="usb", ACTION=="remove", ENV{DEVTYPE}=="usb_device", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh --remove \$major \$minor"
 EOF
 cat > %{buildroot}%{_sysconfdir}/udev/rules.d/vbox-additions.rules << EOF
 KERNEL=="vboxguest", NAME="vboxguest", OWNER="root", MODE="0660"
@@ -404,11 +418,13 @@ install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildr
 
 %post
 %_post_service %{name}
+%_add_group_helper %{name} 1 vboxusers
 
 %postun
 if [ "$1" -ge "1" ]; then
   /sbin/service %{name} condrestart > /dev/null 2>&1 || :
 fi
+%_del_group_helper %{name} 1 vboxusers
 
 %preun
 %_preun_service %{name}
@@ -438,6 +454,17 @@ set -x
 %if %{build_additions}
 %post guest-additions
 %_post_service vboxadd-timesync
+
+# (Debian) Build usb device tree
+for i in /sys/bus/usb/devices/*; do
+if test -r "$i/dev"; then
+dev="`cat "$i/dev" 2> /dev/null || true`"
+major="`expr "$dev" : '\(.*\):' 2> /dev/null || true`"
+minor="`expr "$dev" : '.*:\(.*\)' 2> /dev/null || true`"
+class="`cat $i/bDeviceClass 2> /dev/null || true`"
+/usr/share/virtualbox/VBoxCreateUSBNode.sh "$major" "$minor" "$class" vboxusers 2>/dev/null || true
+fi
+done
 
 %preun guest-additions
 %_preun_service vboxadd-timesync
@@ -486,9 +513,7 @@ set -x
 %{vboxlibdir}/VBoxXPCOMIPCD
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
-%{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/virtualbox.xml
-%{vboxlibdir}/webtest
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
