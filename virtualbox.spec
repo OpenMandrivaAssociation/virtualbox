@@ -96,7 +96,7 @@ BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xmu)
-BuildRequires:	pkgconfig(xorg-server)
+BuildRequires:	pkgconfig(xorg-server) >= 1.13
 BuildRequires:	pkgconfig(libxslt)
 BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xt)
