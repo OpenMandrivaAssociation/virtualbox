@@ -32,7 +32,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.2.0
+Version:	4.2.2
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -42,30 +42,33 @@ Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
 Source100:	virtualbox.rpmlintrc
-Patch2:		VirtualBox-4.0.6_OSE-kernelrelease.patch
-Patch3:		virtualbox-4.0.6-bccpath.patch
-Patch4:		VirtualBox-1.6.0_OSE-futex.patch
-Patch5:		virtualbox-fix-vboxadd-req.patch
+Patch2:		VirtualBox-4.1.8-kernelrelease.patch
+Patch3:		VirtualBox-4.1.8-futex.patch
+Patch4:		virtualbox-fix-vboxadd-req.patch
 # (fc) 1.6.0-2mdv fix initscript name in VBox.sh script
-Patch6:		VirtualBox-1.6.0_OSE-initscriptname.patch
-# (fc) 2.0.0-2mdv fix QT4 detection on x86-64 on Mdv 2008.1
-Patch7:		VirtualBox-2.0.0-mdv20081.patch
-# (hk) fix build kernel-headers-2.6.29*
-Patch10:	VirtualBox-kernel-headers-2.6.29.patch
+Patch5:		VirtualBox-4.1.8-initscriptname.patch
+# (tmb) disable update notification (OpenSuSe)
+# (tmb) TODO: rewrite
+#Patch7:		VirtualBox-4.1.8-no-update.patch
+# don't check for:
+# - mkisofs: we're not going to build the additions .iso file
+# - makeself: we're not going to create the stanalone .run installers
+Patch9:		VirtualBox-4.1.8-dont-check-for-mkisofs-or-makeself.patch
+# (Debian) build X server drivers only for the selected version
+# but we're not using the full patch, only the parts we need (e.g. the section
+# about Debian Lenny), so we regenerate the patch
+Patch10:	VirtualBox-4.2.2-system-xorg.patch
 # (Debian) Only display warnings about broken USB support when it's actually
 # used (i.e. the machine has USB device filters)
-Patch11: VirtualBox-4.1.8-usb-warning-filters.patch
+Patch11:	VirtualBox-4.1.8-usb-warning-filters.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
 
 # use courier font instead of beramono for older releases where beramono isn't
 # available in tetex-latex (it's available since only tetex-latex-3.0-53mdv2011.0)
-Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
-# don't check for:
-# mkisofs: we're not going to build the additions .iso file
-# makeself: we're not going to create the stanalone .run installers
-Patch18:	virtualbox-4.0.0-dont-check-for-mkisofs-or-makeself.patch
+#Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
 #Patch19:	virtualbox-4.1.8-l10n-ru.patch
+Patch20:	VirtualBox-4.2.2-remove-missing-translation.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
@@ -178,23 +181,7 @@ This package contains the user manual PDF file for %{name}.
 
 %prep
 %setup -qn %{distname}
-%patch2 -p1 -b .kernelrelease
-%patch3 -p1 -b .bccpath
-%patch4 -p1 -b .futex
-%patch5 -p1 -b .fix-timesync-req
-%patch6 -p1 -b .initscriptname
-%patch10 -p1 -b .kernel-headers-2.6.29
-%patch11 -p1 -b .usb-warnings
-%patch16 -p1 -b .default-to-mandriva
-
-%if %{build_doc}
-%if %{mdvver} < 201100
-%patch17 -p1 -b .courier
-%endif
-%endif
-
-%patch18 -p1 -b .mkisofs-makeself
-#patch19 -p1 -b .l10n-ru
+%apply_patches
 
 cat << EOF > LocalConfig.kmk
 VBOX_WITH_WARNINGS_AS_ERRORS:=
@@ -223,7 +210,7 @@ echo VBOX_WITHOUT_ADDITIONS=1 >> LocalConfig.kmk
 %endif
 
 . ./env.sh
-kmk %_smp_mflags all
+kmk %{_smp_mflags} all
 
 %install
 # install vbox components
@@ -335,8 +322,7 @@ pushd out/%{vbox_platform}/release/bin/additions
 vboxguest
 EOF
 
-  install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
-  install vboxvideo_drv_%{x11_server_majorver}.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+  install ../vboxvideo_drv.so -D %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
   cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
@@ -558,4 +544,3 @@ set -x
 
 %files doc
 %{vboxlibdir}/UserManual.pdf
-
