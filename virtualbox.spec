@@ -204,6 +204,7 @@ export LIBPATH_LIB="%{_lib}"
 %if ! %{build_doc}
 	--disable-docs
 %endif
+echo VBOX_GCC_OPT="%{optflags}" >> LocalConfig.kmk
 
 %if !%{build_additions}
 sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
