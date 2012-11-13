@@ -1,0 +1,20 @@
+--- VirtualBox-4.2.2/src/VBox/Frontends/VirtualBox/nls/ApprovedLanguages.kmk~	2012-10-18 16:22:52.000000000 +0200
++++ VirtualBox-4.2.2/src/VBox/Frontends/VirtualBox/nls/ApprovedLanguages.kmk	2012-10-25 09:53:33.962193785 +0200
+@@ -23,7 +23,6 @@ VBOX_APPROVED_GUI_LANGUAGES := \
+ 	de    \
+ 	en    \
+ 	es    \
+-	fa_IR \
+ 	hu    \
+ 	it    \
+ 	ja    \
+--- VirtualBox-4.2.2/src/VBox/Frontends/VirtualBox/VBoxUI.pro~	2012-10-18 16:22:47.000000000 +0200
++++ VirtualBox-4.2.2/src/VBox/Frontends/VirtualBox/VBoxUI.pro	2012-10-25 09:53:10.003887784 +0200
+@@ -63,7 +63,6 @@ TRANSLATIONS = \
+ 	nls/VirtualBox_es.ts \
+ 	nls/VirtualBox_eu.ts \
+ 	nls/VirtualBox_fi.ts \
+-	nls/VirtualBox_fa_IR.ts \
+ 	nls/VirtualBox_fr.ts \
+ 	nls/VirtualBox_gl_ES.ts \
+ 	nls/VirtualBox_hu.ts \

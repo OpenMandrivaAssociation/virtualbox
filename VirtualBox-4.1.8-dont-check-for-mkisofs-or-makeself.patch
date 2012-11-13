@@ -1,0 +1,21 @@
+diff -Nurp VirtualBox-4.1.8_OSE-p5/configure VirtualBox-4.1.8_OSE-p9/configure
+--- VirtualBox-4.1.8_OSE-p5/configure	2011-12-24 15:18:03.271635525 +0200
++++ VirtualBox-4.1.8_OSE-p9/configure	2011-12-24 15:42:37.404156620 +0200
+@@ -2549,7 +2549,7 @@ check_gcc
+ # don't check for yasm for the time beeing as 0.40 and 0.50 both have known bugs
+ # [ "$OS" != "darwin" ] && check_yasm
+ [ "$OS" != "darwin"  ] && check_xsltproc
+-[ "$OS" != "darwin"  ] && check_mkisofs
++#[ "$OS" != "darwin"  ] && check_mkisofs
+ 
+ # the libraries
+ [ "$OS" != "darwin"  ] && check_pthread
+@@ -2607,7 +2607,7 @@ if [ "$OS" = "linux" ]; then
+   check_compiler_h
+   [ "$BUILD_MACHINE" = "amd64" -a $WITH_VMMRAW -eq 1 ] && check_32bit
+   # tools/common/makeself*
+-  [ $OSE -ge 1 ] && check_makeself
++ # [ $OSE -ge 1 ] && check_makeself
+ fi
+ 
+ [ -n "$SETUP_WINE" ] && setup_wine

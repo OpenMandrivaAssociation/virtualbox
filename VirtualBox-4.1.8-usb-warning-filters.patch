@@ -1,0 +1,19 @@
+--- ./src/VBox/Frontends/VirtualBox/src/settings/UISettingsDialogSpecific.cpp.usb	2012-09-20 23:43:00.716556922 -0300
++++ ./src/VBox/Frontends/VirtualBox/src/settings/UISettingsDialogSpecific.cpp	2012-09-20 23:45:03.484555275 -0300
+@@ -55,6 +55,7 @@
+ 
+ /* COM includes: */
+ #include "CUSBController.h"
++#include "CUSBDeviceFilter.h"
+ 
+ #if 0 /* Global USB filters are DISABLED now: */
+ # define ENABLE_GLOBAL_USB
+@@ -1107,7 +1108,7 @@ bool UISettingsDialogMachine::isPageAvai
+             /* Get the USB controller object: */
+             CUSBController controller = m_machine.GetUSBController();
+             /* Show the machine error message if any: */
+-            if (!m_machine.isReallyOk() && !controller.isNull() && controller.GetEnabled())
++            if (!m_machine.isReallyOk() && !controller.isNull() && controller.GetEnabled() && (controller.GetDeviceFilters().size() != 0))
+                 msgCenter().cannotAccessUSB(m_machine);
+             /* Check if USB is implemented: */
+             if (controller.isNull() || !controller.GetProxyAvailable())

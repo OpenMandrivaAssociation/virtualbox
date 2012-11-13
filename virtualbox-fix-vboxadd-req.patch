@@ -1,0 +1,17 @@
+--- VirtualBox-4.1.2_OSE/src/VBox/Additions/linux/installer/vboxadd-service.sh.0004~	2011-08-15 14:28:49.000000000 +0200
++++ VirtualBox-4.1.2_OSE/src/VBox/Additions/linux/installer/vboxadd-service.sh	2011-08-17 21:33:39.000000000 +0200
+@@ -18,10 +18,12 @@
+ #
+ ### BEGIN INIT INFO
+ # Provides:       vboxadd-service
+-# Required-Start: vboxadd
+-# Required-Stop:  vboxadd
++# Should-Start:   dkms
+ # Default-Start:  2 3 4 5
+ # Default-Stop:   0 1 6
++# Required-Start:
++# Required-Stop:
++# Short-Description: VirtualBox Additions Service
+ # Description:    VirtualBox Additions Service
+ ### END INIT INFO
+ 

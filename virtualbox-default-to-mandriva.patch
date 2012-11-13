@@ -1,0 +1,19 @@
+--- VirtualBox-4.2.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp.bero	2012-09-14 23:01:47.260704397 +0200
++++ VirtualBox-4.2.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2012-09-14 23:02:14.994853287 +0200
+@@ -200,12 +200,12 @@ void UINameAndSystemEditor::sltFamilyCha
+         if (iIndexWinXP != -1)
+             m_pTypeCombo->setCurrentIndex(iIndexWinXP);
+     }
+-    /* Or select Ubuntu item for Linux family as default: */
++    /* Or select Mandriva item for Linux family as default: */
+     else if (strFamilyId == "Linux")
+     {
+-        int iIndexUbuntu = m_pTypeCombo->findData("Ubuntu", TypeID);
+-        if (iIndexUbuntu != -1)
+-            m_pTypeCombo->setCurrentIndex(iIndexUbuntu);
++        int iIndexMandriva = m_pTypeCombo->findData("Mandriva", TypeID);
++        if (iIndexMandriva != -1)
++            m_pTypeCombo->setCurrentIndex(iIndexMandriva);
+     }
+     /* Else simply select the first one present: */
+     else m_pTypeCombo->setCurrentIndex(0);
