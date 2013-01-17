@@ -1,7 +1,4 @@
 ---
 sources:
-  60-vboxadd.perms: 4491f0c13603e446a0914fb444c0229c73957631
   UserManual.pdf: 10144b8deaf19c0c8a075ef825bb78d8a61bfe67
   VirtualBox-4.2.2.tar.bz2: fe82772e336b5de1a72ff71e8d3e5f5a57ddef52
-  virtualbox.init: 061ddb9b510433540843473bdb073d62d1e08639
-  virtualbox.rpmlintrc: 528944a44d229d7c97de9892791f467cbb8934e3

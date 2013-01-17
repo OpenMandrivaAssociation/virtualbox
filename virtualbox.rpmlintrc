@@ -1,0 +1,8 @@
+# Whether or not those are intentional needs further investigation
+# virtualbox.x86_64: E: unstripped-binary-or-object (Badness: 50) /usr/lib64/virtualbox/VMMR0.r0
+# virtualbox.x86_64: E: unstripped-binary-or-object (Badness: 50) /usr/lib64/virtualbox/VBoxDD2GC.gc
+# virtualbox.x86_64: E: unstripped-binary-or-object (Badness: 50) /usr/lib64/virtualbox/VBoxDDGC.gc
+# virtualbox.x86_64: E: unstripped-binary-or-object (Badness: 50) /usr/lib64/virtualbox/VMMGC.gc
+# virtualbox.x86_64: E: unstripped-binary-or-object (Badness: 50) /usr/lib64/virtualbox/VBoxDD2R0.r0
+# virtualbox.x86_64: E: unstripped-binary-or-object (Badness: 50) /usr/lib64/virtualbox/VBoxDDR0.r0
+addFilter("E: unstripped-binary-or-object")

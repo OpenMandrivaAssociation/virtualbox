@@ -1,0 +1,2 @@
+<vboxadd>=/dev/vboxguest* /dev/vboxuser*
+<console> 0600 <vboxadd> 0600 root
