@@ -68,7 +68,7 @@ Patch16:	virtualbox-default-to-mandriva.patch
 # available in tetex-latex (it's available since only tetex-latex-3.0-53mdv2011.0)
 #Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
 #Patch19:	virtualbox-4.1.8-l10n-ru.patch
-Patch20:	VirtualBox-4.2.2-remove-missing-translation.patch
+#Patch20:	VirtualBox-4.2.2-remove-missing-translation.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
