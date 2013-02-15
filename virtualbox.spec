@@ -105,6 +105,7 @@ BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xt)
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(xcomposite)
+BuildRequires:	pkgconfig(devmapper)
 %if %{build_doc}
 # for building the user manual pdf file
 %if %{mdvver} < 201100
