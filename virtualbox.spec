@@ -506,6 +506,8 @@ set -x
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
 %{vboxlibdir}/virtualbox.xml
+%{vboxlibdir}/helpers
+%{vboxlibdir}/scripts
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
