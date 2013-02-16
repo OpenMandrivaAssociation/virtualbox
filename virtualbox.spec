@@ -63,6 +63,7 @@ Patch10:	VirtualBox-4.2.2-system-xorg.patch
 Patch11:	VirtualBox-4.1.8-usb-warning-filters.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
+Patch17:        VirtualBox-4.2.6-etherboot_x86.patch
 
 # use courier font instead of beramono for older releases where beramono isn't
 # available in tetex-latex (it's available since only tetex-latex-3.0-53mdv2011.0)
