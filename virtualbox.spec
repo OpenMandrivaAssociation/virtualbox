@@ -32,7 +32,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.2.10
+Version:	4.2.12
 Release:	1
 License:	GPLv2
 Group:		Emulators
