@@ -57,7 +57,7 @@ Patch9:		VirtualBox-4.1.8-dont-check-for-mkisofs-or-makeself.patch
 # (Debian) build X server drivers only for the selected version
 # but we're not using the full patch, only the parts we need (e.g. the section
 # about Debian Lenny), so we regenerate the patch
-Patch10:	VirtualBox-4.2.2-system-xorg.patch
+Patch10:	VirtualBox-4.2.12-system-xorg.patch
 # (Debian) Only display warnings about broken USB support when it's actually
 # used (i.e. the machine has USB device filters)
 Patch11:	VirtualBox-4.1.8-usb-warning-filters.patch
