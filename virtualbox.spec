@@ -33,7 +33,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.2.12
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -202,6 +202,8 @@ EOF
 %build
 export LIBPATH_LIB="%{_lib}"
 ./configure \
+	--enable-vnc \
+	--enable-webservice \
 	--disable-kmods \
 %if ! %{build_doc}
 	--disable-docs
