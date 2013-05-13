@@ -203,7 +203,6 @@ EOF
 export LIBPATH_LIB="%{_lib}"
 ./configure \
 	--enable-vnc \
-	--enable-webservice \
 	--disable-kmods \
 %if ! %{build_doc}
 	--disable-docs
