@@ -510,6 +510,7 @@ set -x
 %{vboxlibdir}/virtualbox.xml
 %{vboxlibdir}/helpers
 %{vboxlibdir}/scripts
+%{vboxlibdir}/ExtensionPacks
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
