@@ -64,6 +64,7 @@ Patch11:	VirtualBox-4.1.8-usb-warning-filters.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch17:        VirtualBox-4.2.6-etherboot_x86.patch
+Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 
 # use courier font instead of beramono for older releases where beramono isn't
 # available in tetex-latex (it's available since only tetex-latex-3.0-53mdv2011.0)
@@ -203,6 +204,7 @@ EOF
 export LIBPATH_LIB="%{_lib}"
 ./configure \
 	--enable-vnc \
+	--enable-webservice \
 	--disable-kmods \
 %if ! %{build_doc}
 	--disable-docs
@@ -508,6 +510,8 @@ set -x
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
 %{vboxlibdir}/virtualbox.xml
+%{vboxlibdir}/vboxwebsrv
+%{vboxlibdir}/webtest
 %{vboxlibdir}/helpers
 %{vboxlibdir}/scripts
 %{vboxlibdir}/ExtensionPacks
