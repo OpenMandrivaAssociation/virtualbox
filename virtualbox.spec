@@ -1,9 +1,3 @@
-#define _build_pkgcheck_srpm 0
-## disabled, failing srpm_recreate because of:
-## wrote: /home/alex/BuildSystem/virtualbox/SRPMS/virtualbox-4.1.10-1.src.rpm
-## Executing "0 /home/alex/BuildSystem/virtualbox/SRPMS/virtualbox-4.1.10-1.src.rpm":
-## sh: 0 : command not found
-## error: Execution of "0 /home/alex/BuildSystem/virtualbox/SRPMS/virtualbox-4.1.10-1.src.rpm" failed.
 %define kname  vboxdrv
 %define oname  VirtualBox
 %define srcname	%{oname}-%{version}
@@ -32,13 +26,13 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.2.12
-Release:	3
+Version:	4.2.14
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
-Source0:	http://download.virtualbox.org/virtualbox/%{version}/%{srcname}.tar.bz2
-Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
+Source0:	http://dlc.sun.com.edgesuite.net/virtualbox/%{version}/%{srcname}.tar.bz2
+Source1:	http://dlc.sun.com.edgesuite.net/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
 Source100:	virtualbox.rpmlintrc
@@ -78,7 +72,7 @@ BuildRequires:	dkms-minimal
 BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	iasl
-BuildRequires:	java-rpmbuild
+BuildRequires:	java-1.7.0-openjdk-devel
 BuildRequires:	qt4-linguist
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
@@ -196,7 +190,7 @@ VBOX_PATH_APP_PRIVATE:=%{vboxdatadir}
 VBOX_WITH_VNC:=1
 VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
-VBOX_JAVA_HOME := %{java_home}
+VBOX_JAVA_HOME := /usr/lib/jvm/java-1.7.0
 VBOX_WITHOUT_ADDITIONS_ISO := 1
 EOF
 

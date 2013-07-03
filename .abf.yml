@@ -1,2 +1,5 @@
-sources:
+removed_sources:
   VirtualBox-4.2.12.tar.bz2: df9f2f7fd9c97524e287903df4b65799cbb3fedf
+sources:
+  UserManual.pdf: 97f742e0fef4cd881dac721c96eab309a4cb4396
+  VirtualBox-4.2.14.tar.bz2: fe05d20f89fd856cd65c5e0d72775f85186431ca
