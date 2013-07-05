@@ -26,7 +26,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.2.14
+Version:	4.2.16
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -59,6 +59,7 @@ Patch11:	VirtualBox-4.1.8-usb-warning-filters.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch17:        VirtualBox-4.2.6-etherboot_x86.patch
 Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
+Patch19:	VirtualBox-4.2.14-dont-optimize-away-vboxvideoModuleData.patch
 
 # use courier font instead of beramono for older releases where beramono isn't
 # available in tetex-latex (it's available since only tetex-latex-3.0-53mdv2011.0)
