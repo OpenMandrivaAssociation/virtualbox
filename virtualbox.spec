@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.2.16
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -59,7 +59,6 @@ Patch11:	VirtualBox-4.1.8-usb-warning-filters.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch17:        VirtualBox-4.2.6-etherboot_x86.patch
 Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
-Patch19:	VirtualBox-4.2.14-dont-optimize-away-vboxvideoModuleData.patch
 
 # use courier font instead of beramono for older releases where beramono isn't
 # available in tetex-latex (it's available since only tetex-latex-3.0-53mdv2011.0)
@@ -328,7 +327,7 @@ pushd out/%{vbox_platform}/release/bin/additions
 vboxguest
 EOF
 
-  install ../vboxvideo_drv.so -D %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+  install vboxvideo_drv_%{x11_server_majorver}.so -D %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
   cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
