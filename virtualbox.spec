@@ -192,6 +192,12 @@ VBOX_WITHOUT_ADDITIONS_ISO := 1
 EOF
 
 %build
+# FIXME: gold linker dies with internal error in segment_precedes, at ../../gold/layout.cc:3250
+export CC="%{__cc} -fuse-ld=bfd"
+export CXX="%{__cxx} -fuse-ld=bfd"
+mkdir -p BFD
+ln -sf /usr/bin/ld.bfd BFD/ld
+export PATH=$PWD/BFD:$PATH
 export LIBPATH_LIB="%{_lib}"
 ./configure \
 	--enable-vnc \
