@@ -495,7 +495,6 @@ set -x
 %{vboxlibdir}/*.debug
 %{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/VBoxAutostart
-%{vboxlibdir}/VBoxBFE
 %{vboxlibdir}/VBoxBalloonCtrl
 %{vboxlibdir}/VBoxEFI32.fd
 %{vboxlibdir}/VBoxEFI64.fd
