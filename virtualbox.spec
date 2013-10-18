@@ -492,6 +492,8 @@ set -x
 %{vboxlibdir}/load.sh
 %{vboxlibdir}/loadall.sh
 %{vboxlibdir}/*.so
+%{vboxlibdir}/*.debug
+%{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBFE
 %{vboxlibdir}/VBoxBalloonCtrl
@@ -499,10 +501,12 @@ set -x
 %{vboxlibdir}/VBoxEFI64.fd
 %{vboxlibdir}/VBoxExtPackHelperApp
 %{vboxlibdir}/VBoxManage
+%{vboxlibdir}/VBoxNetNAT
 %{vboxlibdir}/VBoxSVC
 %{vboxlibdir}/VBoxTestOGL
 %{vboxlibdir}/VBoxTunctl
 %{vboxlibdir}/VBoxVMMPreload
+%{vboxlibdir}/VBoxVolInfo
 %{vboxlibdir}/VBoxXPCOMIPCD
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
