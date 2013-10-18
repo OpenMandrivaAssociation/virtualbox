@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.3.0
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -183,7 +183,7 @@ VBOX_WITH_WARNINGS_AS_ERRORS:=
 VBOX_PATH_APP_PRIVATE_ARCH:=%{vboxlibdir}
 VBOX_WITH_ORIGIN:=
 VBOX_WITH_RUNPATH:=%{vboxlibdir}
-VBOX_PATH_APP_PRIVATE:=%{vboxdatadir}
+VBOX_PATH_APP_PRIVATE:=%{vboxlibdir}
 VBOX_WITH_VNC:=1
 VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
