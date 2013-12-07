@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.3.0
-Release:	4
+Release:	5
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
