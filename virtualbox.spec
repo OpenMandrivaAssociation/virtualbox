@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.3.0
-Release:	6
+Version:	4.3.6
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -36,6 +36,7 @@ Source1:	http://dlc.sun.com.edgesuite.net/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
 Source100:	virtualbox.rpmlintrc
+Patch1:		virtualbox-xorg-1.15.patch
 Patch2:		VirtualBox-4.1.8-kernelrelease.patch
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
@@ -68,7 +69,7 @@ BuildRequires:	dkms-minimal
 BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	iasl
-BuildRequires:	java-1.7.0-openjdk-devel
+BuildRequires:	java-1.6.0-openjdk-devel
 BuildRequires:	qt4-linguist
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
@@ -109,6 +110,8 @@ BuildRequires:	texlive-fontsextra
 %endif
 BuildRequires:	docbook-dtd44-xml
 %endif
+# bogus devel-file-in-non-devel-package errors in dkms subpackage
+BuildConflicts:	rpmlint < 1.4-37
 
 Requires(post,preun,postun): rpm-helper
 Requires:	kmod(vboxdrv) = %{version}
@@ -187,7 +190,7 @@ VBOX_PATH_APP_PRIVATE:=%{vboxlibdir}
 VBOX_WITH_VNC:=1
 VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
-VBOX_JAVA_HOME := /usr/lib/jvm/java-1.7.0
+VBOX_JAVA_HOME := /usr/lib/jvm/java-1.6.0
 VBOX_WITHOUT_ADDITIONS_ISO := 1
 EOF
 
@@ -212,7 +215,9 @@ echo VBOX_GCC_OPT="%{optflags}" >> LocalConfig.kmk
 %endif
 echo TOOL_GCC_LDFLAGS="%{ldflags}" >> LocalConfig.kmk
 
-%if !%{build_additions}
+%if %{build_additions}
+echo XSERVER_VERSION=%{x11_server_majorver} >>LocalConfig.kmk
+%else
 sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
 echo VBOX_WITHOUT_ADDITIONS=1 >> LocalConfig.kmk
 %endif
@@ -330,7 +335,7 @@ pushd out/%{vbox_platform}/release/bin/additions
 vboxguest
 EOF
 
-  install vboxvideo_drv_%{x11_server_majorver}.so -D %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+  install vboxvideo_drv.so -D %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
   cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
