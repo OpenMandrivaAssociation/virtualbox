@@ -69,7 +69,7 @@ BuildRequires:	dkms-minimal
 BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	iasl
-BuildRequires:	java-1.6.0-openjdk-devel
+BuildRequires:	java-1.7.0-openjdk-devel
 BuildRequires:	qt4-linguist
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
@@ -190,7 +190,7 @@ VBOX_PATH_APP_PRIVATE:=%{vboxlibdir}
 VBOX_WITH_VNC:=1
 VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
-VBOX_JAVA_HOME := /usr/lib/jvm/java-1.6.0
+VBOX_JAVA_HOME := /usr/lib/jvm/java-1.7.0
 VBOX_WITHOUT_ADDITIONS_ISO := 1
 EOF
 
