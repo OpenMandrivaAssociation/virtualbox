@@ -26,7 +26,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.3.6
+Version:	4.3.8
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -36,7 +36,6 @@ Source1:	http://dlc.sun.com.edgesuite.net/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
 Source4:	60-vboxadd.perms
 Source100:	virtualbox.rpmlintrc
-Patch1:		virtualbox-xorg-1.15.patch
 Patch2:		VirtualBox-4.1.8-kernelrelease.patch
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
