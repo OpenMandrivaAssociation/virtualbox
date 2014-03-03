@@ -1,17 +1,17 @@
---- VirtualBox-4.2.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp.bero	2012-09-14 23:01:47.260704397 +0200
-+++ VirtualBox-4.2.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2012-09-14 23:02:14.994853287 +0200
-@@ -200,12 +200,12 @@ void UINameAndSystemEditor::sltFamilyCha
-         if (iIndexWinXP != -1)
-             m_pTypeCombo->setCurrentIndex(iIndexWinXP);
-     }
--    /* Or select Ubuntu item for Linux family as default: */
-+    /* Or select Mandriva item for Linux family as default: */
+--- VirtualBox-4.3.8/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp.orig	2014-03-03 23:50:59.529129676 +0000
++++ VirtualBox-4.3.8/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2014-03-03 23:51:25.911130743 +0000
+@@ -206,12 +206,12 @@
+     /* Or select Ubuntu item for Linux family as default: */
      else if (strFamilyId == "Linux")
      {
--        int iIndexUbuntu = m_pTypeCombo->findData("Ubuntu", TypeID);
+-        QString strDefaultID = "Ubuntu";
++        QString strDefaultID = "Mandriva";
+         if (ARCH_BITS == 64 && m_fSupportsHWVirtEx && m_fSupportsLongMode)
+             strDefaultID += "_64";
+-        int iIndexUbuntu = m_pTypeCombo->findData(strDefaultID, TypeID);
 -        if (iIndexUbuntu != -1)
 -            m_pTypeCombo->setCurrentIndex(iIndexUbuntu);
-+        int iIndexMandriva = m_pTypeCombo->findData("Mandriva", TypeID);
++        int iIndexMandriva = m_pTypeCombo->findData(strDefaultID, TypeID);
 +        if (iIndexMandriva != -1)
 +            m_pTypeCombo->setCurrentIndex(iIndexMandriva);
      }
