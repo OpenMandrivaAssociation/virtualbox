@@ -1,33 +1,6 @@
-diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk VirtualBox-4.2.12-patched/src/VBox/Additions/common/crOpenGL/Makefile.kmk
---- VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk	2013-04-12 21:35:06.000000000 +1100
-+++ VirtualBox-4.2.12-patched/src/VBox/Additions/common/crOpenGL/Makefile.kmk	2013-04-14 23:24:09.109992882 +1100
-@@ -63,18 +63,12 @@
- VBoxOGL_INCS           = .
- if1of ($(KBUILD_TARGET), linux solaris freebsd)
-  VBoxOGL_INCS     += \
--	$(VBOX_PATH_X11_ROOT)/libXdamage-1.1 \
--	$(VBOX_PATH_X11_ROOT)/libXcomposite-0.4.0 \
--	$(VBOX_PATH_X11_ROOT)/libXext-1.3.1 \
--	$(VBOX_PATH_X11_ROOT)/libXfixes-4.0.3 \
--	$(VBOX_PATH_X11_ROOT)/damageproto-1.1.0 \
--	$(VBOX_PATH_X11_ROOT)/compositeproto-0.4 \
--	$(VBOX_PATH_X11_ROOT)/fixesproto-4.0 \
--	$(VBOX_PATH_X11_ROOT)/libx11-1.1.5-other \
--	$(VBOX_PATH_X11_ROOT)/xextproto-7.1.1 \
--	$(VBOX_PATH_X11_ROOT)/xproto-7.0.18 \
-+	/usr/include/x11 \
-+	/usr/include/xorg \
-+	/usr/include/pixman-1 \
- 	$(VBOX_MESA_INCS) \
--	$(PATH_ROOT)/src/VBox/Additions/x11/x11include/libdrm-2.4.13
-+	/usr/include/drm \
-+	/usr/include/libdrm
-  VBoxOGL_DEFS     += VBOX_NO_NATIVEGL
- endif
- 
---- VirtualBox-4.3.0/src/VBox/Additions/x11/vboxvideo/Makefile.kmk.0010~	2013-10-15 12:03:48.000000000 +0100
-+++ VirtualBox-4.3.0/src/VBox/Additions/x11/vboxvideo/Makefile.kmk	2013-10-18 13:47:11.770318915 +0100
-@@ -53,7 +53,6 @@
+--- VirtualBox-4.3.8/src/VBox/Additions/x11/vboxvideo/Makefile.kmk.orig	2014-02-25 17:00:33.000000000 +0000
++++ VirtualBox-4.3.8/src/VBox/Additions/x11/vboxvideo/Makefile.kmk	2014-03-03 23:38:54.833100349 +0000
+@@ -58,7 +58,6 @@
  # vboxvideo_drv
  #
  if1of ($(KBUILD_TARGET), linux)
@@ -35,7 +8,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  endif   # target linux
  vboxvideo_drv_TEMPLATE = VBOXGUESTR3XF86MOD
  vboxvideo_drv_CFLAGS += -Wno-shadow # Avoid MBs of warnings in X11 and OpenGL headers (solaris mostly).
-@@ -129,7 +128,6 @@
+@@ -134,7 +133,6 @@
  #         base keywords instead of using .solaris or .linux.
  #         Also it is *important* to use := and not = when deriving a property.
  #
@@ -43,7 +16,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_70_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_70_DEFS = $(vboxvideo_70_DEFS) XORG_VERSION_CURRENT=700000000
  ifeq ($(KBUILD_TARGET),solaris) # don't use .solaris or anything here.
-@@ -146,7 +144,6 @@
+@@ -151,7 +149,6 @@
  #
  # vboxvideo_drv_71
  #
@@ -51,7 +24,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_71_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_71_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_71_DEFS := $(vboxvideo_70_DEFS) XORG_VERSION_CURRENT=700100000
-@@ -161,7 +158,6 @@
+@@ -166,7 +163,6 @@
  #
  # vboxvideo_drv_13
  #
@@ -59,7 +32,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_13_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_13_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_13_DEFS := $(vboxvideo_13_DEFS) XORG_VERSION_CURRENT=100300000
-@@ -175,7 +171,6 @@
+@@ -180,7 +176,6 @@
  #
  # vboxvideo_drv_14
  #
@@ -67,7 +40,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_14_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_14_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_14_DEFS := $(vboxvideo_13_DEFS) XORG_VERSION_CURRENT=100400000
-@@ -189,7 +184,6 @@
+@@ -194,7 +189,6 @@
  #
  # vboxvideo_drv_15
  #
@@ -75,7 +48,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_15_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_15_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_15_DEFS := $(vboxvideo_15_DEFS) XORG_VERSION_CURRENT=100503000
-@@ -210,7 +204,6 @@
+@@ -216,7 +210,6 @@
  #
  # vboxvideo_drv_16
  #
@@ -83,7 +56,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_16_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_16_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_16_DEFS := $(vboxvideo_15_DEFS) XORG_VERSION_CURRENT=100600000
-@@ -224,7 +217,6 @@
+@@ -234,7 +227,6 @@
  #
  # vboxvideo_drv_17
  #
@@ -91,7 +64,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_17_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_17_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_17_DEFS := $(vboxvideo_15_DEFS) XORG_VERSION_CURRENT=100699000
-@@ -238,7 +230,6 @@
+@@ -252,7 +244,6 @@
  #
  # vboxvideo_drv_18
  #
@@ -99,7 +72,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_18_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_18_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_18_DEFS := $(vboxvideo_15_DEFS) XORG_VERSION_CURRENT=100800000
-@@ -252,7 +243,6 @@
+@@ -266,7 +257,6 @@
  #
  # vboxvideo_drv_19
  #
@@ -107,7 +80,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_19_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_19_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_19_DEFS := $(vboxvideo_15_DEFS) XORG_VERSION_CURRENT=100900000
-@@ -266,7 +256,6 @@
+@@ -280,7 +270,6 @@
  #
  # vboxvideo_drv_110
  #
@@ -115,7 +88,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_110_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_110_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_110_DEFS := $(vboxvideo_15_DEFS) XORG_VERSION_CURRENT=101000000
-@@ -280,7 +269,6 @@
+@@ -294,7 +283,6 @@
  #
  # vboxvideo_drv_111
  #
@@ -123,7 +96,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_111_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_111_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_111_DEFS := $(vboxvideo_15_DEFS) XORG_VERSION_CURRENT=101100000
-@@ -294,7 +282,6 @@
+@@ -308,7 +296,6 @@
  #
  # vboxvideo_drv_112
  #
@@ -131,7 +104,7 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_112_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_112_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_112_DEFS := $(vboxvideo_15_DEFS) XORG_VERSION_CURRENT=101200000
-@@ -308,7 +295,6 @@
+@@ -322,7 +309,6 @@
  #
  # vboxvideo_drv_113
  #
@@ -139,9 +112,9 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  vboxvideo_drv_113_TEMPLATE = VBOXGUESTR3XORGMOD
  vboxvideo_drv_113_CFLAGS := $(vboxvideo_drv_70_CFLAGS)
  vboxvideo_drv_113_DEFS := $(vboxvideo_15_DEFS) XORG_VERSION_CURRENT=101300000
-@@ -318,6 +304,20 @@
+@@ -332,6 +318,20 @@
  vboxvideo_drv_113_INCS += $(PATH_ROOT)/src/VBox/Runtime/include
- vboxvideo_drv_113_SOURCES := $(vboxvideo_drv_15_SOURCES)
+ vboxvideo_drv_113_SOURCES := $(vboxvideo_drv_17_SOURCES)
  
 +#
 +# build only for selected server
@@ -160,8 +133,8 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
  
  #
  # vboxvideo_drv_114
---- VirtualBox-4.3.0/src/VBox/Additions/x11/vboxmouse/Makefile.kmk.0010~	2013-10-15 12:03:48.000000000 +0100
-+++ VirtualBox-4.3.0/src/VBox/Additions/x11/vboxmouse/Makefile.kmk	2013-10-18 13:48:50.260322901 +0100
+--- VirtualBox-4.3.8/src/VBox/Additions/x11/vboxmouse/Makefile.kmk.orig	2014-02-25 17:00:33.000000000 +0000
++++ VirtualBox-4.3.8/src/VBox/Additions/x11/vboxmouse/Makefile.kmk	2014-03-03 23:38:54.846100350 +0000
 @@ -29,7 +29,6 @@
  # vboxmouse_drv
  #
@@ -279,4 +252,30 @@ diff -urN VirtualBox-4.2.12/src/VBox/Additions/common/crOpenGL/Makefile.kmk Virt
 +
  endif # neq ($(KBUILD_TARGET),linux)
  
- # 32-bit modules for the 64-bit Linux Additions
+ 
+--- VirtualBox-4.3.8/src/VBox/Additions/common/crOpenGL/Makefile.kmk.orig	2014-02-25 17:00:28.000000000 +0000
++++ VirtualBox-4.3.8/src/VBox/Additions/common/crOpenGL/Makefile.kmk	2014-03-03 23:38:54.832100349 +0000
+@@ -74,18 +74,12 @@
+ VBoxOGL_INCS           = .
+ if1of ($(KBUILD_TARGET), linux solaris freebsd)
+  VBoxOGL_INCS     += \
+-	$(VBOX_PATH_X11_ROOT)/libXdamage-1.1 \
+-	$(VBOX_PATH_X11_ROOT)/libXcomposite-0.4.0 \
+-	$(VBOX_PATH_X11_ROOT)/libXext-1.3.1 \
+-	$(VBOX_PATH_X11_ROOT)/libXfixes-4.0.3 \
+-	$(VBOX_PATH_X11_ROOT)/damageproto-1.1.0 \
+-	$(VBOX_PATH_X11_ROOT)/compositeproto-0.4 \
+-	$(VBOX_PATH_X11_ROOT)/fixesproto-4.0 \
+-	$(VBOX_PATH_X11_ROOT)/libx11-1.1.5-other \
+-	$(VBOX_PATH_X11_ROOT)/xextproto-7.1.1 \
+-	$(VBOX_PATH_X11_ROOT)/xproto-7.0.18 \
++	/usr/include/x11 \
++	/usr/include/xorg \
++	/usr/include/pixman-1 \
+ 	$(VBOX_MESA_INCS) \
+-	$(PATH_ROOT)/src/VBox/Additions/x11/x11include/libdrm-2.4.13
++	/usr/include/drm \
++	/usr/include/libdrm
+  VBoxOGL_DEFS     += VBOX_NO_NATIVEGL
+ endif
+ 
