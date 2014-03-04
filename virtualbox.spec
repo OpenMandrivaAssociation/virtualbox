@@ -109,8 +109,6 @@ BuildRequires:	texlive-fontsextra
 %endif
 BuildRequires:	docbook-dtd44-xml
 %endif
-# bogus devel-file-in-non-devel-package errors in dkms subpackage
-BuildConflicts:	rpmlint < 1.4-37
 
 Requires(post,preun,postun): rpm-helper
 Requires:	kmod(vboxdrv) = %{version}

@@ -6,3 +6,4 @@
 # virtualbox.x86_64: E: unstripped-binary-or-object (Badness: 50) /usr/lib64/virtualbox/VBoxDD2R0.r0
 # virtualbox.x86_64: E: unstripped-binary-or-object (Badness: 50) /usr/lib64/virtualbox/VBoxDDR0.r0
 addFilter("E: unstripped-binary-or-object")
+addFilter("E: devel-file-in-non-devel-package")
