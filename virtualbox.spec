@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.3.8
-Release:	2
+Version:	4.3.10
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -153,8 +153,13 @@ Obsoletes:	dkms-vboxadd < %{version}-%{release}
 %rename		dkms-vboxvideo = %{version}-%{release}
 Conflicts:	dkms-%{name} < 4.1.8
 Requires:	dkms
+<<<<<<< HEAD
 Requires(post,preun):	dkms
 Requires(post):	kernel-devel
+=======
+Requires(post,preun): dkms
+Requires(post): kernel-devel
+>>>>>>> master
 
 %description -n dkms-vboxadditions
 Kernel module for VirtualBox additions (ideally only needs to be installed
