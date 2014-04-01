@@ -153,13 +153,8 @@ Obsoletes:	dkms-vboxadd < %{version}-%{release}
 %rename		dkms-vboxvideo = %{version}-%{release}
 Conflicts:	dkms-%{name} < 4.1.8
 Requires:	dkms
-<<<<<<< HEAD
-Requires(post,preun):	dkms
-Requires(post):	kernel-devel
-=======
 Requires(post,preun): dkms
 Requires(post): kernel-devel
->>>>>>> master
 
 %description -n dkms-vboxadditions
 Kernel module for VirtualBox additions (ideally only needs to be installed
