@@ -64,6 +64,8 @@ Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 
 #Fix build with gcc4.9
 Patch21:	VirtualBox-4.3.12-gcc4.9.patch
+#disable a change to the mangling check which seems to break things
+Patch22:	VirtualBox-4.3.12-mangling.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86

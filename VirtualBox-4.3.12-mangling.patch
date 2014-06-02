@@ -1,0 +1,32 @@
+--- a/src/VBox/Runtime/Makefile.kmk	2014-05-16 13:26:38.000000000 +0100
++++ b/src/VBox/Runtime/Makefile.kmk	2014-06-02 14:38:47.600149510 +0100
+@@ -2507,7 +2507,7 @@
+ 		'd'
+ # Find the best way to generate a symbol list and subject it to mangling.h.
+   if $(intersects $(KBUILD_TARGET), linux) && "$(VBOX_GCC_fvisibility-hidden)"
+-	$(call MSG_L1,IPRT: Testing mangling and visiblity for newer gcc...)
++	$(call MSG_L1,IPRT: Testing mangling and visiblity...)
+ 	@readelf -Ws $^ \
+ 		| $(SED) \
+ 			-e '/^  *[[:digit:]]\+:/!d' \
+@@ -2556,9 +2556,9 @@
+ 			-e '/^VBoxHost_/d'\
+ 			-e '/^VBoxGuest_/d'\
+ 		| $(SED) -nf "$@"
+-  endif
+-	$(call MSG_L1,IPRT: Testing mangling for older gcc...)
+-	@nm $^ 	| $(SED) -n \
++  else
++	$(call MSG_L1,IPRT: Testing mangling...)
++	nm $^ 	| $(SED) -n \
+ 			-e 's/^[0-9a-f][0-9a-f]* //' \
+ 			-e '/^[TUDB] /!d' \
+ 			-e 's/^. //' \
+@@ -2579,6 +2579,7 @@
+ 			-e '/^RT/p' \
+ 			-e '/^g_/p' \
+ 		| $(SED) -nf "$@"
++  endif
+  endif
+ endif
+ 	$(QUIET)$(APPEND) -t $@
