@@ -62,6 +62,9 @@ Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 #Patch19:	virtualbox-4.1.8-l10n-ru.patch
 #Patch20:	VirtualBox-4.2.2-remove-missing-translation.patch
 
+#Fix build with gcc4.9
+Patch21:	VirtualBox-4.3.12-gcc4.9.patch
+
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
 BuildRequires:	dkms-minimal
