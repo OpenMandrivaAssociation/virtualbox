@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.3.12
-Release:	3
+Version:	4.3.16
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -62,10 +62,8 @@ Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 #Patch19:	virtualbox-4.1.8-l10n-ru.patch
 #Patch20:	VirtualBox-4.2.2-remove-missing-translation.patch
 
-#Fix build with gcc4.9
-Patch21:	VirtualBox-4.3.12-gcc4.9.patch
 #disable a change to the mangling check which seems to break things
-Patch22:	VirtualBox-4.3.12-mangling.patch
+Patch22:	VirtualBox-4.3.16-mangling.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
@@ -527,6 +525,7 @@ set -x
 %{vboxlibdir}/webtest
 %{vboxlibdir}/helpers
 %{vboxlibdir}/scripts
+%{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless

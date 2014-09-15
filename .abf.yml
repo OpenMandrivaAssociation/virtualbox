@@ -1,7 +1,8 @@
 removed_sources:
   VirtualBox-4.3.10.tar.bz2: c7faabd8fce734ab7bfb953c95bcc46e2436d81c
+  VirtualBox-4.3.12.tar.bz2: 85b7cd47b9cd3444dea750fd8695b0d2dbf95194
   VirtualBox-4.3.6.tar.bz2: 4c6c984d6244b7bc858949a81f47e7892e843725
   VirtualBox-4.3.8.tar.bz2: 786246f3031c1adb6d04740c5544634fa06d6966
 sources:
   UserManual.pdf: 97f742e0fef4cd881dac721c96eab309a4cb4396
-  VirtualBox-4.3.12.tar.bz2: 85b7cd47b9cd3444dea750fd8695b0d2dbf95194
+  VirtualBox-4.3.16.tar.bz2: e4c23b713e8715b8e0172fa066f2197756e901fe
