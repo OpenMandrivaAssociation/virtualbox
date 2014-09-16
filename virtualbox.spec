@@ -77,6 +77,9 @@ BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
 BuildRequires:	openssl-devel
+%if %{mdvver} >= 201500
+BuildRequires:	gnutar
+%endif
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(ext2fs)
 BuildRequires:	pkgconfig(gl)
@@ -104,12 +107,8 @@ BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
 %if %{build_doc}
 # for building the user manual pdf file
-%if %{mdvver} < 201100
-BuildRequires:	tetex-latex
-%else
 BuildRequires:	texlive
 BuildRequires:	texlive-fontsextra
-%endif
 BuildRequires:	docbook-dtd44-xml
 %endif
 # bogus devel-file-in-non-devel-package errors in dkms subpackage
@@ -199,6 +198,7 @@ VBOX_WITH_TESTSUITE:=
 VBOX_JAVA_HOME := /usr/lib/jvm/java-1.7.0
 VBOX_WITHOUT_ADDITIONS_ISO := 1
 VBOX_BLD_PYTHON:=/usr/bin/python2
+VBOX_GTAR:=gtar
 EOF
 
 %build
@@ -316,12 +316,6 @@ EOF
 # vboxadd-timesync should probably be renamed vboxadd now, but renaming initscripts
 # cleanly is hacky business
 install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}%{_initrddir}/vboxadd-timesync
-
-# install .fdi file for releases older than 2011.0; and the udev rule and
-# 50-vboxmouse.conf for newer releases with Xserver >= 1.9
-%if %{mdvver} < 201100
-install -D -m644 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
-%endif
 
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
