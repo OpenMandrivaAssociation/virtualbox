@@ -85,7 +85,7 @@ BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
-BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python2)
 # for now requires full qt4-devel
 # as qtcore has been upgraded to qt5
 BuildRequires:	qt4-devel
@@ -198,6 +198,7 @@ VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
 VBOX_JAVA_HOME := /usr/lib/jvm/java-1.7.0
 VBOX_WITHOUT_ADDITIONS_ISO := 1
+VBOX_BLD_PYTHON:=/usr/bin/python2
 EOF
 
 %build
