@@ -77,9 +77,6 @@ BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
 BuildRequires:	openssl-devel
-%if %{mdvver} >= 201500
-BuildRequires:	gnutar
-%endif
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(ext2fs)
 BuildRequires:	pkgconfig(gl)
@@ -198,7 +195,7 @@ VBOX_WITH_TESTSUITE:=
 VBOX_JAVA_HOME := /usr/lib/jvm/java-1.7.0
 VBOX_WITHOUT_ADDITIONS_ISO := 1
 VBOX_BLD_PYTHON:=/usr/bin/python2
-VBOX_GTAR:=gtar
+VBOX_GTAR:=
 EOF
 
 %build
