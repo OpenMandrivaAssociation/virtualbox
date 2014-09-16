@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.3.10
-Release:	2
+Version:	4.3.16
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -62,6 +62,9 @@ Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 #Patch19:	virtualbox-4.1.8-l10n-ru.patch
 #Patch20:	VirtualBox-4.2.2-remove-missing-translation.patch
 
+#disable a change to the mangling check which seems to break things
+Patch22:	VirtualBox-4.3.16-mangling.patch
+
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
 BuildRequires:	dkms-minimal
@@ -82,7 +85,7 @@ BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
-BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python2)
 # for now requires full qt4-devel
 # as qtcore has been upgraded to qt5
 BuildRequires:	qt4-devel
@@ -101,12 +104,8 @@ BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
 %if %{build_doc}
 # for building the user manual pdf file
-%if %{mdvver} < 201100
-BuildRequires:	tetex-latex
-%else
 BuildRequires:	texlive
 BuildRequires:	texlive-fontsextra
-%endif
 BuildRequires:	docbook-dtd44-xml
 %endif
 # bogus devel-file-in-non-devel-package errors in dkms subpackage
@@ -195,6 +194,8 @@ VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
 VBOX_JAVA_HOME := /usr/lib/jvm/java-1.7.0
 VBOX_WITHOUT_ADDITIONS_ISO := 1
+VBOX_BLD_PYTHON:=/usr/bin/python2
+VBOX_GTAR:=
 EOF
 
 %build
@@ -312,12 +313,6 @@ EOF
 # vboxadd-timesync should probably be renamed vboxadd now, but renaming initscripts
 # cleanly is hacky business
 install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}%{_initrddir}/vboxadd-timesync
-
-# install .fdi file for releases older than 2011.0; and the udev rule and
-# 50-vboxmouse.conf for newer releases with Xserver >= 1.9
-%if %{mdvver} < 201100
-install -D -m644 src/VBox/Additions/linux/installer/90-vboxguest.fdi %{buildroot}%{_datadir}/hal/fdi/policy/20thirdparty/90-vboxguest.fdi
-%endif
 
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
@@ -522,6 +517,7 @@ set -x
 %{vboxlibdir}/webtest
 %{vboxlibdir}/helpers
 %{vboxlibdir}/scripts
+%{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless

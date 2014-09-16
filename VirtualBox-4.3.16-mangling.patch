@@ -1,0 +1,19 @@
+--- a/src/VBox/Runtime/Makefile.kmk.orig	2014-09-15 16:37:32.152905380 +0100
++++ b/src/VBox/Runtime/Makefile.kmk	2014-09-15 16:38:09.000902665 +0100
+@@ -2679,7 +2679,7 @@
+ 			-e '/^VBoxHost_/d'\
+ 			-e '/^VBoxGuest_/d'\
+ 		| $(SED) -nf "$@"
+-  endif
++  else
+ 	$(call MSG_L1,IPRT: Testing mangling using nm...)
+ 	$(QUIET)nm $^  2> /dev/null \
+ 		| $(SED) -n \
+@@ -2707,6 +2707,7 @@
+ 			-e '/^RT/p' \
+ 			-e '/^g_/p' \
+ 		| $(SED) -nf "$@"
++  endif
+  endif
+ endif
+ 	$(QUIET)$(APPEND) -t $@
