@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.3.16
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -151,9 +151,9 @@ Obsoletes:	dkms-vboxadd < %{version}-%{release}
 %rename		dkms-vboxsf
 %rename		dkms-vboxvideo = %{version}-%{release}
 Conflicts:	dkms-%{name} < 4.1.8
-Requires:	dkms
+Requires(pre):	dkms
 Requires(post,preun): dkms
-Requires(post): kernel-devel
+Requires(post):	kernel-devel
 
 %description -n dkms-vboxadditions
 Kernel module for VirtualBox additions (ideally only needs to be installed
@@ -413,7 +413,7 @@ rm  -f %{buildroot}%{vboxlibdir}/xpidl
 install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
 
 %post
-%_post_service %{name}
+%systemd_post %{name}
 %_add_group_helper %{name} 1 vboxusers
 
 %postun
@@ -423,7 +423,7 @@ fi
 %_del_group_helper %{name} 1 vboxusers
 
 %preun
-%_preun_service %{name}
+%systemd_preun %{name}
 
 %post -n dkms-%{name}
 set -x
@@ -449,7 +449,7 @@ set -x
 
 %if %{build_additions}
 %post guest-additions
-%_post_service vboxadd-timesync
+%systemd_post vboxadd-timesync
 
 # (Debian) Build usb device tree
 for i in /sys/bus/usb/devices/*; do
@@ -463,7 +463,7 @@ fi
 done
 
 %preun guest-additions
-%_preun_service vboxadd-timesync
+%systemd_preun vboxadd-timesync
 
 %post -n dkms-vboxadditions
 set -x
