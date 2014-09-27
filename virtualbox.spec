@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.3.16
-Release:	1
+Release:	1.1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -121,7 +121,7 @@ VirtualBox is a general-purpose full virtualizer for x86 hardware.
 %package -n	dkms-%{name}
 Summary:	VirtualBox kernel module
 Group:		System/Kernel and hardware
-Requires:	dkms
+Requires(pre):	dkms
 Requires(post,preun): dkms
 Conflicts:	dkms-vboxadditions < 4.1.8
 
@@ -151,7 +151,7 @@ Obsoletes:	dkms-vboxadd < %{version}-%{release}
 %rename		dkms-vboxsf
 %rename		dkms-vboxvideo = %{version}-%{release}
 Conflicts:	dkms-%{name} < 4.1.8
-Requires:	dkms
+Requires(pre):	dkms
 Requires(post,preun): dkms
 Requires(post): kernel-devel
 
