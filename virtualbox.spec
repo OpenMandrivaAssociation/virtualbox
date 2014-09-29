@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.3.16
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -331,6 +331,7 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
   cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
 vboxguest
+vboxsf
 EOF
 
   install vboxvideo_drv.so -D %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
