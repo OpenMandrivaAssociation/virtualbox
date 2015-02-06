@@ -34,6 +34,7 @@ Url:		http://www.virtualbox.org/
 Source0:	http://dlc.sun.com.edgesuite.net/virtualbox/%{version}/%{srcname}.tar.bz2
 Source1:	http://dlc.sun.com.edgesuite.net/virtualbox/UserManual.pdf
 Source2:	virtualbox.init
+Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source100:	virtualbox.rpmlintrc
 Patch2:		VirtualBox-4.1.8-kernelrelease.patch
@@ -67,7 +68,7 @@ Patch22:	VirtualBox-4.3.16-mangling.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
-BuildRequires:	dkms-minimal
+BuildRequires:	dkms
 BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	iasl
@@ -413,6 +414,8 @@ rm  -f %{buildroot}%{vboxlibdir}/xpidl
 # install PAM module:
 install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
 
+install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
+
 %post
 %_add_group_helper %{name} 1 vboxusers
 
@@ -527,6 +530,7 @@ set -x
 # initscripts integration
 %{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
+%{_tmpfilesdir}/%{name}.conf
 %dir /var/run/%{oname}
 # desktop integration
 %{_iconsdir}/hicolor/*/*/*
