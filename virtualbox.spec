@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.3.20
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -94,7 +94,7 @@ BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xmu)
-BuildRequires:	pkgconfig(xorg-server) >= 1.13
+BuildRequires:	pkgconfig(xorg-server) >= 1.17
 BuildRequires:	pkgconfig(libxslt)
 BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xt)
@@ -414,17 +414,10 @@ rm  -f %{buildroot}%{vboxlibdir}/xpidl
 install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
 
 %post
-%systemd_post %{name}
 %_add_group_helper %{name} 1 vboxusers
 
 %postun
-if [ "$1" -ge "1" ]; then
-  /sbin/service %{name} condrestart > /dev/null 2>&1 || :
-fi
 %_del_group_helper %{name} 1 vboxusers
-
-%preun
-%systemd_preun %{name}
 
 %post -n dkms-%{name}
 set -x
@@ -449,8 +442,8 @@ set -x
 /usr/sbin/dkms --rpm_safe_upgrade remove -m %{name} -v %{version}-%{release} --all || :
 
 %if %{build_additions}
+
 %post guest-additions
-%systemd_post vboxadd-timesync
 
 # (Debian) Build usb device tree
 for i in /sys/bus/usb/devices/*; do
@@ -462,9 +455,6 @@ class="`cat $i/bDeviceClass 2> /dev/null || true`"
 /usr/share/virtualbox/VBoxCreateUSBNode.sh "$major" "$minor" "$class" vboxusers 2>/dev/null || true
 fi
 done
-
-%preun guest-additions
-%systemd_preun vboxadd-timesync
 
 %post -n dkms-vboxadditions
 set -x
