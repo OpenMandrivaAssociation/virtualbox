@@ -444,6 +444,7 @@ set -x
 %if %{build_additions}
 
 %post guest-additions
+%_post_service vboxadd-timesync
 
 # (Debian) Build usb device tree
 for i in /sys/bus/usb/devices/*; do
@@ -455,6 +456,9 @@ class="`cat $i/bDeviceClass 2> /dev/null || true`"
 /usr/share/virtualbox/VBoxCreateUSBNode.sh "$major" "$minor" "$class" vboxusers 2>/dev/null || true
 fi
 done
+
+%preun guest-additions
+%_preun_service vboxadd-timesync
 
 %post -n dkms-vboxadditions
 set -x
