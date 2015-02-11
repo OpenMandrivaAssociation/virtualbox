@@ -334,8 +334,8 @@ pushd out/%{vbox_platform}/release/bin/additions
 vboxguest
 vboxsf
 EOF
-
-  install vboxvideo_drv.so -D %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+	ls -l *
+  install vboxvideo_drv_117 -D %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
   cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
