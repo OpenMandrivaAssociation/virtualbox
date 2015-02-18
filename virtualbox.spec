@@ -72,7 +72,7 @@ BuildRequires:	dkms
 BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	iasl
-BuildRequires:	java-devel
+BuildRequires:	java-1.7.0-openjdk-devel
 BuildRequires:	qt4-linguist
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
