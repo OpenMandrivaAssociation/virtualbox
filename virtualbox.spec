@@ -1,11 +1,11 @@
-%define kname  vboxdrv
-%define oname  VirtualBox
-%define srcname	%{oname}-%{version}
-%define distname	%{oname}-%{version}
-%define pkgver	%{ver}
+%define kname vboxdrv
+%define oname VirtualBox
+%define srcname %{oname}-%{version}
+%define distname %{oname}-%{version}
+%define pkgver %{ver}
 
-%define vboxlibdir	%{_libdir}/%{name}
-%define vboxdatadir	%{_datadir}/%{name}
+%define vboxlibdir %{_libdir}/%{name}
+%define vboxdatadir %{_datadir}/%{name}
 
 %define build_additions 1
 %define build_doc 0
@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.3.20
-Release:	3
+Version:	4.3.22
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -72,7 +72,7 @@ BuildRequires:	dkms
 BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	iasl
-BuildRequires:	java-1.7.0-openjdk-devel
+BuildRequires:	java-devel
 BuildRequires:	qt4-linguist
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
@@ -112,25 +112,25 @@ BuildRequires:	docbook-dtd44-xml
 # bogus devel-file-in-non-devel-package errors in dkms subpackage
 BuildConflicts:	rpmlint < 1.4-37
 
-Requires(post,preun,postun): rpm-helper
+Requires(post,preun,postun):	rpm-helper
 Requires:	kmod(vboxdrv) = %{version}
 Suggests:	%{name}-doc
 
 %description
 VirtualBox is a general-purpose full virtualizer for x86 hardware.
 
-%package -n	dkms-%{name}
+%package -n dkms-%{name}
 Summary:	VirtualBox kernel module
 Group:		System/Kernel and hardware
 Requires:	dkms
-Requires(post,preun): dkms
+Requires(post,preun):	dkms
 Conflicts:	dkms-vboxadditions < 4.1.8
 
 %description -n dkms-%{name}
 Kernel support for VirtualBox.
 
 %if %{build_additions}
-%package 	guest-additions
+%package guest-additions
 Summary:	Additions for VirtualBox guest systems
 Group:		Emulators
 Requires:	kmod(vboxguest) = %{version}
@@ -139,28 +139,28 @@ Requires:	kmod(vboxvideo) = %{version}
 Requires:	x11-driver-video-vboxvideo
 Requires(post,preun): rpm-helper
 
-%description    guest-additions
+%description guest-additions
 This package contains additions for VirtualBox guest systems.
 It allows to share files with the host system and sync time with host.
 
-%package -n	dkms-vboxadditions
+%package -n dkms-vboxadditions
 Summary:	Kernel module for VirtualBox additions
 Group:		System/Kernel and hardware
-Requires(post,preun): dkms
+Requires(post,preun):	dkms
 Obsoletes:	dkms-vboxadd < %{version}-%{release}
 %rename		dkms-vboxvfs
 %rename		dkms-vboxsf
 %rename		dkms-vboxvideo = %{version}-%{release}
 Conflicts:	dkms-%{name} < 4.1.8
 Requires(pre):	dkms
-Requires(post,preun): dkms
+Requires(post,preun):	dkms
 Requires(post):	kernel-devel
 
 %description -n dkms-vboxadditions
 Kernel module for VirtualBox additions (ideally only needs to be installed
 on the guest OS not on the host OS).
 
-%package -n	x11-driver-video-vboxvideo
+%package -n x11-driver-video-vboxvideo
 Summary:	The X.org driver for video in VirtualBox guests
 Group:		System/X11
 #Requires:	x11-server-common %%(xserver-sdk-abi-requires videodrv)
