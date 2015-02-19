@@ -319,7 +319,7 @@ install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
 
 mkdir -p %{buildroot}%{_libdir}/xorg/modules/drivers/
-cp -f out/%{vbox_platform}/release/bin/vboxvideo_drv.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+cp -f out/%{vbox_platform}/release/bin/additions/vboxvideo_drv.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 
 pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri
