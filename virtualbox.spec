@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.3.22
-Release:	0.1
+Release:	0.2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -95,7 +95,7 @@ BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xmu)
-BuildRequires:	pkgconfig(xorg-server) >= 1.15
+BuildRequires:	pkgconfig(xorg-server) >= 1.15.2
 BuildRequires:	pkgconfig(libxslt)
 BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xt)
