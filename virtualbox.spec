@@ -52,7 +52,7 @@ Patch9:		VirtualBox-4.1.8-dont-check-for-mkisofs-or-makeself.patch
 # (Debian) build X server drivers only for the selected version
 # but we're not using the full patch, only the parts we need (e.g. the section
 # about Debian Lenny), so we regenerate the patch
-Patch10:	VirtualBox-4.3.8-system-xorg.patch
+#Patch10:	VirtualBox-4.3.8-system-xorg.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
