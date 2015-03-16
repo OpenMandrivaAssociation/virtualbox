@@ -336,7 +336,7 @@ vboxsf
 EOF
 
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
-  install vboxvideo_drv_system.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
+  install vboxvideo_drv.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
   cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
