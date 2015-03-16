@@ -318,9 +318,6 @@ install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
 
-mkdir -p %{buildroot}%{_libdir}/xorg/modules/drivers/
-cp -f out/%{vbox_platform}/release/bin/additions/vboxvideo_drv.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
-
 pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
@@ -337,6 +334,9 @@ pushd out/%{vbox_platform}/release/bin/additions
 vboxguest
 vboxsf
 EOF
+
+  install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
+  install vboxvideo_drv_system.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
   cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
