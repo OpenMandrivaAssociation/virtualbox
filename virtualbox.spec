@@ -26,7 +26,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.3.24
+Version:	4.3.26
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -62,7 +62,7 @@ Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 #Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
 #Patch19:	virtualbox-4.1.8-l10n-ru.patch
 #Patch20:	VirtualBox-4.2.2-remove-missing-translation.patch
-
+Patch21:	VirtualBox-4.3.6-mesa.patch
 #disable a change to the mangling check which seems to break things
 Patch22:	VirtualBox-4.3.16-mangling.patch
 
