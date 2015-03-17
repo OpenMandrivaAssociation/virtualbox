@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.3.22
-Release:	0.2
+Version:	4.3.26
+Release:	0.1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -52,7 +52,7 @@ Patch9:		VirtualBox-4.1.8-dont-check-for-mkisofs-or-makeself.patch
 # (Debian) build X server drivers only for the selected version
 # but we're not using the full patch, only the parts we need (e.g. the section
 # about Debian Lenny), so we regenerate the patch
-Patch10:	VirtualBox-4.3.8-system-xorg.patch
+#Patch10:	VirtualBox-4.3.8-system-xorg.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
@@ -62,7 +62,7 @@ Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 #Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
 #Patch19:	virtualbox-4.1.8-l10n-ru.patch
 #Patch20:	VirtualBox-4.2.2-remove-missing-translation.patch
-
+Patch21:	VirtualBox-4.3.6-mesa.patch
 #disable a change to the mangling check which seems to break things
 Patch22:	VirtualBox-4.3.16-mangling.patch
 
@@ -95,7 +95,7 @@ BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xmu)
-BuildRequires:	pkgconfig(xorg-server) >= 1.15.2
+BuildRequires:	pkgconfig(xorg-server) >= 1.17
 BuildRequires:	pkgconfig(libxslt)
 BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xt)
@@ -193,8 +193,9 @@ VBOX_PATH_APP_PRIVATE:=%{vboxlibdir}
 VBOX_WITH_VNC:=1
 VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
-VBOX_JAVA_HOME := /usr/lib/jvm/java-1.7.0
+VBOX_JAVA_HOME := %{java_home}
 VBOX_WITHOUT_ADDITIONS_ISO := 1
+VBOX_USE_SYSTEM_XORG_HEADERS := 1
 VBOX_BLD_PYTHON:=/usr/bin/python2
 VBOX_GTAR:=
 EOF
@@ -318,9 +319,6 @@ install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
 
-mkdir -p %{buildroot}%{_libdir}/xorg/modules/drivers/
-cp -f out/%{vbox_platform}/release/bin/additions/vboxvideo_drv.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
-
 pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
@@ -337,6 +335,9 @@ pushd out/%{vbox_platform}/release/bin/additions
 vboxguest
 vboxsf
 EOF
+
+  install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
+  install vboxvideo_drv_system.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
   cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
