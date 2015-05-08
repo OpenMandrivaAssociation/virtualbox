@@ -52,9 +52,6 @@ Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 
 Patch21:	VirtualBox-4.3.6-mesa.patch
-#disable a change to the mangling check which seems to break things
-Patch22:	VirtualBox-4.3.16-mangling.patch
-
 Patch23:	VirtualBox-4.3.0-no-bundles.patch
 Patch24:	VirtualBox-4.3.16-VBoxGuestLib.patch
 
@@ -215,7 +212,8 @@ export LIBPATH_LIB="%{_lib}"
 %if ! %{build_doc}
 	--disable-docs
 %endif
-echo VBOX_GCC_OPT="%{optflags}" >> LocalConfig.kmk
+# remove fPIC to avoid causing issues
+echo VBOX_GCC_OPT="`echo %{optflags} | sed 's/-fPIC//'" >> LocalConfig.kmk
 %ifarch %{ix86}
 %global ldflags %{ldflags} -fuse-ld=bfd
 %endif
