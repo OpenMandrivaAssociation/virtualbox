@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	4.3.26
-Release:	0.2
+Release:	0.3
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -43,28 +43,20 @@ Patch4:		virtualbox-fix-vboxadd-req.patch
 # (fc) 1.6.0-2mdv fix initscript name in VBox.sh script
 Patch5:		VirtualBox-4.1.8-initscriptname.patch
 # (tmb) disable update notification (OpenSuSe)
-# (tmb) TODO: rewrite
-#Patch7:		VirtualBox-4.1.8-no-update.patch
+Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # don't check for:
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
 Patch9:		VirtualBox-4.1.8-dont-check-for-mkisofs-or-makeself.patch
-# (Debian) build X server drivers only for the selected version
-# but we're not using the full patch, only the parts we need (e.g. the section
-# about Debian Lenny), so we regenerate the patch
-#Patch10:	VirtualBox-4.3.8-system-xorg.patch
-
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 
-# use courier font instead of beramono for older releases where beramono isn't
-# available in tetex-latex (it's available since only tetex-latex-3.0-53mdv2011.0)
-#Patch17:	virtualbox-4.0.0-user-courier-instead-of-beramono.patch
-#Patch19:	virtualbox-4.1.8-l10n-ru.patch
-#Patch20:	VirtualBox-4.2.2-remove-missing-translation.patch
 Patch21:	VirtualBox-4.3.6-mesa.patch
 #disable a change to the mangling check which seems to break things
 Patch22:	VirtualBox-4.3.16-mangling.patch
+
+Patch23:	VirtualBox-4.3.0-no-bundles.patch
+Patch24:	VirtualBox-4.3.16-VBoxGuestLib.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
@@ -183,6 +175,14 @@ This package contains the user manual PDF file for %{name}.
 %prep
 %setup -qn %{distname}
 %apply_patches
+
+# Remove bundle X11 sources and some lib sources, before patching.
+rm -rf src/VBox/Additions/x11/x11include
+rm -rf src/VBox/Additions/x11/x11stubs
+#rm -rf src/libs/liblzf-3.4/
+rm -rf src/libs/libxml2-2.6.31/
+rm -rf src/libs/libpng-1.2.8/
+rm -rf src/libs/zlib-1.2.6/
 
 cat << EOF > LocalConfig.kmk
 VBOX_WITH_WARNINGS_AS_ERRORS:=
