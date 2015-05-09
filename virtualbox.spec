@@ -1,7 +1,8 @@
+%define beta BETA3
 %define kname vboxdrv
 %define oname VirtualBox
-%define srcname %{oname}-%{version}
-%define distname %{oname}-%{version}
+%define srcname %{oname}-%{version}_%{beta}
+%define distname %{oname}-%{version}_%{beta}
 %define pkgver %{ver}
 
 %define vboxlibdir %{_libdir}/%{name}
@@ -26,8 +27,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.3.26
-Release:	4
+Version:	5.0.0
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -48,24 +49,22 @@ Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # don't check for:
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
-Patch9:		VirtualBox-4.1.8-dont-check-for-mkisofs-or-makeself.patch
+Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 
 Patch21:	VirtualBox-4.3.6-mesa.patch
-#disable a change to the mangling check which seems to break things
-Patch22:	VirtualBox-4.3.16-mangling.patch
 
 Patch23:	VirtualBox-4.3.0-no-bundles.patch
-Patch24:	VirtualBox-4.3.16-VBoxGuestLib.patch
+Patch24:	VirtualBox-5.0.0_BETA3-VBoxGuestLib.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
 BuildRequires:	dkms
 BuildRequires:	gawk
 BuildRequires:	gsoap
-BuildRequires:	iasl
+BuildRequires:	acpica
 BuildRequires:	java-1.7.0-openjdk-devel
 BuildRequires:	qt4-linguist
 BuildRequires:	xsltproc
@@ -217,7 +216,8 @@ export LIBPATH_LIB="%{_lib}"
 %if ! %{build_doc}
 	--disable-docs
 %endif
-echo VBOX_GCC_OPT="%{optflags}" >> LocalConfig.kmk
+# remove fPIC to avoid causing issues
+echo VBOX_GCC_OPT="`echo %{optflags} | sed 's/-fPIC//'`" >> LocalConfig.kmk
 %ifarch %{ix86}
 %global ldflags %{ldflags} -fuse-ld=bfd
 %endif
