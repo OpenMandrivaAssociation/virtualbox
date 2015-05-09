@@ -312,6 +312,7 @@ KERNEL=="vboxuser", NAME="vboxuser", OWNER="root", MODE="0666"
 EOF
 
 # (tpg) create modules to load
+install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
 cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/virtualbox << EOF
 vboxdrv
 vboxnetflt
@@ -335,7 +336,6 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -m755 VBoxOGL*.so %{buildroot}%{_libdir}
   ln -s -f ../VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
 
-  install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
   cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
 vboxguest
 vboxsf
