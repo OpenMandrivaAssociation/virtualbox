@@ -546,7 +546,7 @@ set -x
 %dir /var/run/%{oname}
 # desktop integration
 %{_iconsdir}/hicolor/*/*/*
-%{_datadir}/applications/mandriva-%{name}.desktop
+%{_datadir}/applications/%{name}.desktop
 %{_datadir}/mime/packages/virtualbox.xml
 
 %files -n dkms-%{name}
