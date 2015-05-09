@@ -233,7 +233,7 @@ kmk %{_smp_mflags} all
 
 %install
 # install vbox components
-mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir} 
+mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir}
 
 (cd out/%{vbox_platform}/release/bin && tar cf - --exclude=additions .) | \
 (cd %{buildroot}%{vboxlibdir} && tar xf -)
@@ -504,6 +504,8 @@ set -x
 %{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBalloonCtrl
+%{vboxlibdir}/VBoxCpuReport
+%{vboxlibdir}/VBoxDTrace
 %{vboxlibdir}/VBoxEFI32.fd
 %{vboxlibdir}/VBoxEFI64.fd
 %{vboxlibdir}/VBoxExtPackHelperApp
