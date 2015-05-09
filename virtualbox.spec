@@ -33,15 +33,16 @@ Group:		Emulators
 Url:		http://www.virtualbox.org/
 Source0:	http://dlc.sun.com.edgesuite.net/virtualbox/%{version}/%{srcname}.tar.bz2
 Source1:	http://dlc.sun.com.edgesuite.net/virtualbox/UserManual.pdf
-Source2:	virtualbox.init
 Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
+Source5:	vboxadd.service
+Source6:	vboxweb.service
 Source100:	virtualbox.rpmlintrc
+# (tpg) dkms is used to build kernel modules, so use it everywhere
+Patch1:		virtualbox-fix-modules-rebuild-command.patch
 Patch2:		VirtualBox-4.1.8-kernelrelease.patch
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
-# (fc) 1.6.0-2mdv fix initscript name in VBox.sh script
-Patch5:		VirtualBox-4.1.8-initscriptname.patch
 # (tmb) disable update notification (OpenSuSe)
 Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # don't check for:
@@ -135,11 +136,11 @@ Requires(post,preun): rpm-helper
 %description guest-additions
 This package contains additions for VirtualBox guest systems.
 It allows to share files with the host system and sync time with host.
+Install only inside guest.
 
 %package -n dkms-vboxadditions
 Summary:	Kernel module for VirtualBox additions
 Group:		System/Kernel and hardware
-Requires(post,preun):	dkms
 Obsoletes:	dkms-vboxadd < %{version}-%{release}
 %rename		dkms-vboxvfs
 %rename		dkms-vboxsf
@@ -242,10 +243,6 @@ mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir}
 # move noarch files to vboxdatadir
 mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,*.desktop,*.png} %{buildroot}%{vboxdatadir}
 
-# install service
-mkdir -p %{buildroot}%{_initrddir}
-install -m755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
-
 # install wrappers
 mkdir -p %{buildroot}%{_sysconfdir}/vbox
 cat > %{buildroot}%{_sysconfdir}/vbox/vbox.cfg << EOF
@@ -266,6 +263,10 @@ ln -s %{vboxlibdir}/VBoxNetAdpCtl %{buildroot}%{_bindir}/VBoxNetAdpCtl
 ln -s %{vboxlibdir}/VBoxNetDHCP %{buildroot}%{_bindir}/VBoxNetDHCP
 
 install -d %{buildroot}/var/run/%{oname}
+
+# (tpg) install Web service
+install -d %{buildroot}%{_unitdir}
+install -m 644 %{SOURCE6} %{buildroot}%{_unitdir}/vboxweb.service
 
 # install dkms sources
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
@@ -297,7 +298,6 @@ AUTOINSTALL=yes
 EOF
 
 # install udev rules
-# install udev rules
 mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
 cat > %{buildroot}%{_sysconfdir}/udev/rules.d/%{name}.rules << EOF
 KERNEL=="%{kname}", NAME="vboxdrv", OWNER="root", GROUP="root", MODE="0600"
@@ -311,17 +311,21 @@ KERNEL=="vboxguest", NAME="vboxguest", OWNER="root", MODE="0660"
 KERNEL=="vboxuser", NAME="vboxuser", OWNER="root", MODE="0666"
 EOF
 
+# (tpg) create modules to load
+cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/virtualbox << EOF
+vboxdrv
+vboxnetflt
+vboxnetadp
+EOF
+
 # install additions
 %if %{build_additions}
-# vboxadd-timesync should probably be renamed vboxadd now, but renaming initscripts
-# cleanly is hacky business
-install -m755 src/VBox/Additions/linux/installer/vboxadd-service.sh %{buildroot}%{_initrddir}/vboxadd-timesync
 
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
 
 pushd out/%{vbox_platform}/release/bin/additions
-  install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri
+  install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri %{buildroot}%{_unitdir}
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 VBoxService %{buildroot}%{_sbindir}
 
@@ -335,6 +339,12 @@ pushd out/%{vbox_platform}/release/bin/additions
   cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
 vboxguest
 vboxsf
+EOF
+
+  install -m 644 %{SOURCE5} %{buildroot}%{_unitdir}/vboxadd.service
+  install -d %{buildroot}%{_presetdir}
+cat > %{buildroot}%{_presetdir}/86-vboxadd.preset << EOF
+enable vboxadd.service
 EOF
 
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
@@ -373,7 +383,7 @@ popd
 
 # install menu entries
 mkdir -p %{buildroot}%{_datadir}/applications
-cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
+cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << EOF
 [Desktop Entry]
 Name=VirtualBox
 Comment=Full virtualizer for x86 hardware
@@ -450,8 +460,6 @@ set -x
 %if %{build_additions}
 
 %post guest-additions
-%_post_service vboxadd-timesync
-
 # (Debian) Build usb device tree
 for i in /sys/bus/usb/devices/*; do
 if test -r "$i/dev"; then
@@ -462,9 +470,6 @@ class="`cat $i/bDeviceClass 2> /dev/null || true`"
 /usr/share/virtualbox/VBoxCreateUSBNode.sh "$major" "$minor" "$class" vboxusers 2>/dev/null || true
 fi
 done
-
-%preun guest-additions
-%_preun_service vboxadd-timesync
 
 %post -n dkms-vboxadditions
 set -x
@@ -490,6 +495,7 @@ set -x
 %{_bindir}/VBoxNetAdpCtl
 %{_bindir}/VBoxNetDHCP
 %{_bindir}/vboxwebsrv
+%{_unitdir}/vboxweb.service
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
@@ -530,8 +536,6 @@ set -x
 %attr(644,root,root) %{vboxlibdir}/*.r0
 %exclude %{vboxlibdir}/UserManual.pdf
 %{vboxdatadir}
-# initscripts integration
-%{_initrddir}/%{name}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
 %{_tmpfilesdir}/%{name}.conf
 %dir /var/run/%{oname}
@@ -541,13 +545,15 @@ set -x
 %{_datadir}/mime/packages/virtualbox.xml
 
 %files -n dkms-%{name}
+%{_sysconfdir}/modprobe.preload.d/virtualbox
 %{_usr}/src/%{name}-%{version}-%{release}
 
 %if %{build_additions}
 %files guest-additions
 /%{_lib}/security/pam_vbox.so
 /sbin/mount.vboxsf
-%{_initrddir}/vboxadd-timesync
+%{_presetdir}/86-vboxadd.preset
+%{_unitdir}/vboxadd.service
 %{_sbindir}/VBoxService
 %{_bindir}/VBoxClient
 %{_bindir}/VBoxControl
