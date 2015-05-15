@@ -1,3 +1,5 @@
-sources:
+removed_sources:
   VirtualBox-4.3.26.tar.bz2: f421be5b31deb5f73352d002020fa6fbce44a001
-  UserManual.pdf: f3d385dcc506aa15f2063263f17accd7b419d499
+sources:
+  UserManual.pdf: e2011aa13e8f60fd2d8b9acf1b8e8905c85388ed
+  VirtualBox-4.3.28.tar.bz2: 252ef1654494177dcf5d8095f70e51250c894b19
