@@ -1,8 +1,13 @@
-%define beta BETA3
+%define beta %{nil}
 %define kname vboxdrv
 %define oname VirtualBox
+%if "%{beta}" != ""
 %define srcname %{oname}-%{version}_%{beta}
 %define distname %{oname}-%{version}_%{beta}
+%else
+%define srcname %{oname}-%{version}
+%define distname %{oname}-%{version}
+%endif
 %define pkgver %{ver}
 
 %define vboxlibdir %{_libdir}/%{name}
@@ -532,8 +537,9 @@ set -x
 %attr(4711,root,root) %{vboxlibdir}/VirtualBox
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetAdpCtl
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
-%attr(644,root,root) %{vboxlibdir}/*.gc
+%attr(644,root,root) %{vboxlibdir}/*.rc
 %attr(644,root,root) %{vboxlibdir}/*.r0
+%attr(755,root,root) %{vboxlibdir}/*.sh
 %exclude %{vboxlibdir}/UserManual.pdf
 %{vboxdatadir}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
