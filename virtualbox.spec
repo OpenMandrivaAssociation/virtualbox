@@ -502,8 +502,6 @@ set -x
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
-%{vboxlibdir}/load.sh
-%{vboxlibdir}/loadall.sh
 %{vboxlibdir}/*.so
 %{vboxlibdir}/*.debug
 %{vboxlibdir}/iPxeBaseBin
