@@ -26,7 +26,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	4.3.28
+Version:	5.0.0
 Release:	0.1
 License:	GPLv2
 Group:		Emulators
@@ -504,13 +504,13 @@ set -x
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
-%{vboxlibdir}/load.sh
-%{vboxlibdir}/loadall.sh
 %{vboxlibdir}/*.so
 %{vboxlibdir}/*.debug
 %{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBalloonCtrl
+%{vboxlibdir}/VBoxCpuReport
+%{vboxlibdir}/VBoxDTrace
 %{vboxlibdir}/VBoxEFI32.fd
 %{vboxlibdir}/VBoxEFI64.fd
 %{vboxlibdir}/VBoxExtPackHelperApp
