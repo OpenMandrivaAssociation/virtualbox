@@ -29,6 +29,10 @@
 ## Disabled: see rpmlint -I external-depfilter-with-internal-depgen
 
 %define x11_server_majorver %(pkg-config --modversion xorg-server|awk -F. '{print $1$2}')
+# FIXME
+# kBuild: xpidl XPCOM - /home/bero/abf/virtualbox/BUILD/VirtualBox-5.0.0/src/libs/xpcom18a4/xpcom/base/nsIExceptionService.idl
+# error: Missing # define COM __gnu_lto_v1
+%define _disable_lto 1
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
