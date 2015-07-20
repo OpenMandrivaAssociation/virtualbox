@@ -47,8 +47,8 @@ Just compile with X11 system source and we may remove bundle X11 source code.
  endif
  
 @@ -222,11 +216,20 @@ VBoxOGL_LIBS = \
- 	$(VBOX_LIB_OGL_CRUTIL) \
- 	$(PATH_STAGE_LIB)/additions/VBoxOGLspuload$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/additions/VBoxCrHgsmi$(VBOX_SUFF_LIB)
+ 
  if1of ($(KBUILD_TARGET), linux solaris freebsd)
 - VBoxOGL_LIBS += \
 - 	$(PATH_STAGE_LIB)/libXcomposite.so \
