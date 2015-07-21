@@ -1,16 +1,12 @@
-diff -Nurp VirtualBox-4.1.8_OSE-p2/src/VBox/Runtime/r3/linux/semmutex-linux.cpp VirtualBox-4.1.8_OSE-p\
-3/src/VBox/Runtime/r3/linux/semmutex-linux.cpp                                                         
---- VirtualBox-4.1.8_OSE-p2/src/VBox/Runtime/r3/linux/semmutex-linux.cpp        2011-12-19 15:01:33.00\
-0000000 +0200                                                                                          
-+++ VirtualBox-4.1.8_OSE-p3/src/VBox/Runtime/r3/linux/semmutex-linux.cpp        2011-12-24 15:25:16.79\
-1196405 +0200                                                                                          
-@@ -88,7 +88,7 @@ struct RTSEMMUTEXINTERNAL                                                            
- static long sys_futex(int32_t volatile *uaddr, int op, int val, struct timespec *utime, int32_t *uadd\
-r2, int val3)                                                                                          
- {                                                                                                     
-     errno = 0;                                                                                        
--    long rc = syscall(__NR_futex, uaddr, op, val, utime, uaddr2, val3);                               
-+    long rc = syscall(SYS_futex, uaddr, op, val, utime, uaddr2, val3);                                
-     if (rc < 0)                                                                                       
-     {                                                                                                 
-         Assert(rc == -1); 
+diff -Nurp VirtualBox-4.1.8_OSE-p2/src/VBox/Runtime/r3/linux/semmutex-linux.cpp VirtualBox-4.1.8_OSE-p3/src/VBox/Runtime/r3/linux/semmutex-linux.cpp
+--- VirtualBox-4.1.8_OSE-p2/src/VBox/Runtime/r3/linux/semmutex-linux.cpp	2011-12-19 15:01:33.000000000 +0200
++++ VirtualBox-4.1.8_OSE-p3/src/VBox/Runtime/r3/linux/semmutex-linux.cpp	2011-12-24 15:25:16.791196405 +0200
+@@ -88,7 +88,7 @@ struct RTSEMMUTEXINTERNAL
+ static long sys_futex(int32_t volatile *uaddr, int op, int val, struct timespec *utime, int32_t *uaddr2, int val3)
+ {
+     errno = 0;
+-    long rc = syscall(__NR_futex, uaddr, op, val, utime, uaddr2, val3);
++    long rc = syscall(SYS_futex, uaddr, op, val, utime, uaddr2, val3);
+     if (rc < 0)
+     {
+         Assert(rc == -1);
