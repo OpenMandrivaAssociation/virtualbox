@@ -17,4 +17,3 @@
      }
      /* Else simply select the first one present: */
      else m_pTypeCombo->setCurrentIndex(0);
-
