@@ -235,7 +235,7 @@ kmk %{_smp_mflags} all
 
 %install
 # install vbox components
-mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir} 
+mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir}
 
 (cd out/%{vbox_platform}/release/bin && tar cf - --exclude=additions .) | \
 (cd %{buildroot}%{vboxlibdir} && tar xf -)
@@ -537,8 +537,9 @@ set -x
 %attr(4711,root,root) %{vboxlibdir}/VirtualBox
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetAdpCtl
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
-%attr(644,root,root) %{vboxlibdir}/*.gc
+%attr(644,root,root) %{vboxlibdir}/*.rc
 %attr(644,root,root) %{vboxlibdir}/*.r0
+%attr(755,root,root) %{vboxlibdir}/*.sh
 %exclude %{vboxlibdir}/UserManual.pdf
 %{vboxdatadir}
 %config %{_sysconfdir}/udev/rules.d/%{name}.rules
