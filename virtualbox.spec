@@ -49,7 +49,7 @@ Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # don't check for:
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
-Patch9:		VirtualBox-4.1.8-dont-check-for-mkisofs-or-makeself.patch
+Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
@@ -57,7 +57,7 @@ Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 Patch21:	VirtualBox-4.3.6-mesa.patch
 
 Patch23:	VirtualBox-4.3.0-no-bundles.patch
-Patch24:	VirtualBox-4.3.16-VBoxGuestLib.patch
+Patch24:	VirtualBox-5.0.0_BETA3-VBoxGuestLib.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
@@ -115,8 +115,8 @@ VirtualBox is a general-purpose full virtualizer for x86 hardware.
 %package -n dkms-%{name}
 Summary:	VirtualBox kernel module
 Group:		System/Kernel and hardware
-Requires:	dkms
-Requires(post,preun):	dkms
+Requires:	dkms >= 2.2.0.3.1-0.20130827.3
+Requires(post,preun):	dkms >= 2.2.0.3.1-0.20130827.3
 Conflicts:	dkms-vboxadditions < 4.1.8
 
 %description -n dkms-%{name}
