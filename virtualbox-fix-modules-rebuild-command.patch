@@ -5,7 +5,7 @@
           load. Please recompile the kernel module and install it by
  
 -           sudo /etc/init.d/vboxdrv setup
-+           sudo dkms autoinstall --verbose
++           sudo dkms_autoinstaller start
  
           You will not be able to start VMs until this problem is fixed.
  EOF
@@ -14,7 +14,7 @@
  WARNING: The character device /dev/vboxdrv does not exist. Try
  
 -           sudo /etc/init.d/vboxdrv restart
-+           sudo dkms autoinstall --verbose
++           sudo dkms_autoinstaller start
  
           and if that is not successful, try to re-install the package.
  
@@ -25,7 +25,7 @@
                                    "that no kernel modules from an older version of VirtualBox exist. "
                                    "Then try to recompile and reload the kernel modules by executing "
 -                                  "'/etc/init.d/vboxdrv setup' as root");
-+                                  "'dkms autoinstall --verbose' as root");
++                                  "'dkms_autoinstaller start' as root");
                      break;
  #endif
  
@@ -34,7 +34,7 @@
                                    "was either not loaded or /dev/vboxdrv is not set up properly. "
                                    "Re-setup the kernel module by executing "
 -                                  "'/etc/init.d/vboxdrv setup' as root");
-+                                  "'dkms autoinstall --verbose' as root");
++                                  "'dkms_autoinstaller start' as root");
  #else
                      pszError = N_("VirtualBox kernel driver not loaded");
  #endif
@@ -43,7 +43,7 @@
                                    "was either not loaded or /dev/vboxdrv was not created for some "
                                    "reason. Re-setup the kernel module by executing "
 -                                  "'/etc/init.d/vboxdrv setup' as root");
-+                                  "'dkms autoinstall --verbose' as root");
++                                  "'dkms_autoinstaller start' as root");
  #else
                      pszError = N_("VirtualBox kernel driver not installed");
  #endif
