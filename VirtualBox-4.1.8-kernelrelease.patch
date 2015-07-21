@@ -30,5 +30,5 @@ diff -Nurp VirtualBox-4.1.8_OSE-p1/src/VBox/HostDrivers/Support/linux/Makefile V
 +  KERN_DIR := /lib/modules/$(KERNELRELEASE)/build                                                     
    ifeq ($(wildcard $(KERN_DIR)/Makefile),)                                                            
     KERN_DIR := /usr/src/linux                                                                         
-   endif                                                                                               
+   endif                                                                                            
                 
