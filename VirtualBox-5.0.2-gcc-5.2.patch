@@ -1,0 +1,14 @@
+--- VirtualBox-5.0.2/configure.orig	2015-08-13 18:33:26.000000000 +0300
++++ VirtualBox-5.0.2/configure	2015-08-20 15:05:32.536653460 +0300
+@@ -422,9 +422,9 @@ check_gcc()
+              -o \( $cc_maj -eq 3 -a $cc_min -lt 2 \) \
+              -o \( $cc_maj -eq 4 -a $cc_min -lt 1 -a "$OS" != "darwin" \) \
+              -o \( $cc_maj -eq 4 -a $cc_min -gt 9 \) \
+-             -o \( $cc_maj -eq 5 -a $cc_min -gt 1 \) \
++             -o \( $cc_maj -eq 5 -a $cc_min -gt 2 \) \
+              -o $cc_maj -gt 5 ]; then
+-        log_failure "gcc version $cc_maj.$cc_min found, expected gcc 3.x with x>1 or gcc 4.x with 0<x<10 or gcc 5.1"
++        log_failure "gcc version $cc_maj.$cc_min found, expected gcc 3.x with x>1 or gcc 4.x with 0<x<10 or gcc  <= 5.2"
+         fail really
+       else
+         log_success "found version $cc_ver"
