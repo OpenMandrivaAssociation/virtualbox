@@ -1,3 +1,5 @@
-sources:
-  UserManual.pdf: f3d385dcc506aa15f2063263f17accd7b419d499
+removed_sources:
   VirtualBox-5.0.0.tar.bz2: 1ecbc7690d71c830b533509e8d8f79ae4832a636
+sources:
+  UserManual.pdf: e2011aa13e8f60fd2d8b9acf1b8e8905c85388ed
+  VirtualBox-5.0.2.tar.bz2: 68dafca256149c1003319707f7f43a8d186d21d2
