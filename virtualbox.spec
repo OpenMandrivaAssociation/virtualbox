@@ -26,7 +26,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.0.2
+Version:	5.0.4
 Release:	0.1
 License:	GPLv2
 Group:		Emulators
