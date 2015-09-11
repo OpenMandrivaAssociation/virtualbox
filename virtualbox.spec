@@ -225,7 +225,7 @@ export LIBPATH_LIB="%{_lib}"
 	--disable-docs
 %endif
 # remove fPIC to avoid causing issues
-echo VBOX_GCC_OPT="`echo %{optflags} | sed 's/-fPIC//'`" >> LocalConfig.kmk
+echo VBOX_GCC_OPT="`echo %{optflags} -fpermissive | sed 's/-fPIC//'`" >> LocalConfig.kmk
 %ifarch %{ix86}
 %global ldflags %{ldflags} -fuse-ld=bfd
 %endif
