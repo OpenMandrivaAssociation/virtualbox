@@ -36,13 +36,13 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.0.4
+Version:	5.0.6
 Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
-Source0:	http://dlc.sun.com.edgesuite.net/virtualbox/%{version}/%{srcname}.tar.bz2
-Source1:	http://dlc.sun.com.edgesuite.net/virtualbox/UserManual.pdf
+Source0:	http://download.virtualbox.org/virtualbox/%{version}/%{srcname}.tar.bz2
+Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
@@ -65,7 +65,6 @@ Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 Patch21:	VirtualBox-4.3.6-mesa.patch
 Patch23:	VirtualBox-4.3.0-no-bundles.patch
 Patch24:	VirtualBox-5.0.0_BETA3-VBoxGuestLib.patch
-Patch25:	VirtualBox-5.0.2-gcc-5.2.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
