@@ -4,7 +4,7 @@
           available for the current kernel (`uname -r`) or it failed to
           load. Please recompile the kernel module and install it by
  
--           sudo /etc/init.d/vboxdrv setup
+-           sudo /sbin/rcvboxdrv setup
 +           sudo dkms autoinstall --verbose
  
           You will not be able to start VMs until this problem is fixed.
@@ -13,7 +13,7 @@
      cat << EOF
  WARNING: The character device /dev/vboxdrv does not exist. Try
  
--           sudo /etc/init.d/vboxdrv restart
+-           sudo /sbin/rcvboxdrv restart
 +           sudo dkms autoinstall --verbose
  
           and if that is not successful, try to re-install the package.
@@ -24,7 +24,7 @@
                      pszError = N_("One of the kernel modules was not successfully loaded. Make sure "
                                    "that no kernel modules from an older version of VirtualBox exist. "
                                    "Then try to recompile and reload the kernel modules by executing "
--                                  "'/etc/init.d/vboxdrv setup' as root");
+-                                  "'/sbin/rcvboxdrv setup' as root");
 +                                  "'dkms autoinstall --verbose' as root");
                      break;
  #endif
@@ -33,7 +33,7 @@
                      pszError = N_("VirtualBox kernel driver not loaded. The vboxdrv kernel module "
                                    "was either not loaded or /dev/vboxdrv is not set up properly. "
                                    "Re-setup the kernel module by executing "
--                                  "'/etc/init.d/vboxdrv setup' as root");
+-                                  "'/sbin/rcvboxdrv setup' as root");
 +                                  "'dkms autoinstall --verbose' as root");
  #else
                      pszError = N_("VirtualBox kernel driver not loaded");
@@ -42,7 +42,7 @@
                      pszError = N_("VirtualBox kernel driver not installed. The vboxdrv kernel module "
                                    "was either not loaded or /dev/vboxdrv was not created for some "
                                    "reason. Re-setup the kernel module by executing "
--                                  "'/etc/init.d/vboxdrv setup' as root");
+-                                  "'/sbin/rcvboxdrv setup' as root");
 +                                  "'dkms autoinstall --verbose' as root");
  #else
                      pszError = N_("VirtualBox kernel driver not installed");
