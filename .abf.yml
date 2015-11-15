@@ -4,5 +4,5 @@ removed_sources:
   VirtualBox-5.0.4.tar.bz2: 11c0bac5387467e2d6286553db829f6a90f444f0
   VirtualBox-5.0.6.tar.bz2: af106cc2114597414fb813761f627ef968540ae0
 sources:
-  UserManual.pdf: 008a58a150832be7af2dffb500b58ef6c29bfe33
+  UserManual.pdf: 3fdc010a6cfc66aea6ad7cc760829f805be40b46
   VirtualBox-5.0.10.tar.bz2: ed6475f0c60c9f2a9a7a63a8b5bceff6fe647844

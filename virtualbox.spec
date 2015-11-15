@@ -55,8 +55,7 @@ Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 
 Patch21:	VirtualBox-4.3.6-mesa.patch
-
-Patch23:	VirtualBox-4.3.0-no-bundles.patch
+Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.0_BETA3-VBoxGuestLib.patch
 
 ExclusiveArch:	%{ix86} x86_64
