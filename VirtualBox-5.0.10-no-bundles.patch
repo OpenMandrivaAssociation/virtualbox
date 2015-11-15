@@ -6,7 +6,7 @@ diff -Nurp VirtualBox-4.3.0.p21/Config.kmk VirtualBox-4.3.0.p22/Config.kmk
  # SDKs for external libraries.
  #
 -SDK_VBOX_LIBXML2          = .
--SDK_VBOX_LIBXML2_INCS   ?= $(PATH_ROOT)/src/libs/libxml2-2.6.31/include
+-SDK_VBOX_LIBXML2_INCS   ?= $(PATH_ROOT)/src/libs/libxml2-2.9.2/include
 +SDK_VBOX_LIBXML2        = .
 +SDK_VBOX_LIBXML2_INCS  ?= /usr/include/libxml2
  SDK_VBOX_LIBXML2_DEFS  ?= _REENTRANT
@@ -15,13 +15,13 @@ diff -Nurp VirtualBox-4.3.0.p21/Config.kmk VirtualBox-4.3.0.p22/Config.kmk
  # libxml against VBoxRT
  
  SDK_VBOX_LIBPNG       = .
--SDK_VBOX_LIBPNG_INCS ?= $(PATH_ROOT)/src/libs/libpng-1.2.8
+-SDK_VBOX_LIBPNG_INCS ?= $(PATH_ROOT)/src/libs/libpng-1.2.53
 +SDK_VBOX_LIBPNG_INCS ?= /usr/include/libpng15
  SDK_VBOX_LIBPNG_LIBS ?= $(PATH_STAGE_LIB)/VBox-libpng$(VBOX_SUFF_LIB)
  
  SDK_VBOX_ZLIB         = .
  if1of ($(KBUILD_TARGET), os2 solaris win)
-- SDK_VBOX_ZLIB_INCS  ?= $(PATH_ROOT)/src/libs/zlib-1.2.6
+- SDK_VBOX_ZLIB_INCS  ?= $(PATH_ROOT)/src/libs/zlib-1.2.8
 + SDK_VBOX_ZLIB_INCS  ?= /usr/include/
   SDK_VBOX_ZLIB_LIBS  ?= $(PATH_STAGE_LIB)/VBox-zlib$(VBOX_SUFF_LIB)
  else
