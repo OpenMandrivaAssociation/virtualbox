@@ -37,7 +37,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.0.10
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -95,7 +95,7 @@ BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xmu)
-BuildRequires:	pkgconfig(xorg-server) >= 1.17
+BuildRequires:	pkgconfig(xorg-server) >= 1.18
 BuildRequires:	pkgconfig(libxslt)
 BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xt)
