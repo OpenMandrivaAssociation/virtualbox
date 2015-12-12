@@ -27,7 +27,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.0.10
-Release:	0.1
+Release:	0.2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -54,7 +54,7 @@ Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
 
-Patch21:	VirtualBox-4.3.6-mesa.patch
+Patch21:	VirtualBox-5.0.0-xserver_guest.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.0_BETA3-VBoxGuestLib.patch
 
@@ -177,8 +177,11 @@ This package contains the user manual PDF file for %{name}.
 %apply_patches
 
 # Remove bundle X11 sources and some lib sources, before patching.
-rm -rf src/VBox/Additions/x11/x11include
+mv src/VBox/Additions/x11/x11include/mesa-7.2 src/VBox/Additions/x11/
+rm -rf src/VBox/Additions/x11/x11include/*
+mv src/VBox/Additions/x11/mesa-7.2 src/VBox/Additions/x11/x11include/
 rm -rf src/VBox/Additions/x11/x11stubs
+rm -rf src/libs/boost-1.37.0/
 #rm -rf src/libs/liblzf-3.4/
 rm -rf src/libs/libxml2-2.6.31/
 rm -rf src/libs/libpng-1.2.8/
@@ -196,6 +199,7 @@ VBOX_WITH_TESTSUITE:=
 VBOX_JAVA_HOME := %{java_home}
 VBOX_WITHOUT_ADDITIONS_ISO := 1
 VBOX_USE_SYSTEM_XORG_HEADERS := 1
+XSERVER_VERSION := %{x11_server_majorver}
 VBOX_BLD_PYTHON:=/usr/bin/python2
 VBOX_GTAR:=
 EOF
@@ -422,6 +426,7 @@ rm  -f %{buildroot}%{vboxlibdir}/tst*
 rm  -f %{buildroot}%{vboxlibdir}/vboxkeyboard.tar.gz
 rm  -f %{buildroot}%{vboxlibdir}/SUP*
 rm  -f %{buildroot}%{vboxlibdir}/xpidl
+rm  -f %{buildroot}%{vboxlibdir}/*.debug
 
 # install PAM module:
 install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
