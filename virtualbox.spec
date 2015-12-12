@@ -513,7 +513,6 @@ set -x
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
 %{vboxlibdir}/*.so
-%{vboxlibdir}/*.debug
 %{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBalloonCtrl
