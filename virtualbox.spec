@@ -192,9 +192,9 @@ mv src/VBox/Additions/x11/mesa-7.2 src/VBox/Additions/x11/x11include/
 rm -rf src/VBox/Additions/x11/x11stubs
 rm -rf src/libs/boost-1.37.0/
 #rm -rf src/libs/liblzf-3.4/
-rm -rf src/libs/libxml2-2.6.31/
-rm -rf src/libs/libpng-1.2.8/
-rm -rf src/libs/zlib-1.2.6/
+rm -rf src/libs/libxml2-2.9.2/
+rm -rf src/libs/libpng-1.2.54/
+rm -rf src/libs/zlib-1.2.8/
 
 cat << EOF > LocalConfig.kmk
 VBOX_WITH_WARNINGS_AS_ERRORS:=

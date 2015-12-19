@@ -15,7 +15,7 @@ diff -Nurp VirtualBox-4.3.0.p21/Config.kmk VirtualBox-4.3.0.p22/Config.kmk
  # libxml against VBoxRT
  
  SDK_VBOX_LIBPNG       = .
--SDK_VBOX_LIBPNG_INCS ?= $(PATH_ROOT)/src/libs/libpng-1.2.53
+-SDK_VBOX_LIBPNG_INCS ?= $(PATH_ROOT)/src/libs/libpng-1.2.54
 +SDK_VBOX_LIBPNG_INCS ?= `/usr/bin/pkg-config libpng --variable=includedir`
  SDK_VBOX_LIBPNG_LIBS ?= $(PATH_STAGE_LIB)/VBox-libpng$(VBOX_SUFF_LIB)
  
