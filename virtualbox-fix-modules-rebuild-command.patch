@@ -1,48 +1,50 @@
---- VirtualBox-4.3.26/src/VBox/Installer/linux/VBox.sh	2015-03-16 17:04:14.000000000 +0000
-+++ VirtualBox-4.3.26/src/VBox/Installer/linux/VBox.sh.tpg	2015-05-09 06:37:58.710459509 +0000
-@@ -38,7 +38,7 @@
+diff -Naur VirtualBox-5.0.12/src/VBox/Installer/linux/VBox.sh VirtualBox-5.0.12.tpg/src/VBox/Installer/linux/VBox.sh
+--- VirtualBox-5.0.12/src/VBox/Installer/linux/VBox.sh	2015-12-18 16:22:03.000000000 +0000
++++ VirtualBox-5.0.12.tpg/src/VBox/Installer/linux/VBox.sh	2015-12-19 18:00:25.103921701 +0000
+@@ -40,7 +40,7 @@
           available for the current kernel (`uname -r`) or it failed to
           load. Please recompile the kernel module and install it by
  
--           sudo /sbin/vboxconfig
+-           sudo /sbin/rcvboxdrv setup
 +           sudo dkms autoinstall --verbose
  
           You will not be able to start VMs until this problem is fixed.
  EOF
-@@ -46,7 +46,7 @@
-     cat << EOF
+@@ -49,6 +49,8 @@
  WARNING: The character device /dev/vboxdrv does not exist. Try
  
--           sudo /sbin/vboxconfig
+            sudo /sbin/rcvboxdrv setup
++           or
 +           sudo dkms autoinstall --verbose
  
           and if that is not successful, try to re-install the package.
  
---- VirtualBox-4.3.26/src/VBox/VMM/VMMR3/VM.cpp	2015-03-16 17:04:42.000000000 +0000
-+++ VirtualBox-4.3.26/src/VBox/VMM/VMMR3/VM.cpp.tpg	2015-05-09 06:42:32.252670719 +0000
-@@ -313,7 +313,7 @@
+diff -Naur VirtualBox-5.0.12/src/VBox/VMM/VMMR3/VM.cpp VirtualBox-5.0.12.tpg/src/VBox/VMM/VMMR3/VM.cpp
+--- VirtualBox-5.0.12/src/VBox/VMM/VMMR3/VM.cpp	2015-12-18 16:22:45.000000000 +0000
++++ VirtualBox-5.0.12.tpg/src/VBox/VMM/VMMR3/VM.cpp	2015-12-19 18:06:27.690598774 +0000
+@@ -315,7 +315,7 @@
                      pszError = N_("One of the kernel modules was not successfully loaded. Make sure "
                                    "that no kernel modules from an older version of VirtualBox exist. "
                                    "Then try to recompile and reload the kernel modules by executing "
--                                  "'/sbin/vboxconfig' as root");
+-                                  "'/sbin/rcvboxdrv setup' as root");
 +                                  "'dkms autoinstall --verbose' as root");
                      break;
  #endif
  
-@@ -379,7 +379,7 @@
+@@ -381,7 +381,7 @@
                      pszError = N_("VirtualBox kernel driver not loaded. The vboxdrv kernel module "
                                    "was either not loaded or /dev/vboxdrv is not set up properly. "
                                    "Re-setup the kernel module by executing "
--                                  "'/sbin/vboxconfig' as root");
+-                                  "'/sbin/rcvboxdrv setup' as root");
 +                                  "'dkms autoinstall --verbose' as root");
  #else
                      pszError = N_("VirtualBox kernel driver not loaded");
  #endif
-@@ -421,7 +421,7 @@
+@@ -423,7 +423,7 @@
                      pszError = N_("VirtualBox kernel driver not installed. The vboxdrv kernel module "
                                    "was either not loaded or /dev/vboxdrv was not created for some "
                                    "reason. Re-setup the kernel module by executing "
--                                  "'/sbin/vboxconfig' as root");
+-                                  "'/sbin/rcvboxdrv setup' as root");
 +                                  "'dkms autoinstall --verbose' as root");
  #else
                      pszError = N_("VirtualBox kernel driver not installed");

@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.0.10
-Release:	0.2
+Version:	5.0.12
+Release:	0.1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -183,9 +183,9 @@ mv src/VBox/Additions/x11/mesa-7.2 src/VBox/Additions/x11/x11include/
 rm -rf src/VBox/Additions/x11/x11stubs
 rm -rf src/libs/boost-1.37.0/
 #rm -rf src/libs/liblzf-3.4/
-rm -rf src/libs/libxml2-2.6.31/
-rm -rf src/libs/libpng-1.2.8/
-rm -rf src/libs/zlib-1.2.6/
+rm -rf src/libs/libxml2-2.9.2/
+rm -rf src/libs/libpng-1.2.54/
+rm -rf src/libs/zlib-1.2.8/
 
 cat << EOF > LocalConfig.kmk
 VBOX_WITH_WARNINGS_AS_ERRORS:=
@@ -534,6 +534,7 @@ set -x
 %{vboxlibdir}/scripts
 %{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
+%{vboxlibdir}/rdesktop-vrdp*
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
