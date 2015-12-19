@@ -539,7 +539,6 @@ set -x
 %{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
 %{vboxlibdir}/rdesktop-vrdp*
-%{vboxlibdir}/rdesktop-vrdp-keymaps
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
