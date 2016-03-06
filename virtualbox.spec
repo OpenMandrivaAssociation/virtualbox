@@ -517,6 +517,7 @@ set -x
 %{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBalloonCtrl
+%{vboxlibdir}/VBoxBugReport
 %{vboxlibdir}/VBoxCpuReport
 %{vboxlibdir}/VBoxDTrace
 %{vboxlibdir}/VBoxEFI32.fd
