@@ -73,13 +73,14 @@ BuildRequires:	dkms
 BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	acpica
-BuildRequires:	java-1.7.0-openjdk-devel
+BuildRequires:	java-1.8.0-openjdk-devel
 BuildRequires:	qt4-linguist
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pam-devel
+BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(ext2fs)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glu)
