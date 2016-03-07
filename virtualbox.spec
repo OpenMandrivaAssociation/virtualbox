@@ -26,8 +26,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.0.14
-Release:	0.2
+Version:	5.0.16
+Release:	0.1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -71,6 +71,7 @@ BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pam-devel
+BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(ext2fs)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glu)
@@ -512,6 +513,7 @@ set -x
 %{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBalloonCtrl
+%{vboxlibdir}/VBoxBugReport
 %{vboxlibdir}/VBoxCpuReport
 %{vboxlibdir}/VBoxDTrace
 %{vboxlibdir}/VBoxEFI32.fd
