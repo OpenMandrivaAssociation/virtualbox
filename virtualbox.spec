@@ -72,6 +72,7 @@ BuildRequires:	libstdc++-static-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(alsa)
+BuildRequires:	pkgconfig(egl)
 BuildRequires:	pkgconfig(ext2fs)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glu)
