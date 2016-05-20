@@ -1,3 +1,8 @@
+# Workaround for the dependency generator somehow
+# thinking x11-driver-video-vboxvideo provides libGL.so.1()(64bit)
+# causing Mesa to go missing...
+%define __noautoprov 'libGL.*'
+
 %define beta %{nil}
 %define kname vboxdrv
 %define oname VirtualBox
@@ -38,7 +43,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.0.20
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
