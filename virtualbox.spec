@@ -1,3 +1,8 @@
+# Workaround for the dependency generator somehow
+# thinking x11-driver-video-vboxvideo provides libGL.so.1()(64bit)
+# causing Mesa to go missing...
+%define __noautoprov 'libGL.*'
+
 %define beta %{nil}
 %define kname vboxdrv
 %define oname VirtualBox
