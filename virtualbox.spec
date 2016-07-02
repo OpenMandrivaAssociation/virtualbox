@@ -42,7 +42,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.0.22
+Version:	5.0.24
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -123,6 +123,7 @@ BuildConflicts:	rpmlint < 1.4-37
 Requires(post,preun,postun):	rpm-helper
 Requires:	kmod(vboxdrv) = %{version}
 Suggests:	%{name}-doc
+Conflicts:	dkms-%{name} < 5.0.24-1
 
 %description
 VirtualBox is a general-purpose full virtualizer for x86 hardware.
@@ -284,8 +285,8 @@ ln -s %{vboxlibdir}/VBoxNetDHCP %{buildroot}%{_bindir}/VBoxNetDHCP
 install -d %{buildroot}/var/run/%{oname}
 
 # (tpg) install Web service
-install -d %{buildroot}%{_unitdir}
-install -m 644 %{SOURCE6} %{buildroot}%{_unitdir}/vboxweb.service
+install -d %{buildroot}%{_systemunitdir}
+install -m 644 %{SOURCE6} %{buildroot}%{_systemunitdir}/vboxweb.service
 
 # install dkms sources
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
@@ -345,7 +346,7 @@ install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
 
 pushd out/%{vbox_platform}/release/bin/additions
-  install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri %{buildroot}%{_unitdir}
+  install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri %{buildroot}%{_systemunitdir}
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 VBoxService %{buildroot}%{_sbindir}
 
@@ -360,7 +361,7 @@ vboxguest
 vboxsf
 EOF
 
-  install -m 644 %{SOURCE5} %{buildroot}%{_unitdir}/vboxadd.service
+  install -m 644 %{SOURCE5} %{buildroot}%{_systemunitdir}/vboxadd.service
   install -d %{buildroot}%{_presetdir}
 cat > %{buildroot}%{_presetdir}/86-vboxadd.preset << EOF
 enable vboxadd.service
@@ -419,14 +420,14 @@ install -D -m644 src/VBox/Installer/common/virtualbox.xml %{buildroot}%{_datadir
 
 # install shipped icons for apps and mimetypes
 for i in 16 20 32 40 48 64 128; do
-	install -D -m0644 src/VBox/Artwork/OSE/virtualbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/virtualbox.png
+    install -D -m0644 src/VBox/Artwork/OSE/virtualbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/virtualbox.png
 done
 
 for i in 16 20 24 32 40 48 64 72 80 96 128 256 512; do
-	install -D -m0644 src/VBox/Artwork/other/virtualbox-ova-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-ova.png
-	install -D -m0644 src/VBox/Artwork/other/virtualbox-ovf-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-ovf.png
-	install -D -m0644 src/VBox/Artwork/other/virtualbox-vbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-vbox.png
-	install -D -m0644 src/VBox/Artwork/other/virtualbox-vbox-extpack-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-vbox-extpack.png
+    install -D -m0644 src/VBox/Artwork/other/virtualbox-ova-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-ova.png
+    install -D -m0644 src/VBox/Artwork/other/virtualbox-ovf-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-ovf.png
+    install -D -m0644 src/VBox/Artwork/other/virtualbox-vbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-vbox.png
+    install -D -m0644 src/VBox/Artwork/other/virtualbox-vbox-extpack-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-vbox-extpack.png
 done
 
 # add missing makefile for kernel module
@@ -451,6 +452,13 @@ install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
 %post
 %_add_group_helper %{name} 1 vboxusers
+/sbin/rmmod vboxnetflt &>/dev/null
+/sbin/rmmod vboxnetadp &>/dev/null
+/sbin/rmmod %{kname} &>/dev/null
+/sbin/modprobe %{kname} &>/dev/null
+/sbin/modprobe vboxnetflt &>/dev/null
+/sbin/modprobe vboxnetadp &>/dev/null
+
 
 %postun
 %_del_group_helper %{name} 1 vboxusers
@@ -470,9 +478,9 @@ set -x
 
 %preun -n dkms-%{name}
 if [ "$1" = "0" ]; then
-	/sbin/rmmod vboxnetadp >/dev/null 2>&1
-	/sbin/rmmod vboxnetflt >/dev/null 2>&1
-	/sbin/rmmod %{kname} >/dev/null 2>&1
+    /sbin/rmmod vboxnetadp >/dev/null 2>&1
+    /sbin/rmmod vboxnetflt >/dev/null 2>&1
+    /sbin/rmmod %{kname} >/dev/null 2>&1
 fi
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade remove -m %{name} -v %{version}-%{release} --all || :
@@ -507,6 +515,7 @@ set -x
 
 %files
 %config %{_sysconfdir}/vbox/vbox.cfg
+%{_sysconfdir}/modprobe.preload.d/virtualbox
 %{_bindir}/%{oname}
 %{_bindir}/VBoxManage
 %{_bindir}/VBoxSDL
@@ -515,7 +524,7 @@ set -x
 %{_bindir}/VBoxNetAdpCtl
 %{_bindir}/VBoxNetDHCP
 %{_bindir}/vboxwebsrv
-%{_unitdir}/vboxweb.service
+%{_systemunitdir}/vboxweb.service
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
@@ -567,7 +576,6 @@ set -x
 %{_datadir}/mime/packages/virtualbox.xml
 
 %files -n dkms-%{name}
-%{_sysconfdir}/modprobe.preload.d/virtualbox
 %{_usr}/src/%{name}-%{version}-%{release}
 
 %if %{build_additions}
