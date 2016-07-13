@@ -42,7 +42,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.0.24
+Version:	5.1.0
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -79,7 +79,6 @@ BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	acpica
 BuildRequires:	java-1.8.0-openjdk-devel
-BuildRequires:	qt4-linguist
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
@@ -95,10 +94,7 @@ BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
 BuildRequires:	pkgconfig(python2)
-# for now requires full qt4-devel
-# as qtcore has been upgraded to qt5
-BuildRequires:	qt4-devel
-#BuildRequires:	pkgconfig(QtCore)
+#BuildRequires:	pkgconfig(Qt5Core)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
@@ -233,6 +229,9 @@ export LIBPATH_LIB="%{_lib}"
 	--enable-vnc \
 	--enable-webservice \
 	--disable-kmods \
+	--enable-qt5 \
+	--disable-qt4 \
+	--enable-pulse \
 %if ! %{build_doc}
 	--disable-docs
 %endif
