@@ -94,7 +94,7 @@ BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
 BuildRequires:	pkgconfig(python2)
-#BuildRequires:	pkgconfig(Qt5Core)
+BuildRequires:	pkgconfig(Qt5Core)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
@@ -107,6 +107,7 @@ BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(xcomposite)
 BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
+BuildRequires:	pkgconfig(liblzf)
 %if %{build_doc}
 # for building the user manual pdf file
 BuildRequires:	texlive
@@ -195,7 +196,7 @@ rm -rf src/VBox/Additions/x11/x11include/*
 mv src/VBox/Additions/x11/mesa-7.2 src/VBox/Additions/x11/x11include/
 rm -rf src/VBox/Additions/x11/x11stubs
 rm -rf src/libs/boost-1.37.0/
-#rm -rf src/libs/liblzf-3.4/
+rm -rf src/libs/liblzf-3.4/
 rm -rf src/libs/libxml2-2.9.2/
 rm -rf src/libs/libpng-1.2.54/
 rm -rf src/libs/zlib-1.2.8/
@@ -230,7 +231,6 @@ export LIBPATH_LIB="%{_lib}"
 	--enable-webservice \
 	--disable-kmods \
 	--enable-qt5 \
-	--disable-qt4 \
 	--enable-pulse \
 %if ! %{build_doc}
 	--disable-docs
@@ -317,15 +317,15 @@ AUTOINSTALL=yes
 EOF
 
 # install udev rules
-mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
-cat > %{buildroot}%{_sysconfdir}/udev/rules.d/%{name}.rules << EOF
+mkdir -p %{buildroot}%{_udevrulesdir}
+cat > %{buildroot}%{_udevrulesdir}/%{name}.rules << EOF
 KERNEL=="%{kname}", NAME="vboxdrv", OWNER="root", GROUP="root", MODE="0600"
 SUBSYSTEM=="usb_device", ACTION=="add", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh \$major \$minor \$attr{bDeviceClass} vboxusers"
 SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh \$major \$minor \$attr{bDeviceClass} vboxusers"
 SUBSYSTEM=="usb_device", ACTION=="remove", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh --remove \$major \$minor"
 SUBSYSTEM=="usb", ACTION=="remove", ENV{DEVTYPE}=="usb_device", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh --remove \$major \$minor"
 EOF
-cat > %{buildroot}%{_sysconfdir}/udev/rules.d/vbox-additions.rules << EOF
+cat > %{buildroot}%{_udevrulesdir}/vbox-additions.rules << EOF
 KERNEL=="vboxguest", NAME="vboxguest", OWNER="root", MODE="0660"
 KERNEL=="vboxuser", NAME="vboxuser", OWNER="root", MODE="0666"
 EOF
@@ -566,7 +566,7 @@ set -x
 %attr(755,root,root) %{vboxlibdir}/*.sh
 %exclude %{vboxlibdir}/UserManual.pdf
 %{vboxdatadir}
-%config %{_sysconfdir}/udev/rules.d/%{name}.rules
+%config %{_udevrulesdir}/%{name}.rules
 %{_tmpfilesdir}/%{name}.conf
 %dir /var/run/%{oname}
 # desktop integration
@@ -586,7 +586,7 @@ set -x
 %{_sbindir}/VBoxService
 %{_bindir}/VBoxClient
 %{_bindir}/VBoxControl
-%{_sysconfdir}/udev/rules.d/vbox-additions.rules
+%{_udevrulesdir}/vbox-additions.rules
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
 
