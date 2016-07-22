@@ -108,6 +108,7 @@ BuildRequires:	pkgconfig(xcomposite)
 BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
 BuildRequires:	pkgconfig(liblzf)
+BuildRequires:	pkgconfig(libpng)
 %if %{build_doc}
 # for building the user manual pdf file
 BuildRequires:	texlive
