@@ -42,7 +42,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.0.24
+Version:	5.1.2
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -79,7 +79,6 @@ BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	acpica
 BuildRequires:	java-1.8.0-openjdk-devel
-BuildRequires:	qt4-linguist
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
@@ -95,10 +94,14 @@ BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
 BuildRequires:	pkgconfig(python2)
-# for now requires full qt4-devel
-# as qtcore has been upgraded to qt5
-BuildRequires:	qt4-devel
-#BuildRequires:	pkgconfig(QtCore)
+BuildRequires:	qt5-qttools
+BuildRequires:	qt5-linguist-tools
+BuildRequires:	pkgconfig(Qt5Core)
+BuildRequires:	pkgconfig(Qt5Gui)
+BuildRequires:	pkgconfig(Qt5Widgets)
+BuildRequires:	pkgconfig(Qt5X11Extras)
+BuildRequires:	pkgconfig(Qt5PrintSupport)
+BuildRequires:	pkgconfig(Qt5OpenGL)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
@@ -111,6 +114,8 @@ BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(xcomposite)
 BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
+BuildRequires:	pkgconfig(liblzf)
+BuildRequires:	pkgconfig(libpng)
 %if %{build_doc}
 # for building the user manual pdf file
 BuildRequires:	texlive
@@ -221,10 +226,10 @@ VBOX_BLD_PYTHON:=/usr/bin/python2
 VBOX_GTAR:=
 EOF
 
+sed -i 's/CXX="g++"/CXX="g++ -std=c++11"/' configure
+
 %build
 # FIXME: gold linker dies with internal error in segment_precedes, at ../../gold/layout.cc:3250
-export CC="%{__cc} -fuse-ld=bfd"
-export CXX="%{__cxx} -fuse-ld=bfd"
 mkdir -p BFD
 ln -sf /usr/bin/ld.bfd BFD/ld
 export PATH=$PWD/BFD:$PATH
@@ -233,9 +238,13 @@ export LIBPATH_LIB="%{_lib}"
 	--enable-vnc \
 	--enable-webservice \
 	--disable-kmods \
+	--enable-qt5 \
+	--enable-pulse \
 %if ! %{build_doc}
-	--disable-docs
+	--disable-docs \
 %endif
+	|| (cat configure.log && exit 1)
+
 # remove fPIC to avoid causing issues
 echo VBOX_GCC_OPT="`echo %{optflags} -fpermissive | sed 's/-fPIC//'`" >> LocalConfig.kmk
 %ifarch %{ix86}
@@ -318,15 +327,15 @@ AUTOINSTALL=yes
 EOF
 
 # install udev rules
-mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
-cat > %{buildroot}%{_sysconfdir}/udev/rules.d/%{name}.rules << EOF
+mkdir -p %{buildroot}%{_udevrulesdir}
+cat > %{buildroot}%{_udevrulesdir}/%{name}.rules << EOF
 KERNEL=="%{kname}", NAME="vboxdrv", OWNER="root", GROUP="root", MODE="0600"
 SUBSYSTEM=="usb_device", ACTION=="add", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh \$major \$minor \$attr{bDeviceClass} vboxusers"
 SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh \$major \$minor \$attr{bDeviceClass} vboxusers"
 SUBSYSTEM=="usb_device", ACTION=="remove", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh --remove \$major \$minor"
 SUBSYSTEM=="usb", ACTION=="remove", ENV{DEVTYPE}=="usb_device", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh --remove \$major \$minor"
 EOF
-cat > %{buildroot}%{_sysconfdir}/udev/rules.d/vbox-additions.rules << EOF
+cat > %{buildroot}%{_udevrulesdir}/vbox-additions.rules << EOF
 KERNEL=="vboxguest", NAME="vboxguest", OWNER="root", MODE="0660"
 KERNEL=="vboxuser", NAME="vboxuser", OWNER="root", MODE="0666"
 EOF
@@ -567,7 +576,7 @@ set -x
 %attr(755,root,root) %{vboxlibdir}/*.sh
 %exclude %{vboxlibdir}/UserManual.pdf
 %{vboxdatadir}
-%config %{_sysconfdir}/udev/rules.d/%{name}.rules
+%config %{_udevrulesdir}/%{name}.rules
 %{_tmpfilesdir}/%{name}.conf
 %dir /var/run/%{oname}
 # desktop integration
@@ -587,7 +596,7 @@ set -x
 %{_sbindir}/VBoxService
 %{_bindir}/VBoxClient
 %{_bindir}/VBoxControl
-%{_sysconfdir}/udev/rules.d/vbox-additions.rules
+%{_udevrulesdir}/vbox-additions.rules
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
 
