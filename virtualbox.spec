@@ -204,7 +204,7 @@ rm -rf src/VBox/Additions/x11/x11include/*
 mv src/VBox/Additions/x11/mesa-7.2 src/VBox/Additions/x11/x11include/
 rm -rf src/VBox/Additions/x11/x11stubs
 rm -rf src/libs/boost-1.37.0/
-rm -rf src/libs/liblzf-3.4/
+#rm -rf src/libs/liblzf-3.4/
 rm -rf src/libs/libxml2-2.9.2/
 rm -rf src/libs/libpng-1.2.54/
 rm -rf src/libs/zlib-1.2.8/
@@ -226,10 +226,10 @@ VBOX_BLD_PYTHON:=/usr/bin/python2
 VBOX_GTAR:=
 EOF
 
+sed -i 's/CXX="g++"/CXX="g++ -std=c++11"/' configure
+
 %build
 # FIXME: gold linker dies with internal error in segment_precedes, at ../../gold/layout.cc:3250
-export CC="%{__cc} -fuse-ld=bfd"
-export CXX="%{__cxx} -fuse-ld=bfd"
 mkdir -p BFD
 ln -sf /usr/bin/ld.bfd BFD/ld
 export PATH=$PWD/BFD:$PATH
