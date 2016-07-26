@@ -560,7 +560,6 @@ set -x
 %{vboxlibdir}/virtualbox.xml
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/webtest
-%{vboxlibdir}/helpers
 %{vboxlibdir}/scripts
 %{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
