@@ -241,8 +241,10 @@ export LIBPATH_LIB="%{_lib}"
 	--enable-qt5 \
 	--enable-pulse \
 %if ! %{build_doc}
-	--disable-docs
+	--disable-docs \
 %endif
+	|| (cat configure.log && exit 1)
+
 # remove fPIC to avoid causing issues
 echo VBOX_GCC_OPT="`echo %{optflags} -fpermissive | sed 's/-fPIC//'`" >> LocalConfig.kmk
 %ifarch %{ix86}
