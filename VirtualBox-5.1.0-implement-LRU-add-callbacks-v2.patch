@@ -1,0 +1,32 @@
+
+Upstream kernel 4.7 added this commit to all in-kernel drivers:
+
+Web:        https://git.kernel.org/torvalds/c/98c2872ae99bb7c9e8e4369cf48154f41dd6a109
+Commit:     98c2872ae99bb7c9e8e4369cf48154f41dd6a109
+Parent:     c3ea576e0583bb0537cdd66b704e49d380427721
+Refname:    refs/heads/master
+Author:     Christian König <christian.koenig@amd.com>
+AuthorDate: Wed Apr 6 11:12:07 2016 +0200
+Committer:  Alex Deucher <alexander.deucher@amd.com>
+CommitDate: Wed May 4 20:21:38 2016 -0400
+
+    drm/ttm: implement LRU add callbacks v2
+
+
+So do the same for vboxvideo driver
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+--- VirtualBox-5.1.0/src/VBox/Additions/linux/drm/vbox_ttm.c.orig
++++ VirtualBox-5.1.0/src/VBox/Additions/linux/drm/vbox_ttm.c
+@@ -274,6 +274,10 @@ struct ttm_bo_driver vbox_bo_driver = {
+     .verify_access = vbox_bo_verify_access,
+     .io_mem_reserve = &vbox_ttm_io_mem_reserve,
+     .io_mem_free = &vbox_ttm_io_mem_free,
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 7, 0)
++    .lru_tail = &ttm_bo_default_lru_tail,
++    .swap_lru_tail = &ttm_bo_default_swap_lru_tail,
++#endif
+ };
+ 
+ int vbox_mm_init(struct vbox_private *vbox)
