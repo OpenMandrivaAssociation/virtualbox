@@ -42,8 +42,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.1.2
-Release:	3
+Version:	5.1.8
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -67,11 +67,10 @@ Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
-Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
+Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch21:	VirtualBox-5.0.0-xserver_guest.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.0_BETA3-VBoxGuestLib.patch
-Patch25:	VirtualBox-5.1.0-implement-LRU-add-callbacks-v2.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
