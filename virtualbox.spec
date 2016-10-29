@@ -71,6 +71,7 @@ Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch21:	VirtualBox-5.0.0-xserver_guest.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.0_BETA3-VBoxGuestLib.patch
+Patch26:	fix-build.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
