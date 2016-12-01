@@ -70,6 +70,7 @@ Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch21:	VirtualBox-5.0.18-xserver_guest.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
+Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
@@ -176,7 +177,6 @@ on the guest OS not on the host OS).
 %package -n x11-driver-video-vboxvideo
 Summary:	The X.org driver for video in VirtualBox guests
 Group:		System/X11
-#Requires:	x11-server-common %%(xserver-sdk-abi-requires videodrv)
 Requires:	x11-server-common
 Suggests:	virtualbox-guest-additions
 Conflicts:	virtualbox-guest-additions < 2.2.0-2
@@ -363,7 +363,6 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -m755 VBoxControl %{buildroot}%{_bindir}
 
   install -m755 VBoxOGL*.so %{buildroot}%{_libdir}
-  ln -s -f ../VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
 
   cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
 vboxguest
@@ -377,7 +376,6 @@ enable vboxadd.service
 EOF
 
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
-  install vboxvideo_drv_system.so %{buildroot}%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
   cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
@@ -601,8 +599,6 @@ set -x
 
 %files -n x11-driver-video-vboxvideo
 %{_libdir}/VBoxOGL*
-%{_libdir}/xorg/modules/drivers/vboxvideo_drv.so
-%{_libdir}/dri/vboxvideo_dri.so
 
 %files -n dkms-vboxadditions
 %{_usr}/src/vbox*-%{version}-%{release}
