@@ -81,6 +81,7 @@ BuildRequires:	iasl
 BuildRequires:	java-1.7.0-openjdk-devel
 BuildRequires:	javapackages-tools
 BuildRequires:	qt4-linguist
+BuildRequires:	qt4-devel
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
@@ -96,14 +97,6 @@ BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
 BuildRequires:	pkgconfig(python2)
-BuildRequires:	qt5-qttools
-BuildRequires:	qt5-linguist-tools
-BuildRequires:	pkgconfig(Qt5Core)
-BuildRequires:	pkgconfig(Qt5Gui)
-BuildRequires:	pkgconfig(Qt5Widgets)
-BuildRequires:	pkgconfig(Qt5X11Extras)
-BuildRequires:	pkgconfig(Qt5PrintSupport)
-BuildRequires:	pkgconfig(Qt5OpenGL)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
@@ -241,7 +234,6 @@ export LIBPATH_LIB="%{_lib}"
 	--enable-vnc \
 	--enable-webservice \
 	--disable-kmods \
-	--enable-qt5 \
 	--enable-pulse \
 %if ! %{build_doc}
 	--disable-docs \
