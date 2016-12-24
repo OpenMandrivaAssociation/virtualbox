@@ -1,6 +1,7 @@
---- VirtualBox-4.3.8/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp.orig	2014-03-03 23:50:59.529129676 +0000
-+++ VirtualBox-4.3.8/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2014-03-03 23:51:25.911130743 +0000
-@@ -206,12 +206,12 @@
+diff -Naur VirtualBox-5.1.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp VirtualBox-5.1.0.tpg/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp
+--- VirtualBox-5.1.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2016-07-12 14:54:10.000000000 +0000
++++ VirtualBox-5.1.0.tpg/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2016-07-22 20:14:00.785904704 +0000
+@@ -330,12 +330,12 @@
      /* Or select Ubuntu item for Linux family as default: */
      else if (strFamilyId == "Linux")
      {
@@ -8,12 +9,12 @@
 +        QString strDefaultID = "Mandriva";
          if (ARCH_BITS == 64 && m_fSupportsHWVirtEx && m_fSupportsLongMode)
              strDefaultID += "_64";
--        int iIndexUbuntu = m_pTypeCombo->findData(strDefaultID, TypeID);
+-        const int iIndexUbuntu = m_pComboType->findData(strDefaultID, TypeID);
 -        if (iIndexUbuntu != -1)
--            m_pTypeCombo->setCurrentIndex(iIndexUbuntu);
-+        int iIndexMandriva = m_pTypeCombo->findData(strDefaultID, TypeID);
+-            m_pComboType->setCurrentIndex(iIndexUbuntu);
++        const int iIndexMandriva = m_pComboType->findData(strDefaultID, TypeID);
 +        if (iIndexMandriva != -1)
-+            m_pTypeCombo->setCurrentIndex(iIndexMandriva);
++            m_pComboType->setCurrentIndex(iIndexMandriva);
      }
      /* Else simply select the first one present: */
-     else m_pTypeCombo->setCurrentIndex(0);
+     else

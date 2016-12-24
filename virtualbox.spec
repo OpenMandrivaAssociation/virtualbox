@@ -3,10 +3,16 @@
 # causing Mesa to go missing...
 %define __noautoprov 'libGL.*'
 
+%define beta %{nil}
 %define kname vboxdrv
 %define oname VirtualBox
+%if "%{beta}" != ""
+%define srcname %{oname}-%{version}_%{beta}
+%define distname %{oname}-%{version}_%{beta}
+%else
 %define srcname %{oname}-%{version}
 %define distname %{oname}-%{version}
+%endif
 %define pkgver %{ver}
 
 %define vboxlibdir %{_libdir}/%{name}
@@ -29,21 +35,25 @@
 
 %define x11_server_majorver %(pkg-config --modversion xorg-server|awk -F. '{print $1$2}')
 
+# FIXME
+# kBuild: xpidl XPCOM - /home/bero/abf/virtualbox/BUILD/VirtualBox-5.0.0/src/libs/xpcom18a4/xpcom/base/nsIExceptionService.idl
+# error: Missing # define COM __gnu_lto_v1
+%define _disable_lto 1
+
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.0.24
+Version:	5.1.10
 Release:	0.1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
-Source0:	http://dlc.sun.com.edgesuite.net/virtualbox/%{version}/%{srcname}.tar.bz2
-Source1:	http://dlc.sun.com.edgesuite.net/virtualbox/UserManual.pdf
+Source0:	http://download.virtualbox.org/virtualbox/%{version}/%{srcname}.tar.bz2
+Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
 Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
 Source6:	vboxweb.service
 Source100:	virtualbox.rpmlintrc
-# (tpg) dkms is used to build kernel modules, so use it everywhere
 # please do not mix cooker with 2014.0 version of this patch
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
 Patch2:		VirtualBox-4.1.8-kernelrelease.patch
@@ -57,8 +67,7 @@ Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
-Patch18:	VirtualBox-4.2.12-gsoap-2.8.13.patch
-
+Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch21:	VirtualBox-5.0.0-xserver_guest.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.0_BETA3-VBoxGuestLib.patch
@@ -87,10 +96,14 @@ BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
 BuildRequires:	pkgconfig(python2)
-# for now requires full qt4-devel
-# as qtcore has been upgraded to qt5
-BuildRequires:	qt4-devel
-#BuildRequires:	pkgconfig(QtCore)
+BuildRequires:	qt5-qttools
+BuildRequires:	qt5-linguist-tools
+BuildRequires:	pkgconfig(Qt5Core)
+BuildRequires:	pkgconfig(Qt5Gui)
+BuildRequires:	pkgconfig(Qt5Widgets)
+BuildRequires:	pkgconfig(Qt5X11Extras)
+BuildRequires:	pkgconfig(Qt5PrintSupport)
+BuildRequires:	pkgconfig(Qt5OpenGL)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xinerama)
@@ -103,6 +116,8 @@ BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(xcomposite)
 BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
+BuildRequires:	pkgconfig(liblzf)
+BuildRequires:	pkgconfig(libpng)
 %if %{build_doc}
 # for building the user manual pdf file
 BuildRequires:	texlive
@@ -115,6 +130,7 @@ BuildConflicts:	rpmlint < 1.4-37
 Requires(post,preun,postun):	rpm-helper
 Requires:	kmod(vboxdrv) = %{version}
 Suggests:	%{name}-doc
+Conflicts:	dkms-%{name} < 5.0.24-1
 
 %description
 VirtualBox is a general-purpose full virtualizer for x86 hardware.
@@ -212,10 +228,11 @@ VBOX_BLD_PYTHON:=/usr/bin/python2
 VBOX_GTAR:=
 EOF
 
+sed -i 's/CXX="g++"/CXX="g++ -std=c++11"/' configure
+sed -i "s!/usr/lib/virtualbox!%{vboxlibdir}!g" src/VBox/Installer/linux/VBox.sh
+
 %build
 # FIXME: gold linker dies with internal error in segment_precedes, at ../../gold/layout.cc:3250
-export CC="%{__cc} -fuse-ld=bfd"
-export CXX="%{__cxx} -fuse-ld=bfd"
 mkdir -p BFD
 ln -sf /usr/bin/ld.bfd BFD/ld
 export PATH=$PWD/BFD:$PATH
@@ -224,9 +241,13 @@ export LIBPATH_LIB="%{_lib}"
 	--enable-vnc \
 	--enable-webservice \
 	--disable-kmods \
+	--enable-qt5 \
+	--enable-pulse \
 %if ! %{build_doc}
-	--disable-docs
+	--disable-docs \
 %endif
+	|| (cat configure.log && exit 1)
+
 # remove fPIC to avoid causing issues
 echo VBOX_GCC_OPT="`echo %{optflags} -fpermissive | sed 's/-fPIC//'`" >> LocalConfig.kmk
 %ifarch %{ix86}
@@ -317,7 +338,7 @@ SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", RUN+="%{_datadir}/%
 SUBSYSTEM=="usb_device", ACTION=="remove", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh --remove \$major \$minor"
 SUBSYSTEM=="usb", ACTION=="remove", ENV{DEVTYPE}=="usb_device", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh --remove \$major \$minor"
 EOF
-cat > %{buildroot}%{_sysconfdir}/udev/rules.d/vbox-additions.rules << EOF
+cat > %{buildroot}%{_udevrulesdir}/vbox-additions.rules << EOF
 KERNEL=="vboxguest", NAME="vboxguest", OWNER="root", MODE="0660"
 KERNEL=="vboxuser", NAME="vboxuser", OWNER="root", MODE="0666"
 EOF
@@ -411,14 +432,14 @@ install -D -m644 src/VBox/Installer/common/virtualbox.xml %{buildroot}%{_datadir
 
 # install shipped icons for apps and mimetypes
 for i in 16 20 32 40 48 64 128; do
-	install -D -m0644 src/VBox/Artwork/OSE/virtualbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/virtualbox.png
+    install -D -m0644 src/VBox/Artwork/OSE/virtualbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/virtualbox.png
 done
 
 for i in 16 20 24 32 40 48 64 72 80 96 128 256 512; do
-	install -D -m0644 src/VBox/Artwork/other/virtualbox-ova-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-ova.png
-	install -D -m0644 src/VBox/Artwork/other/virtualbox-ovf-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-ovf.png
-	install -D -m0644 src/VBox/Artwork/other/virtualbox-vbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-vbox.png
-	install -D -m0644 src/VBox/Artwork/other/virtualbox-vbox-extpack-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-vbox-extpack.png
+    install -D -m0644 src/VBox/Artwork/other/virtualbox-ova-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-ova.png
+    install -D -m0644 src/VBox/Artwork/other/virtualbox-ovf-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-ovf.png
+    install -D -m0644 src/VBox/Artwork/other/virtualbox-vbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-vbox.png
+    install -D -m0644 src/VBox/Artwork/other/virtualbox-vbox-extpack-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/mimetypes/virtualbox-vbox-extpack.png
 done
 
 # add missing makefile for kernel module
@@ -443,6 +464,13 @@ install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
 %post
 %_add_group_helper %{name} 1 vboxusers
+/sbin/rmmod vboxnetflt &>/dev/null
+/sbin/rmmod vboxnetadp &>/dev/null
+/sbin/rmmod %{kname} &>/dev/null
+/sbin/modprobe %{kname} &>/dev/null
+/sbin/modprobe vboxnetflt &>/dev/null
+/sbin/modprobe vboxnetadp &>/dev/null
+
 
 %postun
 %_del_group_helper %{name} 1 vboxusers
@@ -462,9 +490,9 @@ set -x
 
 %preun -n dkms-%{name}
 if [ "$1" = "0" ]; then
-	/sbin/rmmod vboxnetadp >/dev/null 2>&1
-	/sbin/rmmod vboxnetflt >/dev/null 2>&1
-	/sbin/rmmod %{kname} >/dev/null 2>&1
+    /sbin/rmmod vboxnetadp >/dev/null 2>&1
+    /sbin/rmmod vboxnetflt >/dev/null 2>&1
+    /sbin/rmmod %{kname} >/dev/null 2>&1
 fi
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade remove -m %{name} -v %{version}-%{release} --all || :
@@ -473,7 +501,6 @@ set -x
 
 %post guest-additions
 %systemd_post vboxadd.service
-
 # (Debian) Build usb device tree
 for i in /sys/bus/usb/devices/*; do
 if test -r "$i/dev"; then
@@ -504,6 +531,7 @@ set -x
 
 %files
 %config %{_sysconfdir}/vbox/vbox.cfg
+%{_sysconfdir}/modprobe.preload.d/virtualbox
 %{_bindir}/%{oname}
 %{_bindir}/VBoxManage
 %{_bindir}/VBoxSDL
@@ -539,7 +567,6 @@ set -x
 %{vboxlibdir}/virtualbox.xml
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/webtest
-%{vboxlibdir}/helpers
 %{vboxlibdir}/scripts
 %{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
@@ -576,7 +603,7 @@ set -x
 %{_sbindir}/VBoxService
 %{_bindir}/VBoxClient
 %{_bindir}/VBoxControl
-%{_sysconfdir}/udev/rules.d/vbox-additions.rules
+%{_udevrulesdir}/vbox-additions.rules
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
 
