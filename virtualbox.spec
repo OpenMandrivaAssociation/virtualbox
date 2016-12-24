@@ -86,6 +86,12 @@ BuildRequires:  qt5-designer
 BuildRequires:  qt5-linguist
 BuildRequires:  qt5-linguist-tools
 BuildRequires:  qt5-tools
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Gui)
+BuildRequires:  pkgconfig(Qt5Widgets)
+BuildRequires:  pkgconfig(Qt5X11Extras)
+BuildRequires:  pkgconfig(Qt5PrintSupport)
+BuildRequires:  pkgconfig(Qt5OpenGL)
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
