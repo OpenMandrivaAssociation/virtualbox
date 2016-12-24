@@ -593,7 +593,6 @@ set -x
 %{_datadir}/mime/packages/virtualbox.xml
 
 %files -n dkms-%{name}
-%{_sysconfdir}/modprobe.preload.d/virtualbox
 %{_usr}/src/%{name}-%{version}-%{release}
 
 %if %{build_additions}
