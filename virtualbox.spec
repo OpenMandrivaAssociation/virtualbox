@@ -80,8 +80,12 @@ BuildRequires:	gsoap
 BuildRequires:	iasl
 BuildRequires:	java-1.7.0-openjdk-devel
 BuildRequires:	javapackages-tools
-BuildRequires:	qt4-linguist
-BuildRequires:	qt4-devel
+BuildRequires:	qt5-devel
+BuildRequires:  qt5-assistant
+BuildRequires:  qt5-designer
+BuildRequires:  qt5-linguist
+BuildRequires:  qt5-linguist-tools
+BuildRequires:  qt5-tools
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
@@ -235,8 +239,6 @@ export LIBPATH_LIB="%{_lib}"
 	--enable-webservice \
 	--disable-kmods \
 	--enable-pulse \
-	--enable-qt4 \
-	--disable-qt5 \
 %if ! %{build_doc}
 	--disable-docs \
 %endif
