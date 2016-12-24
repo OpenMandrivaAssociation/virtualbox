@@ -235,6 +235,7 @@ export LIBPATH_LIB="%{_lib}"
 	--enable-webservice \
 	--disable-kmods \
 	--enable-pulse \
+	--enable-qt4 \
 %if ! %{build_doc}
 	--disable-docs \
 %endif
