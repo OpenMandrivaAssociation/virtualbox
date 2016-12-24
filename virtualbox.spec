@@ -236,6 +236,7 @@ export LIBPATH_LIB="%{_lib}"
 	--disable-kmods \
 	--enable-pulse \
 	--enable-qt4 \
+	--disable-qt5 \
 %if ! %{build_doc}
 	--disable-docs \
 %endif
