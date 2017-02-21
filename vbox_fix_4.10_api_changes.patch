@@ -1,0 +1,36 @@
+Index: VirtualBox-5.1.14/src/VBox/Additions/linux/sharedfolders/lnkops.c
+===================================================================
+--- VirtualBox-5.1.14.orig/src/VBox/Additions/linux/sharedfolders/lnkops.c
++++ VirtualBox-5.1.14/src/VBox/Additions/linux/sharedfolders/lnkops.c
+@@ -88,6 +88,31 @@ static const char *sf_get_link(struct de
+ }
+ # endif /* LINUX_VERSION_CODE < KERNEL_VERSION(4, 5, 0) */
+ 
++# if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
++/*
++ * A helper for ->readlink().  This should be used *ONLY* for symlinks that
++ * have ->get_link() not calling nd_jump_link().  Using (or not using) it
++ * for any given inode is up to filesystem.
++ */
++static int generic_readlink(struct dentry *dentry, char __user *buffer,
++			    int buflen)
++{
++	DEFINE_DELAYED_CALL(done);
++	struct inode *inode = d_inode(dentry);
++	const char *link = inode->i_link;
++	int res;
++
++	if (!link) {
++		link = inode->i_op->get_link(dentry, inode, &done);
++		if (IS_ERR(link))
++			return PTR_ERR(link);
++	}
++	res = readlink_copy(buffer, buflen, link);
++	do_delayed_call(&done);
++	return res;
++}
++#endif
++
+ struct inode_operations sf_lnk_iops =
+ {
+     .readlink       = generic_readlink,
