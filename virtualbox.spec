@@ -43,7 +43,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.1.14
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -73,7 +73,7 @@ Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 
 #(tpg) needed for kernel-release-4.10+
-Patch25:	vbox_fix_4.10_api_changes.patch
+Patch25:	VirtualBox-kernel-4.10.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
