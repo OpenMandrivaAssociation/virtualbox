@@ -43,7 +43,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.1.14
-Release:	3
+Release:	4
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -402,8 +402,8 @@ EOF
     i=$((i+1))
   done
   cat >> %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
-CLEAN="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxguest clean && 
-make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxsf clean && 
+CLEAN="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxguest clean &&
+make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxsf clean &&
 make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvideo clean "
 AUTOINSTALL=yes
 EOF
