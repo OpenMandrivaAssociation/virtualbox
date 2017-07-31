@@ -42,7 +42,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.1.22
+Version:	5.1.26
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -71,6 +71,7 @@ Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch21:	VirtualBox-5.0.18-xserver_guest.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
+Patch25:	virtualbox-5.1.26-glibc-2.26.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
@@ -247,9 +248,9 @@ export LIBPATH_LIB="%{_lib}"
 
 # remove fPIC to avoid causing issues
 echo VBOX_GCC_OPT="`echo %{optflags} -fpermissive | sed 's/-fPIC//'`" >> LocalConfig.kmk
-%ifarch %{ix86}
+#ifarch %{ix86}
 %global ldflags %{ldflags} -fuse-ld=bfd
-%endif
+#endif
 echo TOOL_GCC_LDFLAGS="%{ldflags}" >> LocalConfig.kmk
 
 %if %{build_additions}
@@ -260,7 +261,7 @@ echo VBOX_WITHOUT_ADDITIONS=1 >> LocalConfig.kmk
 %endif
 
 . ./env.sh
-kmk %{_smp_mflags} all
+kmk %{_smp_mflags} all VERBOSE=1
 
 %install
 # install vbox components
