@@ -42,7 +42,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.1.26
+Version:	5.2.0
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -56,7 +56,6 @@ Source6:	vboxweb.service
 Source100:	virtualbox.rpmlintrc
 # (tpg) dkms is used to build kernel modules, so use it everywhere
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
-Patch2:		VirtualBox-4.1.8-kernelrelease.patch
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
 # (tmb) disable update notification (OpenSuSe)
@@ -68,10 +67,9 @@ Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
-Patch21:	VirtualBox-5.0.18-xserver_guest.patch
+Patch22:	virtualbox-no-prehistoric-xfree86.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
-Patch25:	virtualbox-5.1.26-glibc-2.26.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
@@ -205,7 +203,7 @@ mv src/VBox/Additions/x11/mesa-7.2 src/VBox/Additions/x11/x11include/
 rm -rf src/VBox/Additions/x11/x11stubs
 rm -rf src/libs/boost-1.37.0/
 #rm -rf src/libs/liblzf-3.4/
-rm -rf src/libs/libxml2-2.9.2/
+rm -rf src/libs/libxml2-2.9.4/
 rm -rf src/libs/libpng-1.2.54/
 rm -rf src/libs/zlib-1.2.8/
 
@@ -221,6 +219,7 @@ VBOX_WITH_TESTSUITE:=
 VBOX_JAVA_HOME := %{java_home}
 VBOX_WITHOUT_ADDITIONS_ISO := 1
 VBOX_USE_SYSTEM_XORG_HEADERS := 1
+VBOX_USE_SYSTEM_GL_HEADERS := 1
 XSERVER_VERSION := %{x11_server_majorver}
 VBOX_BLD_PYTHON:=/usr/bin/python2
 VBOX_GTAR:=
@@ -247,7 +246,7 @@ export LIBPATH_LIB="%{_lib}"
 	|| (cat configure.log && exit 1)
 
 # remove fPIC to avoid causing issues
-echo VBOX_GCC_OPT="`echo %{optflags} -fpermissive | sed 's/-fPIC//'`" >> LocalConfig.kmk
+echo VBOX_GCC_OPT="`echo %{optflags} -fpermissive $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//'`" >> LocalConfig.kmk
 #ifarch %{ix86}
 %global ldflags %{ldflags} -fuse-ld=bfd
 #endif
@@ -538,6 +537,7 @@ set -x
 %{vboxlibdir}/components
 %{vboxlibdir}/*.so
 %{vboxlibdir}/iPxeBaseBin
+%{vboxlibdir}/UnattendedTemplates
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBalloonCtrl
 %{vboxlibdir}/VBoxBugReport
