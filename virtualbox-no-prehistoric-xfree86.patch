@@ -1,0 +1,35 @@
+--- VirtualBox-5.2.0/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp.0022~	2017-10-18 09:06:44.000000000 +0200
++++ VirtualBox-5.2.0/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp	2017-10-31 13:31:27.646597617 +0100
+@@ -36,16 +36,14 @@
+ #if defined(VBOX_VBGLR3_XFREE86)
+ extern "C" {
+ # define XFree86LOADER
+-# include <xf86_ansic.h>
+ # undef size_t
+ }
+-#else
+-# include <stdarg.h>
+-# include <stdlib.h>
+-# define xalloc malloc
+-# define xfree free
+-extern "C" void ErrorF(const char *f, ...);
+ #endif
++#include <stdarg.h>
++#include <stdlib.h>
++#define xalloc malloc
++#define xfree free
++extern "C" void ErrorF(const char *f, ...);
+ 
+ RTDECL(void)    RTAssertMsg1Weak(const char *pszExpr, unsigned uLine, const char *pszFile, const char *pszFunction)
+ {
+--- VirtualBox-5.2.0/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h.0022~	2017-10-18 09:06:50.000000000 +0200
++++ VirtualBox-5.2.0/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h	2017-10-31 13:36:20.635971573 +0100
+@@ -52,7 +52,7 @@ RT_C_DECLS_BEGIN
+ RT_C_DECLS_END
+ #endif  /* defined(IN_XF86_MODULE) && !defined(NO_ANSIC) */
+ #define __STDC_LIMIT_MACROS  /* define *INT*_MAX on C++ too. */
+-#include "compiler.h"  /* Can pull in <sdtint.h>.  Must come after xf86_ansic.h on XFree86. */
++#include <xorg/compiler.h>  /* Can pull in <stdint.h>.  Must come after xf86_ansic.h on XFree86. */
+ #include <X11/Xfuncproto.h>
+ #include <stdint.h>
+ #if defined(IN_XF86_MODULE) && !defined(NO_ANSIC)
