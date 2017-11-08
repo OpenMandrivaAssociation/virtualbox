@@ -1,0 +1,12 @@
+--- VirtualBox-5.1.30/src/VBox/ExtPacks/VBoxDTrace/include/VBoxDTraceTypes.h	2017-10-16 10:49:22.000000000 +0100
++++ VirtualBox-5.1.30/src/VBox/ExtPacks/VBoxDTrace/include/VBoxDTraceTypes.h.0025~	2017-11-08 18:03:55.832261207 +0000
+@@ -57,7 +57,9 @@
+ typedef uint32_t                    zoneid_t;
+ #endif
+ #if (!defined(__NGREG) && !defined(NGREG)) || !defined(RT_OS_LINUX)
++#ifndef _SYS_UCONTEXT_H // sys/context.h defines greg_t
+ typedef RTCCINTREG                  greg_t;
++#endif
+ #else
+ AssertCompileSize(greg_t, sizeof(RTCCINTREG));
+ #endif
