@@ -43,7 +43,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.1.30
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -72,6 +72,7 @@ Patch21:	VirtualBox-5.0.18-xserver_guest.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 Patch25:	virtualbox-5.1.30-glibc-2.26.patch
+Patch26:	virtualbox-framebuffer-oops-fix.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
@@ -225,6 +226,10 @@ XSERVER_VERSION := %{x11_server_majorver}
 VBOX_BLD_PYTHON:=/usr/bin/python2
 VBOX_GTAR:=
 EOF
+
+#If you need the VB debugger add the following two above.
+#VBOX_WITH_DEBUGGER=1
+#VBOX_GUI_DBG_ENABLED=1
 
 sed -i 's/CXX="g++"/CXX="g++ -std=c++11"/' configure
 sed -i "s!/usr/lib/virtualbox!%{vboxlibdir}!g" src/VBox/Installer/linux/VBox.sh
