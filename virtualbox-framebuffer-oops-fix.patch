@@ -1,0 +1,22 @@
+--- VirtualBox-5.1.30/src/VBox/Additions/linux/drm/vbox_fb.c~	2017-10-16 10:43:42.035322432 +0100
++++ VirtualBox-5.1.30/src/VBox/Additions/linux/drm/vbox_fb.c	2017-11-13 21:39:20.128499273 +0000
+@@ -353,6 +353,8 @@
+     }
+     info->apertures->ranges[0].base = pci_resource_start(dev->pdev, 0);
+     info->apertures->ranges[0].size = pci_resource_len(dev->pdev, 0);
++    info->fix.smem_start = 0;
++    info->fix.smem_len = size;
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
+     drm_fb_helper_fill_fix(info, fb->pitches[0], fb->format->depth);
+@@ -504,8 +506,8 @@
+ 
+ void vbox_fbdev_set_base(struct vbox_private *vbox, unsigned long gpu_addr)
+ {
+-        vbox->fbdev->helper.fbdev->fix.smem_start =
++/*        vbox->fbdev->helper.fbdev->fix.smem_start =
+                 vbox->fbdev->helper.fbdev->apertures->ranges[0].base +
+                 gpu_addr;
+-        vbox->fbdev->helper.fbdev->fix.smem_len = vbox->available_vram_size - gpu_addr;
++        vbox->fbdev->helper.fbdev->fix.smem_len = vbox->available_vram_size - gpu_addr; */
+ }
