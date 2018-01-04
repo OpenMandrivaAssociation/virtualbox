@@ -1,0 +1,30 @@
+diff -Nurp VirtualBox-4.1.8_OSE-p1/src/VBox/HostDrivers/Support/linux/Makefile VirtualBox-4.1.8_OSE-p2/src/VBox/HostDrivers/Support/linux/Makefile
+--- VirtualBox-4.1.8_OSE-p1/src/VBox/HostDrivers/Support/linux/Makefile	2011-12-19 15:01:06.000000000 +0200
++++ VirtualBox-4.1.8_OSE-p2/src/VBox/HostDrivers/Support/linux/Makefile	2011-12-24 15:22:08.487043179 +0200
+@@ -165,7 +165,7 @@ ifeq ($(KERNELRELEASE),)
+  # kernel base directory
+  ifndef KERN_DIR
+   # build for the current kernel, version check
+-  KERN_DIR := /lib/modules/$(shell uname -r)/build
++  KERN_DIR := /lib/modules/$(KERNELRELEASE)/build
+   ifneq ($(shell if test -d $(KERN_DIR); then echo yes; fi),yes)
+    KERN_DIR := /usr/src/linux
+    ifneq ($(shell if test -d $(KERN_DIR); then echo yes; fi),yes)
+@@ -194,7 +194,7 @@ ifeq ($(KERNELRELEASE),)
+  # module install dir, only for current kernel
+  ifneq ($(filter install install_rpm,$(MAKECMDGOALS)),)
+   ifndef MODULE_DIR
+-   MODULE_DIR_TST := /lib/modules/$(shell uname -r)
++   MODULE_DIR_TST := /lib/modules/$(KERNELRELEASE)
+    ifeq ($(shell if test -d $(MODULE_DIR_TST); then echo yes; fi),yes)
+     MODULE_DIR := $(MODULE_DIR_TST)/misc
+    else
+@@ -286,7 +286,7 @@ install_rpm: $(MODULE)
+ else # eq ($(MAKECMDGOALS),clean)
+ 
+  ifndef KERN_DIR
+-  KERN_DIR := /lib/modules/$(shell uname -r)/build
++  KERN_DIR := /lib/modules/$(KERNELRELEASE)/build
+   ifeq ($(wildcard $(KERN_DIR)/Makefile),)
+    KERN_DIR := /usr/src/linux
+   endif
