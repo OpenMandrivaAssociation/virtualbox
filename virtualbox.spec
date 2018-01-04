@@ -42,8 +42,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.1.30
-Release:	2
+Version:	5.2.4
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -561,13 +561,13 @@ set -x
 %{vboxlibdir}/VBoxXPCOMIPCD
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
-%{vboxlibdir}/virtualbox.xml
 %{vboxlibdir}/vboxwebsrv
-%{vboxlibdir}/webtest
+%{vboxlibdir}/virtualbox.xml
 %{vboxlibdir}/scripts
 %{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
 %{vboxlibdir}/rdesktop-vrdp*
+%{vboxlibdir}/webtest
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
