@@ -42,7 +42,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.2.4
+Version:	5.2.8
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -220,6 +220,8 @@ VBOX_JAVA_HOME := %{java_home}
 VBOX_WITHOUT_ADDITIONS_ISO := 1
 VBOX_USE_SYSTEM_XORG_HEADERS := 1
 VBOX_USE_SYSTEM_GL_HEADERS := 1
+VBOX_NO_LEGACY_XORG_X11 := 1
+VBOX_USE_SYSTEM_GL_HEADERS := 1
 XSERVER_VERSION := %{x11_server_majorver}
 VBOX_BLD_PYTHON:=/usr/bin/python2
 VBOX_GTAR:=
@@ -358,11 +360,10 @@ pushd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri %{buildroot}%{_systemunitdir}
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 VBoxService %{buildroot}%{_sbindir}
-
   install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 VBoxControl %{buildroot}%{_bindir}
 
-  install -m755 VBoxOGL*.so %{buildroot}%{_libdir}
+  install -m755 VBox*.so %{buildroot}%{_libdir}
 
   cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
 vboxguest
@@ -465,7 +466,6 @@ install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 /sbin/modprobe %{kname} &>/dev/null
 /sbin/modprobe vboxnetflt &>/dev/null
 /sbin/modprobe vboxnetadp &>/dev/null
-
 
 %postun
 %_del_group_helper %{name} 1 vboxusers
@@ -599,6 +599,7 @@ set -x
 %{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
 
 %files -n x11-driver-video-vboxvideo
+%{_libdir}/VBoxEGL*
 %{_libdir}/VBoxOGL*
 
 %files -n dkms-vboxadditions
