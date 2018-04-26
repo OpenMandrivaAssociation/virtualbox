@@ -95,7 +95,7 @@ BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
-BuildRequires:	pkgconfig(python2)
+BuildRequires:	pkgconfig(python)
 BuildRequires:	qt5-qttools
 BuildRequires:	qt5-linguist-tools
 BuildRequires:	pkgconfig(Qt5Core)
@@ -226,7 +226,7 @@ VBOX_USE_SYSTEM_GL_HEADERS := 1
 VBOX_NO_LEGACY_XORG_X11 := 1
 VBOX_USE_SYSTEM_GL_HEADERS := 1
 XSERVER_VERSION := %{x11_server_majorver}
-VBOX_BLD_PYTHON:=/usr/bin/python2
+VBOX_BLD_PYTHON:=/usr/bin/python
 VBOX_GTAR:=
 EOF
 
