@@ -559,6 +559,7 @@ set -x
 %{vboxlibdir}/VBoxXPCOMIPCD
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
+%{vboxlibdir}/__pycache__
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/virtualbox.xml
 %{vboxlibdir}/scripts
