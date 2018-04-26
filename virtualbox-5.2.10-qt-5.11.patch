@@ -1,0 +1,11 @@
+diff -up VirtualBox-5.2.10/src/VBox/Frontends/VirtualBox/src/settings/global/UIGlobalSettingsProxy.cpp.omv~ VirtualBox-5.2.10/src/VBox/Frontends/VirtualBox/src/settings/global/UIGlobalSettingsProxy.cpp
+--- VirtualBox-5.2.10/src/VBox/Frontends/VirtualBox/src/settings/global/UIGlobalSettingsProxy.cpp.omv~	2018-04-27 01:31:42.763060610 +0200
++++ VirtualBox-5.2.10/src/VBox/Frontends/VirtualBox/src/settings/global/UIGlobalSettingsProxy.cpp	2018-04-27 01:32:08.839427839 +0200
+@@ -23,6 +23,7 @@
+ # include <QRegExpValidator>
+ 
+ /* GUI includes: */
++# include <QButtonGroup>
+ # include "QIWidgetValidator.h"
+ # include "UIGlobalSettingsProxy.h"
+ # include "UIExtraDataManager.h"

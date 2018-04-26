@@ -42,7 +42,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.2.8
+Version:	5.2.10
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -58,12 +58,15 @@ Source100:	virtualbox.rpmlintrc
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
+Patch5:		virtualbox-5.2.10-qt-5.11.patch
+Patch6:		virtualbox-5.2.10-python-3.7.patch
 # (tmb) disable update notification (OpenSuSe)
 Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # don't check for:
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
 Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
+Patch10:	VirtualBox-5.2.10-allow-gcc-8.0.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
@@ -163,7 +166,7 @@ Group:		System/Kernel and hardware
 Obsoletes:	dkms-vboxadd < %{version}-%{release}
 %rename		dkms-vboxvfs
 %rename		dkms-vboxsf
-%rename		dkms-vboxvideo = %{version}-%{release}
+%rename		dkms-vboxvideo
 Conflicts:	dkms-%{name} < 4.1.8
 Requires(pre):	dkms
 Requires(post,preun):	dkms
