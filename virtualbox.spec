@@ -1,3 +1,10 @@
+%ifarch %{ix86}
+# This is bogus, but at normal optimization levels, gcc
+# tries to allocate more memory than 32-bit address space
+# can hold :/
+%global optflags %{optflags} -g0 -fno-lto
+%endif
+
 # Workaround for the dependency generator somehow
 # thinking x11-driver-video-vboxvideo provides libGL.so.1()(64bit)
 # causing Mesa to go missing...
