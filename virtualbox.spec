@@ -42,7 +42,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.2.10
+Version:	5.2.12
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -74,6 +74,17 @@ Patch22:	virtualbox-no-prehistoric-xfree86.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 
+# "Borrowed" from Debian
+Patch103:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/06-xsession.patch
+Patch104:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/07-vboxnetflt-reference.patch
+Patch107:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/16-no-update.patch
+Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/18-system-xorg.patch
+Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/27-hide-host-cache-warning.patch
+Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/29-fix-ftbfs-as-needed.patch
+Patch111:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build.patch
+Patch112:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/videorec.patch
+Patch113:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build-failure-new-acpica-unix.patch
+
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
 BuildRequires:	dkms
@@ -91,6 +102,7 @@ BuildRequires:	pkgconfig(egl)
 BuildRequires:	pkgconfig(ext2fs)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(opus)
 BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
@@ -242,6 +254,7 @@ export LIBPATH_LIB="%{_lib}"
 ./configure \
 	--enable-vnc \
 	--enable-webservice \
+	--enable-system-libopus \
 	--disable-kmods \
 	--enable-qt5 \
 	--enable-pulse \
