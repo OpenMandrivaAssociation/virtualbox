@@ -140,7 +140,7 @@ BuildRequires:	docbook-dtd44-xml
 BuildConflicts:	rpmlint < 1.4-37
 
 Requires(post,preun,postun):	rpm-helper
-Requires:	kmod(vboxdrv) = %{version}
+#Requires:	kmod(vboxdrv) = %{version}
 Suggests:	%{name}-doc
 Conflicts:	dkms-%{name} < 5.0.24-1
 
@@ -161,9 +161,9 @@ Kernel support for VirtualBox.
 %package guest-additions
 Summary:	Additions for VirtualBox guest systems
 Group:		Emulators
-Requires:	kmod(vboxguest) = %{version}
-Requires:	kmod(vboxsf) = %{version}
-Requires:	kmod(vboxvideo) = %{version}
+#Requires:	kmod(vboxguest) = %{version}
+#Requires:	kmod(vboxsf) = %{version}
+#Requires:	kmod(vboxvideo) = %{version}
 Requires:	x11-driver-video-vboxvideo
 Requires(post,preun): rpm-helper
 
