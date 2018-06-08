@@ -2,7 +2,8 @@
 # This is bogus, but at normal optimization levels, gcc
 # tries to allocate more memory than 32-bit address space
 # can hold :/
-%global optflags %{optflags} -g0 -fno-lto -fuse-ld=bfd
+%global optflags %{optflags} -g0 -fno-lto -fuse-ld=bfd -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
+%global ldflags %{ldflags} -g0 -fno-lto -fuse-ld=bfd -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
 %endif
 
 # Workaround for the dependency generator somehow
