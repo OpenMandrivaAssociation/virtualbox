@@ -99,6 +99,7 @@ BuildRequires:	dkms
 BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	acpica
+BuildRequires:	yasm
 BuildRequires:	java-1.8.0-openjdk-devel
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
@@ -248,6 +249,7 @@ VBOX_USE_SYSTEM_GL_HEADERS := 1
 XSERVER_VERSION := %{x11_server_majorver}
 VBOX_BLD_PYTHON:=/usr/bin/python
 VBOX_GTAR:=
+TOOL_YASM_AS=yasm
 EOF
 
 sed -i 's/CXX="g++"/CXX="g++ -std=c++11"/' configure
