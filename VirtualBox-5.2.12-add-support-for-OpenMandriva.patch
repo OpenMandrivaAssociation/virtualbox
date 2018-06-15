@@ -1,6 +1,6 @@
 diff -Naur VirtualBox-5.2.12/include/VBox/ostypes.h VirtualBox-5.2.12.tpg/include/VBox/ostypes.h
 --- VirtualBox-5.2.12/include/VBox/ostypes.h	2018-05-09 16:32:03.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/include/VBox/ostypes.h	2018-06-15 11:39:46.552013251 +0000
++++ VirtualBox-5.2.12.tpg/include/VBox/ostypes.h	2018-06-15 12:44:53.607162147 +0000
 @@ -95,8 +95,8 @@
      VBOXOSTYPE_FedoraCore_x64   = 0x57100,
      VBOXOSTYPE_Gentoo           = 0x58000,
@@ -14,7 +14,7 @@ diff -Naur VirtualBox-5.2.12/include/VBox/ostypes.h VirtualBox-5.2.12.tpg/includ
      VBOXOSTYPE_Turbolinux       = 0x5B000,
 diff -Naur VirtualBox-5.2.12/src/VBox/Additions/linux/installer/vboxadd-x11.sh VirtualBox-5.2.12.tpg/src/VBox/Additions/linux/installer/vboxadd-x11.sh
 --- VirtualBox-5.2.12/src/VBox/Additions/linux/installer/vboxadd-x11.sh	2018-05-09 16:32:19.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Additions/linux/installer/vboxadd-x11.sh	2018-06-15 11:40:16.847014405 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Additions/linux/installer/vboxadd-x11.sh	2018-06-15 12:44:53.608162147 +0000
 @@ -94,11 +94,11 @@
      x11_autostart="/etc/xdg/autostart"
      kde_autostart="/usr/share/autostart"
@@ -32,7 +32,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Additions/linux/installer/vboxadd-x11.sh V
      if [ -d "$x11_autostart" -a -w "$x11_autostart" -a -x "$x11_autostart" ]
 diff -Naur VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/VirtualBox1.qrc VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/VirtualBox1.qrc
 --- VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/VirtualBox1.qrc	2018-05-09 16:37:50.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/VirtualBox1.qrc	2018-06-15 11:43:11.318021054 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/VirtualBox1.qrc	2018-06-15 12:44:53.608162147 +0000
 @@ -290,8 +290,8 @@
          <file alias="os_linux26_64.png">images/os_linux26_64.png</file>
          <file alias="os_macosx.png">images/os_macosx.png</file>
@@ -46,7 +46,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/VirtualBox1.qrc Virtu
          <file alias="os_netware.png">images/os_netware.png</file>
 diff -Naur VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp
 --- VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp	2018-05-09 16:37:58.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp	2018-06-15 11:41:41.873017646 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp	2018-06-15 12:44:53.608162147 +0000
 @@ -316,8 +316,8 @@
      m_guestOSTypeIconNames.insert("Fedora_64",       ":/os_fedora_64.png");
      m_guestOSTypeIconNames.insert("Gentoo",          ":/os_gentoo.png");
@@ -59,8 +59,8 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/globals/UIIconPoo
      m_guestOSTypeIconNames.insert("RedHat_64",       ":/os_redhat_64.png");
      m_guestOSTypeIconNames.insert("Turbolinux",      ":/os_turbolinux.png");
 diff -Naur VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp
---- VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2018-06-15 11:36:56.779006000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2018-06-15 11:57:53.516054675 +0000
+--- VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2018-06-15 12:44:16.375160000 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2018-06-15 12:46:14.661165236 +0000
 @@ -213,6 +213,10 @@
  
      /* Choose the 1st item to be the current: */
@@ -72,7 +72,15 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/widgets/UINameAnd
      /* And update the linked widgets accordingly: */
      sltFamilyChanged(m_pComboFamily->currentIndex());
  }
-@@ -272,6 +276,16 @@
+@@ -272,6 +276,7 @@
+         if (iTypeIndex != -1)
+             m_pComboType->setCurrentIndex(iTypeIndex);
+     }
++
+ }
+ 
+ void UINameAndSystemEditor::retranslateUi()
+@@ -317,6 +322,16 @@
          if (iTypeIndex != -1)
              m_pComboType->setCurrentIndex(iTypeIndex);
      }
@@ -86,10 +94,10 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/widgets/UINameAnd
 +        if (iIndexOpenMandriva != -1)
 +            m_pComboType->setCurrentIndex(iIndexOpenMandriva);
 +    }
- }
- 
- void UINameAndSystemEditor::retranslateUi()
-@@ -327,16 +341,6 @@
+     /* Or select Windows 7 item for Windows family as default: */
+     else if (strFamilyId == "Windows")
+     {
+@@ -327,16 +342,6 @@
          if (iIndexWin7 != -1)
              m_pComboType->setCurrentIndex(iIndexWin7);
      }
@@ -108,7 +116,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/widgets/UINameAnd
          m_pComboType->setCurrentIndex(0);
 diff -Naur VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp
 --- VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp	2018-05-09 16:38:11.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp	2018-06-15 11:42:30.051019482 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp	2018-06-15 12:44:53.608162147 +0000
 @@ -138,8 +138,8 @@
      { QRegExp("Fe.*32",                            Qt::CaseInsensitive), "Fedora" },
      { QRegExp("((Gen)|(Sab)).*64",                 Qt::CaseInsensitive), "Gentoo_64" },
@@ -122,7 +130,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIW
      { QRegExp("Tur.*64",                           Qt::CaseInsensitive), "Turbolinux_64" },
 diff -Naur VirtualBox-5.2.12/src/VBox/Installer/linux/VBoxSysInfo.sh VirtualBox-5.2.12.tpg/src/VBox/Installer/linux/VBoxSysInfo.sh
 --- VirtualBox-5.2.12/src/VBox/Installer/linux/VBoxSysInfo.sh	2018-05-09 16:38:25.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Installer/linux/VBoxSysInfo.sh	2018-06-15 11:53:16.641044123 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Installer/linux/VBoxSysInfo.sh	2018-06-15 12:44:53.609162147 +0000
 @@ -44,11 +44,11 @@
          # Debian-based system
          release=`cat /etc/debian_version`
@@ -141,7 +149,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Installer/linux/VBoxSysInfo.sh VirtualBox-
          # Fedora-based
 diff -Naur VirtualBox-5.2.12/src/VBox/Installer/linux/distributions_rpm VirtualBox-5.2.12.tpg/src/VBox/Installer/linux/distributions_rpm
 --- VirtualBox-5.2.12/src/VBox/Installer/linux/distributions_rpm	2018-05-09 16:38:25.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Installer/linux/distributions_rpm	2018-06-15 11:45:43.997026873 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Installer/linux/distributions_rpm	2018-06-15 12:44:53.609162147 +0000
 @@ -6,6 +6,9 @@
  sles11.0        = SLES_11_0
  sles10.1        = SLES_10_1
@@ -154,7 +162,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Installer/linux/distributions_rpm VirtualB
  fedora24        = FEDORA_24
 diff -Naur VirtualBox-5.2.12/src/VBox/Main/cbinding/VBoxCAPI_v2_2.h VirtualBox-5.2.12.tpg/src/VBox/Main/cbinding/VBoxCAPI_v2_2.h
 --- VirtualBox-5.2.12/src/VBox/Main/cbinding/VBoxCAPI_v2_2.h	2018-05-09 16:38:27.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Main/cbinding/VBoxCAPI_v2_2.h	2018-06-15 11:48:33.910033348 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Main/cbinding/VBoxCAPI_v2_2.h	2018-06-15 12:44:53.609162147 +0000
 @@ -908,8 +908,8 @@
      CIMOSType_CIMOS_NovellOES = 86,
      CIMOSType_CIMOS_NovellLinuxDesktop = 87,
@@ -168,7 +176,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Main/cbinding/VBoxCAPI_v2_2.h VirtualBox-5
      CIMOSType_CIMOS_Ubuntu = 93,
 diff -Naur VirtualBox-5.2.12/src/VBox/Main/cbinding/VBoxCAPI_v3_0.h VirtualBox-5.2.12.tpg/src/VBox/Main/cbinding/VBoxCAPI_v3_0.h
 --- VirtualBox-5.2.12/src/VBox/Main/cbinding/VBoxCAPI_v3_0.h	2018-05-09 16:38:27.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Main/cbinding/VBoxCAPI_v3_0.h	2018-06-15 11:48:43.879033728 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Main/cbinding/VBoxCAPI_v3_0.h	2018-06-15 12:44:53.610162147 +0000
 @@ -1358,8 +1358,8 @@
      CIMOSType_CIMOS_NovellOES = 86,
      CIMOSType_CIMOS_NovellLinuxDesktop = 87,
@@ -182,7 +190,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Main/cbinding/VBoxCAPI_v3_0.h VirtualBox-5
      CIMOSType_CIMOS_Ubuntu = 93,
 diff -Naur VirtualBox-5.2.12/src/VBox/Main/include/ovfreader.h VirtualBox-5.2.12.tpg/src/VBox/Main/include/ovfreader.h
 --- VirtualBox-5.2.12/src/VBox/Main/include/ovfreader.h	2018-05-09 16:38:28.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Main/include/ovfreader.h	2018-06-15 11:49:34.264035648 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Main/include/ovfreader.h	2018-06-15 12:44:53.610162147 +0000
 @@ -153,8 +153,8 @@
      CIMOSType_CIMOS_NovellOES   = 86,
      CIMOSType_CIMOS_NovellLinuxDesktop  = 87,
@@ -196,7 +204,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Main/include/ovfreader.h VirtualBox-5.2.12
      CIMOSType_CIMOS_Ubuntu  = 93,
 diff -Naur VirtualBox-5.2.12/src/VBox/Main/src-all/Global.cpp VirtualBox-5.2.12.tpg/src/VBox/Main/src-all/Global.cpp
 --- VirtualBox-5.2.12/src/VBox/Main/src-all/Global.cpp	2018-05-09 16:38:28.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Main/src-all/Global.cpp	2018-06-15 11:48:10.995032475 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Main/src-all/Global.cpp	2018-06-15 12:44:53.610162147 +0000
 @@ -250,15 +250,15 @@
        1024,  16,  8 * _1G64, NetworkAdapterType_I82540EM, 0, StorageControllerType_PIIX4, StorageBus_IDE,
          StorageControllerType_IntelAhci, StorageBus_SATA, ChipsetType_PIIX3, AudioControllerType_AC97, AudioCodecType_AD1980  },
@@ -221,7 +229,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Main/src-all/Global.cpp VirtualBox-5.2.12.
      { "Linux",   "Linux",             "RedHat",             "Red Hat (32-bit)",
 diff -Naur VirtualBox-5.2.12/src/VBox/Main/src-server/ApplianceImpl.cpp VirtualBox-5.2.12.tpg/src/VBox/Main/src-server/ApplianceImpl.cpp
 --- VirtualBox-5.2.12/src/VBox/Main/src-server/ApplianceImpl.cpp	2018-05-09 16:38:29.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Main/src-server/ApplianceImpl.cpp	2018-06-15 11:50:55.786038755 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Main/src-server/ApplianceImpl.cpp	2018-06-15 12:44:53.611162147 +0000
 @@ -165,8 +165,8 @@
      { ovf::CIMOSType_CIMOS_SunJavaDesktopSystem,                 VBOXOSTYPE_Linux },
      { ovf::CIMOSType_CIMOS_TurboLinux,                           VBOXOSTYPE_Turbolinux },
@@ -253,7 +261,7 @@ diff -Naur VirtualBox-5.2.12/src/VBox/Main/src-server/ApplianceImpl.cpp VirtualB
      {"Linux 2.4",     VBOXOSTYPE_Linux24_x64},
 diff -Naur VirtualBox-5.2.12/src/VBox/Main/xml/Settings.cpp VirtualBox-5.2.12.tpg/src/VBox/Main/xml/Settings.cpp
 --- VirtualBox-5.2.12/src/VBox/Main/xml/Settings.cpp	2018-05-09 16:38:31.000000000 +0000
-+++ VirtualBox-5.2.12.tpg/src/VBox/Main/xml/Settings.cpp	2018-06-15 11:51:22.308039766 +0000
++++ VirtualBox-5.2.12.tpg/src/VBox/Main/xml/Settings.cpp	2018-06-15 12:44:53.612162147 +0000
 @@ -5095,7 +5095,7 @@
      { "opensuse", "OpenSUSE" },
      { "fedoracore", "Fedora" },
