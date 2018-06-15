@@ -61,6 +61,8 @@ Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
 Source6:	vboxweb.service
+Source20:	os_openmandriva.png
+Source21:	os_openmandriva_64.png
 Source100:	virtualbox.rpmlintrc
 # (tpg) dkms is used to build kernel modules, so use it everywhere
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
@@ -92,6 +94,9 @@ Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/deb
 Patch111:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build.patch
 Patch112:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/videorec.patch
 Patch113:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build-failure-new-acpica-unix.patch
+
+# (tpg) add support for OpenMandriva
+Patch999:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
 
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
@@ -147,7 +152,6 @@ BuildRequires:	docbook-dtd44-xml
 %endif
 # bogus devel-file-in-non-devel-package errors in dkms subpackage
 BuildConflicts:	rpmlint < 1.4-37
-
 Requires(post,preun,postun):	rpm-helper
 #Requires:	kmod(vboxdrv) = %{version}
 Suggests:	%{name}-doc
@@ -219,6 +223,9 @@ This package contains the user manual PDF file for %{name}.
 %prep
 %setup -qn %{distname}
 %apply_patches
+
+# add OpenMandriva images
+cp -a %{SOURCE20} %{SOURCE21} src/VBox/Frontends/VirtualBox/images/
 
 # Remove bundle X11 sources and some lib sources, before patching.
 mv src/VBox/Additions/x11/x11include/mesa-7.2 src/VBox/Additions/x11/
