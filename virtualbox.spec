@@ -272,9 +272,7 @@ export PATH=$PWD/BFD:$PATH
 export LIBPATH_LIB="%{_lib}"
 ./configure \
 	--enable-vnc \
-%ifarch %{ix86}
 	--enable-webservice \
-%endif
 	--enable-system-libopus \
 	--disable-kmods \
 	--enable-qt5 \
