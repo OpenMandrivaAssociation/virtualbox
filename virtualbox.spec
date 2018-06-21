@@ -10,6 +10,8 @@
 # thinking x11-driver-video-vboxvideo provides libGL.so.1()(64bit)
 # causing Mesa to go missing...
 %define __noautoprov 'libGL.*'
+%global __provides_exclude ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
+%global __requires_exclude ^VBox
 
 %define beta %{nil}
 %define kname vboxdrv
@@ -51,7 +53,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.2.12
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -270,7 +272,9 @@ export PATH=$PWD/BFD:$PATH
 export LIBPATH_LIB="%{_lib}"
 ./configure \
 	--enable-vnc \
+%ifarch %{ix86}
 	--enable-webservice \
+%endif
 	--enable-system-libopus \
 	--disable-kmods \
 	--enable-qt5 \
