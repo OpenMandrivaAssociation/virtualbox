@@ -104,7 +104,9 @@ ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
 BuildRequires:	dkms
 BuildRequires:	gawk
+%ifnarch %{ix86}
 BuildRequires:	gsoap
+%endif
 BuildRequires:	acpica
 BuildRequires:	yasm
 BuildRequires:	java-1.8.0-openjdk-devel
@@ -272,7 +274,9 @@ export PATH=$PWD/BFD:$PATH
 export LIBPATH_LIB="%{_lib}"
 ./configure \
 	--enable-vnc \
+%ifnarch %{ix86}
 	--enable-webservice \
+%endif
 	--enable-system-libopus \
 	--disable-kmods \
 	--enable-qt5 \
@@ -592,13 +596,15 @@ set -x
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
 %{vboxlibdir}/__pycache__
+%ifnarch %{ix86}
 %{vboxlibdir}/vboxwebsrv
+%{vboxlibdir}/webtest
+%endif
 %{vboxlibdir}/virtualbox.xml
 %{vboxlibdir}/scripts
 %{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
 %{vboxlibdir}/rdesktop-vrdp*
-%{vboxlibdir}/webtest
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
