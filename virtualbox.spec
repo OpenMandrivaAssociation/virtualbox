@@ -34,7 +34,7 @@
 %ifarch %{ix86}
 %define vbox_platform linux.x86
 %endif
-%ifarch x86_64
+%ifarch x86_64 znver1
 %define vbox_platform linux.amd64
 %endif
 
@@ -100,7 +100,7 @@ Patch113:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/deb
 # (tpg) add support for OpenMandriva
 Patch999:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
 
-ExclusiveArch:	%{ix86} x86_64
+ExclusiveArch:	%{ix86} x86_64 znver1
 BuildRequires:	dev86
 BuildRequires:	dkms
 BuildRequires:	gawk
