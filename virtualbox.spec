@@ -1,7 +1,17 @@
+%ifarch %{ix86}
+# This is bogus, but at normal optimization levels, gcc
+# tries to allocate more memory than 32-bit address space
+# can hold :/
+%global optflags %{optflags} -g0 -fno-lto -fuse-ld=bfd -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
+%global ldflags %{ldflags} -g0 -fno-lto -fuse-ld=bfd -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
+%endif
+
 # Workaround for the dependency generator somehow
 # thinking x11-driver-video-vboxvideo provides libGL.so.1()(64bit)
 # causing Mesa to go missing...
 %define __noautoprov 'libGL.*'
+%global __provides_exclude ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
+%global __requires_exclude ^VBox
 
 %define beta %{nil}
 %define kname vboxdrv
@@ -42,8 +52,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.2.8
-Release:	1
+Version:	5.2.12
+Release:	3
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -53,17 +63,22 @@ Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
 Source6:	vboxweb.service
+Source20:	os_openmandriva.png
+Source21:	os_openmandriva_64.png
 Source100:	virtualbox.rpmlintrc
 # (tpg) dkms is used to build kernel modules, so use it everywhere
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
+Patch5:		virtualbox-5.2.10-qt-5.11.patch
+Patch6:		virtualbox-5.2.10-python-3.7.patch
 # (tmb) disable update notification (OpenSuSe)
 Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # don't check for:
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
 Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
+Patch10:	VirtualBox-5.2.10-allow-gcc-8.0.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
@@ -71,12 +86,29 @@ Patch22:	virtualbox-no-prehistoric-xfree86.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 
+# "Borrowed" from Debian
+Patch103:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/06-xsession.patch
+Patch104:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/07-vboxnetflt-reference.patch
+Patch107:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/16-no-update.patch
+Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/18-system-xorg.patch
+Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/27-hide-host-cache-warning.patch
+Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/29-fix-ftbfs-as-needed.patch
+Patch111:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build.patch
+Patch112:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/videorec.patch
+Patch113:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build-failure-new-acpica-unix.patch
+
+# (tpg) add support for OpenMandriva
+Patch999:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
+
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	dev86
 BuildRequires:	dkms
 BuildRequires:	gawk
+%ifnarch %{ix86}
 BuildRequires:	gsoap
+%endif
 BuildRequires:	acpica
+BuildRequires:	yasm
 BuildRequires:	java-1.8.0-openjdk-devel
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
@@ -88,11 +120,12 @@ BuildRequires:	pkgconfig(egl)
 BuildRequires:	pkgconfig(ext2fs)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(opus)
 BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
-BuildRequires:	pkgconfig(python2)
+BuildRequires:	pkgconfig(python)
 BuildRequires:	qt5-qttools
 BuildRequires:	qt5-linguist-tools
 BuildRequires:	pkgconfig(Qt5Core)
@@ -123,9 +156,8 @@ BuildRequires:	docbook-dtd44-xml
 %endif
 # bogus devel-file-in-non-devel-package errors in dkms subpackage
 BuildConflicts:	rpmlint < 1.4-37
-
 Requires(post,preun,postun):	rpm-helper
-Requires:	kmod(vboxdrv) = %{version}
+#Requires:	kmod(vboxdrv) = %{version}
 Suggests:	%{name}-doc
 Conflicts:	dkms-%{name} < 5.0.24-1
 
@@ -146,9 +178,9 @@ Kernel support for VirtualBox.
 %package guest-additions
 Summary:	Additions for VirtualBox guest systems
 Group:		Emulators
-Requires:	kmod(vboxguest) = %{version}
-Requires:	kmod(vboxsf) = %{version}
-Requires:	kmod(vboxvideo) = %{version}
+#Requires:	kmod(vboxguest) = %{version}
+#Requires:	kmod(vboxsf) = %{version}
+#Requires:	kmod(vboxvideo) = %{version}
 Requires:	x11-driver-video-vboxvideo
 Requires(post,preun): rpm-helper
 
@@ -163,7 +195,7 @@ Group:		System/Kernel and hardware
 Obsoletes:	dkms-vboxadd < %{version}-%{release}
 %rename		dkms-vboxvfs
 %rename		dkms-vboxsf
-%rename		dkms-vboxvideo = %{version}-%{release}
+%rename		dkms-vboxvideo
 Conflicts:	dkms-%{name} < 4.1.8
 Requires(pre):	dkms
 Requires(post,preun):	dkms
@@ -196,6 +228,9 @@ This package contains the user manual PDF file for %{name}.
 %setup -qn %{distname}
 %apply_patches
 
+# add OpenMandriva images
+cp -a %{SOURCE20} %{SOURCE21} src/VBox/Frontends/VirtualBox/images/
+
 # Remove bundle X11 sources and some lib sources, before patching.
 mv src/VBox/Additions/x11/x11include/mesa-7.2 src/VBox/Additions/x11/
 rm -rf src/VBox/Additions/x11/x11include/*
@@ -223,8 +258,9 @@ VBOX_USE_SYSTEM_GL_HEADERS := 1
 VBOX_NO_LEGACY_XORG_X11 := 1
 VBOX_USE_SYSTEM_GL_HEADERS := 1
 XSERVER_VERSION := %{x11_server_majorver}
-VBOX_BLD_PYTHON:=/usr/bin/python2
+VBOX_BLD_PYTHON:=/usr/bin/python
 VBOX_GTAR:=
+TOOL_YASM_AS=yasm
 EOF
 
 sed -i 's/CXX="g++"/CXX="g++ -std=c++11"/' configure
@@ -238,7 +274,10 @@ export PATH=$PWD/BFD:$PATH
 export LIBPATH_LIB="%{_lib}"
 ./configure \
 	--enable-vnc \
+%ifnarch %{ix86}
 	--enable-webservice \
+%endif
+	--enable-system-libopus \
 	--disable-kmods \
 	--enable-qt5 \
 	--enable-pulse \
@@ -556,13 +595,16 @@ set -x
 %{vboxlibdir}/VBoxXPCOMIPCD
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
+%{vboxlibdir}/__pycache__
+%ifnarch %{ix86}
 %{vboxlibdir}/vboxwebsrv
+%{vboxlibdir}/webtest
+%endif
 %{vboxlibdir}/virtualbox.xml
 %{vboxlibdir}/scripts
 %{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
 %{vboxlibdir}/rdesktop-vrdp*
-%{vboxlibdir}/webtest
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
