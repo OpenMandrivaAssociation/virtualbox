@@ -595,7 +595,6 @@ set -x
 %{vboxlibdir}/VBoxXPCOMIPCD
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
-%{vboxlibdir}/__pycache__
 %ifnarch %{ix86}
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/webtest
