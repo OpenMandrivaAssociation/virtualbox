@@ -52,8 +52,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.2.12
-Release:	3
+Version:	5.2.16
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -77,7 +77,8 @@ Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # don't check for:
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
-Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
+# (tpg) not needed ?
+#Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 Patch10:	VirtualBox-5.2.10-allow-gcc-8.0.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
@@ -91,11 +92,14 @@ Patch103:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/deb
 Patch104:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/07-vboxnetflt-reference.patch
 Patch107:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/16-no-update.patch
 Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/18-system-xorg.patch
-Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/27-hide-host-cache-warning.patch
-Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/29-fix-ftbfs-as-needed.patch
-Patch111:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build.patch
-Patch112:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/videorec.patch
-Patch113:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build-failure-new-acpica-unix.patch
+# (tpg) not needed ?
+#Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/27-hide-host-cache-warning.patch
+#Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/29-fix-ftbfs-as-needed.patch
+#Patch112:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/videorec.patch
+#Patch113:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build-failure-new-acpica-unix.patch
+
+# (tpg) do not crash on Wayland
+Patch200:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 
 # (tpg) add support for OpenMandriva
 Patch999:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch

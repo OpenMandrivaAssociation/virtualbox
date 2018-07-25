@@ -1,0 +1,12 @@
+diff -Naur VirtualBox-5.2.16/src/VBox/Installer/linux/VBox.sh VirtualBox-5.2.16.tpg/src/VBox/Installer/linux/VBox.sh
+--- VirtualBox-5.2.16/src/VBox/Installer/linux/VBox.sh	2018-07-25 12:27:21.803763000 +0000
++++ VirtualBox-5.2.16.tpg/src/VBox/Installer/linux/VBox.sh	2018-07-25 12:31:32.200747261 +0000
+@@ -110,7 +110,7 @@
+ APP=`basename $0`
+ case "$APP" in
+     VirtualBox|virtualbox)
+-        exec "$INSTALL_DIR/VirtualBox" "$@"
++        QT_QPA_PLATFORM=xcb exec "$INSTALL_DIR/VirtualBox" "$@"
+         ;;
+     VBoxManage|vboxmanage)
+         exec "$INSTALL_DIR/VBoxManage" "$@"
