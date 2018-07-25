@@ -98,11 +98,10 @@ Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/deb
 #Patch112:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/videorec.patch
 #Patch113:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build-failure-new-acpica-unix.patch
 
-# (tpg) do not crash on Wayland
-Patch200:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
-
 # (tpg) add support for OpenMandriva
-Patch999:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
+Patch200:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
+# (tpg) do not crash on Wayland
+Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 
 ExclusiveArch:	%{ix86} x86_64 znver1
 BuildRequires:	dev86
