@@ -94,6 +94,7 @@ Patch107:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/deb
 Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/18-system-xorg.patch
 Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/27-hide-host-cache-warning.patch
 Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/29-fix-ftbfs-as-needed.patch
+Patch111:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/37-python-3.7-support.patch
 
 # (tpg) add support for OpenMandriva
 Patch200:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
