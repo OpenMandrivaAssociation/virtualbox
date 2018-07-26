@@ -88,15 +88,12 @@ Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 
 # "Borrowed" from Debian
-Patch103:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/06-xsession.patch
-Patch104:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/07-vboxnetflt-reference.patch
-Patch107:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/16-no-update.patch
-Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/18-system-xorg.patch
-# (tpg) not needed ?
-#Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/27-hide-host-cache-warning.patch
-#Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/29-fix-ftbfs-as-needed.patch
-#Patch112:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/videorec.patch
-#Patch113:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build-failure-new-acpica-unix.patch
+Patch103:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/06-xsession.patch
+Patch104:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/07-vboxnetflt-reference.patch
+Patch107:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/16-no-update.patch
+Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/18-system-xorg.patch
+Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/27-hide-host-cache-warning.patch
+Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/29-fix-ftbfs-as-needed.patch
 
 # (tpg) add support for OpenMandriva
 Patch200:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
