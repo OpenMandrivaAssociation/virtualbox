@@ -277,7 +277,6 @@ export LIBPATH_LIB="%{_lib}"
 %ifnarch %{ix86}
 	--enable-webservice \
 %endif
-	--enable-system-libopus \
 	--disable-kmods \
 	--enable-qt5 \
 	--enable-pulse \
