@@ -1,20 +1,12 @@
---- VirtualBox-5.0.0_BETA3/configure	2015-05-09 11:45:04.405620955 +0000
-+++ VirtualBox-5.0.0_BETA3/configure.tpg	2015-05-09 11:46:10.924373618 +0000
-@@ -2706,7 +2706,7 @@
-   # don't check for yasm for the time beeing as 0.40 and 0.50 both have known bugs
-   # [ "$OS" != "darwin" ] && check_yasm
-   [ "$OS" != "darwin"  ] && check_xsltproc
--  [ "$OS" != "darwin"  ] && check_mkisofs
-+  #[ "$OS" != "darwin"  ] && check_mkisofs
- fi
- 
- # the libraries
-@@ -2774,7 +2774,7 @@
+diff -Naur VirtualBox-5.2.16/configure VirtualBox-5.2.16.tpg/configure
+--- VirtualBox-5.2.16/configure	2018-07-27 16:16:32.858489000 +0000
++++ VirtualBox-5.2.16.tpg/configure	2018-07-27 16:19:05.690495478 +0000
+@@ -2823,8 +2823,6 @@
+   fi
    check_compiler_h
    [ $ONLY_ADDITIONS -eq 0 -a "$BUILD_MACHINE" = "amd64" -a $WITH_VMMRAW -eq 1 ] && check_32bit
-   # tools/common/makeself*
+-  # tools/common/makeself*
 -  [ $OSE -ge 1 ] && check_makeself
-+  #[ $OSE -ge 1 ] && check_makeself
  fi
  
  [ -n "$SETUP_WINE" ] && setup_wine

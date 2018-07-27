@@ -34,7 +34,7 @@
 %ifarch %{ix86}
 %define vbox_platform linux.x86
 %endif
-%ifarch x86_64
+%ifarch x86_64 znver1
 %define vbox_platform linux.amd64
 %endif
 
@@ -52,8 +52,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.2.12
-Release:	3
+Version:	5.2.16
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -87,20 +87,20 @@ Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 
 # "Borrowed" from Debian
-Patch103:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/06-xsession.patch
-Patch104:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/07-vboxnetflt-reference.patch
-Patch107:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/16-no-update.patch
-Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/18-system-xorg.patch
-Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/27-hide-host-cache-warning.patch
-Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/29-fix-ftbfs-as-needed.patch
-Patch111:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build.patch
-Patch112:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/videorec.patch
-Patch113:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.12-dfsg-2/debian/patches/fix-build-failure-new-acpica-unix.patch
+Patch103:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/06-xsession.patch
+Patch104:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/07-vboxnetflt-reference.patch
+Patch107:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/16-no-update.patch
+Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/18-system-xorg.patch
+Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/27-hide-host-cache-warning.patch
+Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/29-fix-ftbfs-as-needed.patch
+Patch111:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/37-python-3.7-support.patch
 
 # (tpg) add support for OpenMandriva
-Patch999:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
+Patch200:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
+# (tpg) do not crash on Wayland
+Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 
-ExclusiveArch:	%{ix86} x86_64
+ExclusiveArch:	%{ix86} x86_64 znver1
 BuildRequires:	dev86
 BuildRequires:	dkms
 BuildRequires:	gawk
@@ -261,6 +261,8 @@ XSERVER_VERSION := %{x11_server_majorver}
 VBOX_BLD_PYTHON:=/usr/bin/python
 VBOX_GTAR:=
 TOOL_YASM_AS=yasm
+VBOX_WITH_REGISTRATION_REQUEST= 
+VBOX_WITH_UPDATE_REQUEST= 
 EOF
 
 sed -i 's/CXX="g++"/CXX="g++ -std=c++11"/' configure
@@ -277,7 +279,6 @@ export LIBPATH_LIB="%{_lib}"
 %ifnarch %{ix86}
 	--enable-webservice \
 %endif
-	--enable-system-libopus \
 	--disable-kmods \
 	--enable-qt5 \
 	--enable-pulse \
