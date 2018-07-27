@@ -13,8 +13,6 @@
 %global __provides_exclude ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
 %global __requires_exclude ^VBox
 
-%global __python /usr/bin/python3
-
 %define beta %{nil}
 %define kname vboxdrv
 %define oname VirtualBox
