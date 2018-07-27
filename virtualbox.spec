@@ -77,8 +77,7 @@ Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # don't check for:
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
-# (tpg) not needed ?
-#Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
+Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 Patch10:	VirtualBox-5.2.10-allow-gcc-8.0.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
@@ -286,8 +285,6 @@ export LIBPATH_LIB="%{_lib}"
 	--disable-kmods \
 	--enable-qt5 \
 	--enable-pulse \
-	--with-mkisofs=/bin/true \
-	--with-makeself=/bin/true \
 %if ! %{build_doc}
 	--disable-docs \
 %endif
