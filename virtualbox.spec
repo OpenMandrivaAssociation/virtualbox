@@ -263,9 +263,6 @@ VBOX_GTAR:=
 TOOL_YASM_AS=yasm
 VBOX_WITH_REGISTRATION_REQUEST= 
 VBOX_WITH_UPDATE_REQUEST= 
-TOOL_GCC3_CFLAGS="%{optflags}"
-TOOL_GCC3_CXXFLAGS="%{optflags}"
-VBOX_GCC_OPT="%{optflags}"
 EOF
 
 sed -i 's/CXX="g++"/CXX="g++ -std=c++11"/' configure
