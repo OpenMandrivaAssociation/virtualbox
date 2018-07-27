@@ -13,6 +13,8 @@
 %global __provides_exclude ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
 %global __requires_exclude ^VBox
 
+%global __python /usr/bin/python3
+
 %define beta %{nil}
 %define kname vboxdrv
 %define oname VirtualBox
@@ -262,6 +264,11 @@ XSERVER_VERSION := %{x11_server_majorver}
 VBOX_BLD_PYTHON:=/usr/bin/python
 VBOX_GTAR:=
 TOOL_YASM_AS=yasm
+VBOX_WITH_REGISTRATION_REQUEST= 
+VBOX_WITH_UPDATE_REQUEST= 
+TOOL_GCC3_CFLAGS="%{optflags}"
+TOOL_GCC3_CXXFLAGS="%{optflags}"
+VBOX_GCC_OPT="%{optflags}"
 EOF
 
 sed -i 's/CXX="g++"/CXX="g++ -std=c++11"/' configure
