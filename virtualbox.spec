@@ -286,6 +286,8 @@ export LIBPATH_LIB="%{_lib}"
 	--disable-kmods \
 	--enable-qt5 \
 	--enable-pulse \
+	--with-mkisofs=/bin/true \
+	--with-makeself=/bin/true \
 %if ! %{build_doc}
 	--disable-docs \
 %endif
