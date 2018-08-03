@@ -53,7 +53,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.2.16
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -347,8 +347,11 @@ set -e
 make -C %{kname} KERN_DIR=\$1
 cp -f %{kname}/Module.symvers vboxnetflt
 cp -f %{kname}/Module.symvers vboxnetadp
+cp -f %{kname}/Module.symvers vboxpci
 make -C vboxnetflt KERN_DIR=\$1
 make -C vboxnetadp KERN_DIR=\$1
+make -C vboxpci KERN_DIR=\$1
+
 EOF
 install -m 0755 vboxbuild %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
 mv %{buildroot}%{vboxlibdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
@@ -365,6 +368,9 @@ BUILT_MODULE_NAME[1]=vboxnetflt
 DEST_MODULE_LOCATION[2]=/kernel/3rdparty/vbox
 BUILT_MODULE_LOCATION[2]=vboxnetadp/
 BUILT_MODULE_NAME[2]=vboxnetadp
+DEST_MODULE_LOCATION[3]=/kernel/3rdparty/vbox
+BUILT_MODULE_LOCATION[3]=vboxpci/
+BUILT_MODULE_NAME[3]=vboxpci
 AUTOINSTALL=yes
 EOF
 
@@ -388,6 +394,7 @@ cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/virtualbox << EOF
 vboxdrv
 vboxnetflt
 vboxnetadp
+vboxpci
 EOF
 
 # install additions
