@@ -6,13 +6,6 @@
 %global ldflags %{ldflags} -g0 -fno-lto -fuse-ld=bfd -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
 %endif
 
-# Workaround for the dependency generator somehow
-# thinking x11-driver-video-vboxvideo provides libGL.so.1()(64bit)
-# causing Mesa to go missing...
-%define __noautoprov 'libGL.*'
-%global __provides_exclude ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
-%global __requires_exclude ^VBox
-
 %define beta %{nil}
 %define kname vboxdrv
 %define oname VirtualBox
@@ -38,10 +31,9 @@
 %define vbox_platform linux.amd64
 %endif
 
-# nuke vbox-specific dependencies
-#define _provides_exceptions ^VBox
-#define _requires_exceptions ^VBox
-## Disabled: see rpmlint -I external-depfilter-with-internal-depgen
+# nuke vbox-specific dependencies, dont provide libGL.so.1
+%global __provides_exclude ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
+%global __requires_exclude ^VBox
 
 %define x11_server_majorver %(pkg-config --modversion xorg-server|awk -F. '{print $1$2}')
 
@@ -53,7 +45,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.2.18
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -182,6 +174,7 @@ Group:		Emulators
 #Requires:	kmod(vboxsf) = %{version}
 #Requires:	kmod(vboxvideo) = %{version}
 Requires:	x11-driver-video-vboxvideo
+Requires:	libnotify
 Requires(post,preun): rpm-helper
 
 %description guest-additions
