@@ -27,7 +27,7 @@
 %ifarch %{ix86}
 %define vbox_platform linux.x86
 %endif
-%ifarch x86_64 znver1
+%ifarch %{x86_64}
 %define vbox_platform linux.amd64
 %endif
 
@@ -92,7 +92,8 @@ Patch200:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 
-ExclusiveArch:	%{ix86} x86_64 znver1
+ExclusiveArch:	%{ix86} %{x86_64}
+BuildRequires:	systemd-macros
 BuildRequires:	dev86
 BuildRequires:	dkms
 BuildRequires:	gawk
@@ -329,8 +330,8 @@ ln -s %{vboxlibdir}/VBoxNetDHCP %{buildroot}%{_bindir}/VBoxNetDHCP
 install -d %{buildroot}/var/run/%{oname}
 
 # (tpg) install Web service
-install -d %{buildroot}%{_systemunitdir}
-install -m 644 %{SOURCE6} %{buildroot}%{_systemunitdir}/vboxweb.service
+install -d %{buildroot}%{_unitdir}
+install -m 644 %{SOURCE6} %{buildroot}%{_unitdir}/vboxweb.service
 
 # install dkms sources
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
@@ -390,7 +391,7 @@ install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
 
 pushd out/%{vbox_platform}/release/bin/additions
-  install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri %{buildroot}%{_systemunitdir}
+  install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri %{buildroot}%{_unitdir}
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 VBoxService %{buildroot}%{_sbindir}
   install -m755 VBoxClient %{buildroot}%{_bindir}
@@ -403,7 +404,7 @@ vboxguest
 vboxsf
 EOF
 
-  install -m 644 %{SOURCE5} %{buildroot}%{_systemunitdir}/vboxadd.service
+  install -m 644 %{SOURCE5} %{buildroot}%{_unitdir}/vboxadd.service
   install -d %{buildroot}%{_presetdir}
 cat > %{buildroot}%{_presetdir}/86-vboxadd.preset << EOF
 enable vboxadd.service
@@ -564,7 +565,7 @@ set -x
 %{_bindir}/VBoxNetAdpCtl
 %{_bindir}/VBoxNetDHCP
 %{_bindir}/vboxwebsrv
-%{_systemunitdir}/vboxweb.service
+%{_unitdir}/vboxweb.service
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
