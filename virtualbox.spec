@@ -45,7 +45,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.2.18
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -492,6 +492,9 @@ install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildr
 
 install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
+# Put a symlink to VBoxOGL where it will be found
+ln -s %{_libdir}/VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
+
 %post
 %_add_group_helper %{name} 1 vboxusers
 /sbin/rmmod vboxnetflt &>/dev/null
@@ -638,6 +641,7 @@ set -x
 %files -n x11-driver-video-vboxvideo
 %{_libdir}/VBoxEGL*
 %{_libdir}/VBoxOGL*
+%{_libdir}/dri/vboxvideo_dri.so
 
 %files -n dkms-vboxadditions
 %{_usr}/src/vbox*-%{version}-%{release}
