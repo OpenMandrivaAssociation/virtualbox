@@ -6,13 +6,6 @@
 %global ldflags %{ldflags} -g0 -fno-lto -fuse-ld=bfd -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
 %endif
 
-# Workaround for the dependency generator somehow
-# thinking x11-driver-video-vboxvideo provides libGL.so.1()(64bit)
-# causing Mesa to go missing...
-%define __noautoprov 'libGL.*'
-%global __provides_exclude ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
-%global __requires_exclude ^VBox
-
 %define beta %{nil}
 %define kname vboxdrv
 %define oname VirtualBox
@@ -34,14 +27,13 @@
 %ifarch %{ix86}
 %define vbox_platform linux.x86
 %endif
-%ifarch x86_64 znver1
+%ifarch %{x86_64}
 %define vbox_platform linux.amd64
 %endif
 
-# nuke vbox-specific dependencies
-#define _provides_exceptions ^VBox
-#define _requires_exceptions ^VBox
-## Disabled: see rpmlint -I external-depfilter-with-internal-depgen
+# nuke vbox-specific dependencies, dont provide libGL.so.1
+%global __provides_exclude ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
+%global __requires_exclude ^VBox
 
 %define x11_server_majorver %(pkg-config --modversion xorg-server|awk -F. '{print $1$2}')
 
@@ -52,8 +44,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.2.16
-Release:	2
+Version:	5.2.20
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -100,7 +92,7 @@ Patch200:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 
-ExclusiveArch:	%{ix86} x86_64 znver1
+ExclusiveArch:	%{ix86} %{x86_64}
 BuildRequires:	dev86
 BuildRequires:	dkms
 BuildRequires:	gawk
@@ -182,6 +174,7 @@ Group:		Emulators
 #Requires:	kmod(vboxsf) = %{version}
 #Requires:	kmod(vboxvideo) = %{version}
 Requires:	x11-driver-video-vboxvideo
+Requires:	libnotify
 Requires(post,preun): rpm-helper
 
 %description guest-additions
@@ -336,8 +329,8 @@ ln -s %{vboxlibdir}/VBoxNetDHCP %{buildroot}%{_bindir}/VBoxNetDHCP
 install -d %{buildroot}/var/run/%{oname}
 
 # (tpg) install Web service
-install -d %{buildroot}%{_systemunitdir}
-install -m 644 %{SOURCE6} %{buildroot}%{_systemunitdir}/vboxweb.service
+install -d %{buildroot}%{_unitdir}
+install -m 644 %{SOURCE6} %{buildroot}%{_unitdir}/vboxweb.service
 
 # install dkms sources
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
@@ -404,7 +397,7 @@ install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
 
 pushd out/%{vbox_platform}/release/bin/additions
-  install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri %{buildroot}%{_systemunitdir}
+  install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri %{buildroot}%{_unitdir}
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 VBoxService %{buildroot}%{_sbindir}
   install -m755 VBoxClient %{buildroot}%{_bindir}
@@ -417,7 +410,7 @@ vboxguest
 vboxsf
 EOF
 
-  install -m 644 %{SOURCE5} %{buildroot}%{_systemunitdir}/vboxadd.service
+  install -m 644 %{SOURCE5} %{buildroot}%{_unitdir}/vboxadd.service
   install -d %{buildroot}%{_presetdir}
 cat > %{buildroot}%{_presetdir}/86-vboxadd.preset << EOF
 enable vboxadd.service
@@ -505,6 +498,9 @@ install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildr
 
 install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
+# Put a symlink to VBoxOGL where it will be found
+ln -s %{_libdir}/VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
+
 %post
 %_add_group_helper %{name} 1 vboxusers
 /sbin/rmmod vboxnetflt &>/dev/null
@@ -578,7 +574,7 @@ set -x
 %{_bindir}/VBoxNetAdpCtl
 %{_bindir}/VBoxNetDHCP
 %{_bindir}/vboxwebsrv
-%{_systemunitdir}/vboxweb.service
+%{_unitdir}/vboxweb.service
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
@@ -650,6 +646,7 @@ set -x
 %files -n x11-driver-video-vboxvideo
 %{_libdir}/VBoxEGL*
 %{_libdir}/VBoxOGL*
+%{_libdir}/dri/vboxvideo_dri.so
 
 %files -n dkms-vboxadditions
 %{_usr}/src/vbox*-%{version}-%{release}
