@@ -44,7 +44,7 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.2.20
+Version:	5.2.22
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -70,7 +70,6 @@ Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
 Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
-Patch10:	VirtualBox-5.2.10-allow-gcc-8.0.patch
 
 Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
