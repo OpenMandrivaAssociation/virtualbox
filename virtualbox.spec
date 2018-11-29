@@ -560,8 +560,7 @@ set -x
 
 %files
 %config %{_sysconfdir}/vbox/vbox.cfg
-%{_sysconfdir}/modules-load.d
-/virtualbox.conf
+%{_sysconfdir}/modules-load.d/virtualbox.conf
 %{_bindir}/%{oname}
 %{_bindir}/VBoxManage
 %{_bindir}/VBoxSDL
