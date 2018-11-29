@@ -45,7 +45,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.2.22
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -376,8 +376,8 @@ KERNEL=="vboxuser", NAME="vboxuser", OWNER="root", MODE="0666"
 EOF
 
 # (tpg) create modules to load
-  install -d %{buildroot}%{_sysconfdir}/modprobe.preload.d
-cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/virtualbox << EOF
+install -d %{buildroot}%{_sysconfdir}/modules-load.d
+cat > %{buildroot}%{_sysconfdir}/modules-load.d/virtualbox.conf << EOF
 vboxdrv
 vboxnetflt
 vboxnetadp
@@ -398,7 +398,7 @@ pushd out/%{vbox_platform}/release/bin/additions
 
   install -m755 VBox*.so %{buildroot}%{_libdir}
 
-  cat > %{buildroot}%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions << EOF
+  cat > %{buildroot}%{_sysconfdir}/modules-load.d/vbox-guest-additions.conf << EOF
 vboxguest
 vboxsf
 EOF
@@ -549,6 +549,8 @@ set -x
 /usr/sbin/dkms --rpm_safe_upgrade install -m vboxadditions -v %{version}-%{release}
 :
 
+systemctl try-restart --quiet systemd-modules-load || :
+
 %preun -n dkms-vboxadditions
 set -x
 /usr/sbin/dkms --rpm_safe_upgrade remove -m vboxadditions -v %{version}-%{release} --all
@@ -558,7 +560,8 @@ set -x
 
 %files
 %config %{_sysconfdir}/vbox/vbox.cfg
-%{_sysconfdir}/modprobe.preload.d/virtualbox
+%{_sysconfdir}/modules-load.d
+/virtualbox.conf
 %{_bindir}/%{oname}
 %{_bindir}/VBoxManage
 %{_bindir}/VBoxSDL
@@ -635,7 +638,7 @@ set -x
 %{_bindir}/VBoxControl
 %{_udevrulesdir}/vbox-additions.rules
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
-%{_sysconfdir}/modprobe.preload.d/vbox-guest-additions
+%{_sysconfdir}/modules-load.d/vbox-guest-additions.conf
 
 %files -n x11-driver-video-vboxvideo
 %{_libdir}/VBoxEGL*
