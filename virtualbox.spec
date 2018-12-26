@@ -32,7 +32,7 @@
 %endif
 
 # nuke vbox-specific dependencies, dont provide libGL.so.1
-%global __provides_exclude ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
+%define __noautoprov ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
 %global __requires_exclude ^VBox
 
 %define x11_server_majorver %(pkg-config --modversion xorg-server|awk -F. '{print $1$2}')
@@ -45,7 +45,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	5.2.22
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
