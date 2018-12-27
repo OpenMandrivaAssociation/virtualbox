@@ -32,8 +32,7 @@
 %endif
 
 # nuke vbox-specific dependencies, dont provide libGL.so.1
-%define __noautoprov ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
-%global __requires_exclude ^VBox
+%define __noautoprov \^libGL\\.so\\.1|\^libEGL\\.so\\.1
 
 %define x11_server_majorver %(pkg-config --modversion xorg-server|awk -F. '{print $1$2}')
 
