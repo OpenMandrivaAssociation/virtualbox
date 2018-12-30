@@ -45,7 +45,7 @@
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 Version:	6.0.0
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -69,6 +69,7 @@ Patch5:		virtualbox-5.2.10-qt-5.11.patch
 Patch6:		vbox-6.0.0-kernel-modules-in-tree.patch
 # (tmb) disable update notification (OpenSuSe)
 Patch7:		VirtualBox-4.3.0-noupdate-check.patch
+Patch8:		https://git.archlinux.org/svntogit/community.git/plain/trunk/101-vboxsf-automount.patch?h=packages/virtualbox
 # don't check for:
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
@@ -471,6 +472,7 @@ cat >%{buildroot}/sbin/mount.vboxsf <<'EOF'
 name=${1#$PWD/}; shift
 exec /bin/mount -cit vboxsf "$name" "$@"
 EOF
+chmod 0755 %{buildroot}/sbin/mount.vboxsf
 
 %post
 %_add_group_helper %{name} 1 vboxusers
