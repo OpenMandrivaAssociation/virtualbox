@@ -1,11 +1,15 @@
-diff -Naur VirtualBox-5.1.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp VirtualBox-5.1.0.tpg/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp
---- VirtualBox-5.1.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2016-07-12 14:54:10.000000000 +0000
-+++ VirtualBox-5.1.0.tpg/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2016-07-22 20:14:00.785904704 +0000
-@@ -330,12 +330,12 @@
-     /* Or select Ubuntu item for Linux family as default: */
-     else if (strFamilyId == "Linux")
+diff -up VirtualBox-6.0.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp.0016~ VirtualBox-6.0.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp
+--- VirtualBox-6.0.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp.0016~	2018-12-19 00:10:07.476926771 +0100
++++ VirtualBox-6.0.0/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2018-12-19 00:11:34.158542152 +0100
+@@ -251,15 +251,15 @@ void UINameAndSystemEditor::sltFamilyCha
+         if (iIndexWin7 != -1)
+             m_pComboType->setCurrentIndex(iIndexWin7);
+     }
+-    /* Or select Oracle Linux item for Linux family as default: */
++    /* Or select Mandriva Linux item for Linux family as default: */
+     else if (m_strFamilyId == "Linux")
      {
--        QString strDefaultID = "Ubuntu";
+-        QString strDefaultID = "Oracle";
 +        QString strDefaultID = "Mandriva";
          if (ARCH_BITS == 64 && m_fSupportsHWVirtEx && m_fSupportsLongMode)
              strDefaultID += "_64";

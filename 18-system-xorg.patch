@@ -1,18 +1,22 @@
-Description: Build the X.Org driver only for the selected system X Server version.
-Author: Michael Meskes <meskes@debian.org>, Felix Geyer <fgeyer@debian.org>
-
-diff --git a/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk b/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk
-index 8cf43e8fe..6ee1d415e 100644
---- a/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk
-+++ b/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk
-@@ -39,10 +39,6 @@ LIBRARIES += \
+diff -up VirtualBox-6.0.0/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk.0108~ VirtualBox-6.0.0/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk
+--- VirtualBox-6.0.0/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk.0108~	2018-12-19 00:23:11.145158830 +0100
++++ VirtualBox-6.0.0/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk	2018-12-19 00:26:13.714950398 +0100
+@@ -38,18 +38,6 @@ endif
+ LIBRARIES += \
  	VBoxGuestR3Lib \
  	VBoxGuestR3LibShared
- ifndef VBOX_ONLY_VALIDATIONKIT
+-ifndef VBOX_ONLY_VALIDATIONKIT
 - if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd)
+- ifndef VBOX_USE_SYSTEM_XORG_HEADERS
 -  LIBRARIES += \
 -  	VBoxGuestR3LibXFree86
 - endif
-  if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris)
-   LIBRARIES += \
-   	VBoxGuestR3LibXOrg
+- endif
+- if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris)
+-  LIBRARIES += \
+-  	VBoxGuestR3LibXOrg
+- endif
+-endif
+ LIBRARIES.win.amd64 += VBoxGuestR3Lib-x86 VBoxGuestR3LibShared-x86
+ 
+ 

@@ -1,18 +1,19 @@
---- VirtualBox-5.1.18/Config.kmk.0023~	2017-03-16 09:41:58.290668573 +0100
-+++ VirtualBox-5.1.18/Config.kmk	2017-03-16 09:44:03.348010650 +0100
-@@ -3634,15 +3634,15 @@ VBOXLNX32GUEST_SUFF_LIB = .a
+diff -up VirtualBox-6.0.0/Config.kmk.0023~ VirtualBox-6.0.0/Config.kmk
+--- VirtualBox-6.0.0/Config.kmk.0023~	2018-12-19 00:12:38.908727337 +0100
++++ VirtualBox-6.0.0/Config.kmk	2018-12-19 00:13:55.104083739 +0100
+@@ -4038,15 +4038,15 @@ VBOXLNX32GUEST_SUFF_LIB = .a
  # SDKs for external libraries.
  #
- SDK_VBOX_LIBXML2          = .
--SDK_VBOX_LIBXML2_INCS   ?= $(PATH_ROOT)/src/libs/libxml2-2.9.4/include
-+SDK_VBOX_LIBXML2_INCS   ?= /usr/include/libxml2
- SDK_VBOX_LIBXML2_DEFS  ?= _REENTRANT
- SDK_VBOX_LIBXML2_DEFS.win += WIN32 _WINDOWS _MBCS
- # note: no linking to LIB here, we do that explicitly in src/VBox/Runtime/Makefile.kmk to link
- # libxml against VBoxRT
+ SDK_VBOX_LIBXML2           = .
+-SDK_VBOX_LIBXML2_INCS     ?= $(PATH_ROOT)/src/libs/libxml2-2.9.4/include
++SDK_VBOX_LIBXML2_INCS     ?= /usr/include/libxml2
+ SDK_VBOX_LIBXML2_DEFS     ?= _REENTRANT LIBXML_STATIC LIBXML_STATIC_FOR_DLL
+ SDK_VBOX_LIBXML2_DEFS.win ?= WIN32 _WINDOWS _MBCS HAVE_WIN32_THREADS HAVE_COMPILER_TLS
+ # Note: no linking to LIB here, we do that explicitly in src/VBox/Runtime/Makefile.kmk to link
+ #       libxml against VBoxRT
  
  SDK_VBOX_LIBPNG       = .
--SDK_VBOX_LIBPNG_INCS ?= $(PATH_ROOT)/src/libs/libpng-1.2.54
+-SDK_VBOX_LIBPNG_INCS ?= $(PATH_ROOT)/src/libs/libpng-1.6.36
 -SDK_VBOX_LIBPNG_LIBS ?= $(PATH_STAGE_LIB)/VBox-libpng$(VBOX_SUFF_LIB)
 +SDK_VBOX_LIBPNG_INCS ?= `/usr/bin/pkg-config libpng --variable=includedir`
 +SDK_VBOX_LIBPNG_LIBS ?= png

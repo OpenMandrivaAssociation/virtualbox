@@ -1,0 +1,31 @@
+diff -up VirtualBox-6.0.0/src/VBox/Installer/linux/Makefile.include.header.omv~ VirtualBox-6.0.0/src/VBox/Installer/linux/Makefile.include.header
+--- VirtualBox-6.0.0/src/VBox/Installer/linux/Makefile.include.header.omv~	2018-12-29 21:12:09.246865520 +0100
++++ VirtualBox-6.0.0/src/VBox/Installer/linux/Makefile.include.header	2018-12-29 21:18:30.468070958 +0100
+@@ -134,27 +134,3 @@ else # neq($(KERNELRELEASE),)
+  KERN_VER := $(KERNELRELEASE)
+ 
+ endif # neq($(KERNELRELEASE),)
+-
+-# Kernel build folder
+-ifeq ($(KERN_DIR),)
+- KERN_DIR := /lib/modules/$(KERN_VER)/build
+-endif
+-ifneq ($(shell if test -d $(KERN_DIR); then echo yes; fi),yes)
+- $(error Error: unable to find the headers of the Linux kernel to build against. \
+-          Specify KERN_VER=<version> (currently $(KERN_VER)) and run Make again)
+-endif
+-# Kernel include folder
+-KERN_INCL := $(KERN_DIR)/include
+-# module install folder
+-INSTALL_MOD_DIR ?= misc
+-MODULE_DIR := $(INSTALL_MOD_PATH)/lib/modules/$(KERN_VER)/$(INSTALL_MOD_DIR)
+-
+-# debug - show guesses.
+-ifdef DEBUG
+-$(warning dbg: INSTALL_MOD_PATH = $(INSTALL_MOD_PATH))
+-$(warning dbg: INSTALL_MOD_DIR  = $(INSTALL_MOD_DIR))
+-$(warning dbg: KERN_DIR         = $(KERN_DIR))
+-$(warning dbg: KERN_INCL        = $(KERN_INCL))
+-$(warning dbg: KERN_VERSION     = $(KERN_VERSION))
+-$(warning dbg: MODULE_DIR       = $(MODULE_DIR))
+-endif

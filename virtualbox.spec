@@ -44,8 +44,8 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	5.2.22
-Release:	2
+Version:	6.0.0
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -58,12 +58,15 @@ Source6:	vboxweb.service
 Source20:	os_openmandriva.png
 Source21:	os_openmandriva_64.png
 Source100:	virtualbox.rpmlintrc
-# (tpg) dkms is used to build kernel modules, so use it everywhere
+# Update docs on kernel modules
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
+# Fix docs to give the right mount command for the in-tree version of vboxsf
+Patch2:		http://crazy.dev.frugalware.org/vboxsf-mainline-mount-help.patch
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
 Patch5:		virtualbox-5.2.10-qt-5.11.patch
-Patch6:		virtualbox-5.2.10-python-3.7.patch
+# We build the kernel modules in-tree -- adjust the Makefiles to support it
+Patch6:		vbox-6.0.0-kernel-modules-in-tree.patch
 # (tmb) disable update notification (OpenSuSe)
 Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # don't check for:
@@ -94,7 +97,6 @@ Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 ExclusiveArch:	%{ix86} %{x86_64}
 BuildRequires:	systemd-macros
 BuildRequires:	dev86
-BuildRequires:	dkms
 BuildRequires:	gawk
 %ifnarch %{ix86}
 BuildRequires:	gsoap
@@ -146,8 +148,6 @@ BuildRequires:	texlive
 BuildRequires:	texlive-fontsextra
 BuildRequires:	docbook-dtd44-xml
 %endif
-# bogus devel-file-in-non-devel-package errors in dkms subpackage
-BuildConflicts:	rpmlint < 1.4-37
 Requires(post,preun,postun):	rpm-helper
 #Requires:	kmod(vboxdrv) = %{version}
 Suggests:	%{name}-doc
@@ -156,15 +156,19 @@ Conflicts:	dkms-%{name} < 5.0.24-1
 %description
 VirtualBox is a general-purpose full virtualizer for x86 hardware.
 
-%package -n dkms-%{name}
-Summary:	VirtualBox kernel module
+%package kernel-module-sources
+Summary:	VirtualBox kernel module sources
 Group:		System/Kernel and hardware
-Requires:	dkms
-Requires(post,preun):	dkms
-Conflicts:	dkms-vboxadditions < 4.1.8
+%rename dkms-%{name}
 
-%description -n dkms-%{name}
-Kernel support for VirtualBox.
+%description kernel-module-sources
+VirtualBox kernel module sources.
+
+These sources are pulled into the kernel source tree by the
+kernel RPMs. There is no need to install this package unless
+you're building your own kernel.
+
+The modules in this package are required on the HOST side.
 
 %if %{build_additions}
 %package guest-additions
@@ -182,21 +186,24 @@ This package contains additions for VirtualBox guest systems.
 It allows to share files with the host system and sync time with host.
 Install only inside guest.
 
-%package -n dkms-vboxadditions
-Summary:	Kernel module for VirtualBox additions
+%package guest-kernel-module-sources
+Summary:	Kernel module sources for VirtualBox additions
 Group:		System/Kernel and hardware
 Obsoletes:	dkms-vboxadd < %{version}-%{release}
 %rename		dkms-vboxvfs
 %rename		dkms-vboxsf
 %rename		dkms-vboxvideo
 Conflicts:	dkms-%{name} < 4.1.8
-Requires(pre):	dkms
-Requires(post,preun):	dkms
-Requires(post):	kernel-devel
+%rename dkms-vboxadditions
 
-%description -n dkms-vboxadditions
-Kernel module for VirtualBox additions (ideally only needs to be installed
-on the guest OS not on the host OS).
+%description guest-kernel-module-sources
+Kernel module sources for VirtualBox additions.
+
+These sources are pulled into the kernel source tree by the
+kernel RPMs. There is no need to install this package unless
+you're building your own kernel.
+
+The modules in this package are required on the GUEST side.
 
 %package -n x11-driver-video-vboxvideo
 Summary:	The X.org driver for video in VirtualBox guests
@@ -332,7 +339,7 @@ install -d %{buildroot}/var/run/%{oname}
 install -d %{buildroot}%{_unitdir}
 install -m 644 %{SOURCE6} %{buildroot}%{_unitdir}/vboxweb.service
 
-# install dkms sources
+# install kernel module sources
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
 cat > vboxbuild << EOF
 #!/bin/sh
@@ -345,21 +352,6 @@ make -C vboxnetadp KERN_DIR=\$1
 EOF
 install -m 0755 vboxbuild %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
 mv %{buildroot}%{vboxlibdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
-cat > %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/dkms.conf << EOF
-MAKE[0]="./vboxbuild \$kernel_source_dir"
-PACKAGE_NAME=%{name}
-PACKAGE_VERSION=%{version}-%{release}
-DEST_MODULE_LOCATION[0]=/kernel/3rdparty/vbox
-BUILT_MODULE_LOCATION[0]=%{kname}/
-BUILT_MODULE_NAME[0]=%{kname}
-DEST_MODULE_LOCATION[1]=/kernel/3rdparty/vbox
-BUILT_MODULE_LOCATION[1]=vboxnetflt/
-BUILT_MODULE_NAME[1]=vboxnetflt
-DEST_MODULE_LOCATION[2]=/kernel/3rdparty/vbox
-BUILT_MODULE_LOCATION[2]=vboxnetadp/
-BUILT_MODULE_NAME[2]=vboxnetadp
-AUTOINSTALL=yes
-EOF
 
 # install udev rules
 mkdir -p %{buildroot}%{_udevrulesdir}
@@ -412,32 +404,10 @@ EOF
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
-  cat > %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
-PACKAGE_NAME=vboxadditions
-PACKAGE_VERSION=%{version}-%{release}
-MAKE[0]="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxguest &&
-cp \$dkms_tree/\$module/\$module_version/build/vboxguest/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxsf &&
-make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxsf &&
-cp \$dkms_tree/\$module/\$module_version/build/vboxsf/Module.symvers \$dkms_tree/\$module/\$module_version/build/vboxvideo &&
-make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvideo"
-EOF
-  i=0
   for kmod in vboxguest vboxsf vboxvideo; do
     mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod
     cp -a src/$kmod/* %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod/
-    cat >> %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
-DEST_MODULE_LOCATION[$i]=/kernel/3rdparty/vbox
-BUILT_MODULE_LOCATION[$i]=$kmod/
-BUILT_MODULE_NAME[$i]=$kmod
-EOF
-    i=$((i+1))
   done
-  cat >> %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/dkms.conf << EOF
-CLEAN="make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxguest clean &&
-make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxsf clean &&
-make -C \$kernel_source_dir M=\$dkms_tree/\$module/\$module_version/build/vboxvideo clean "
-AUTOINSTALL=yes
-EOF
 popd
 
 %endif
@@ -494,6 +464,14 @@ install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 # Put a symlink to VBoxOGL where it will be found
 ln -s %{_libdir}/VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
 
+# Replace the vboxsf mount wrapper with one that works for
+# the in-tree version of the kernel module
+cat >%{buildroot}/sbin/mount.vboxsf <<'EOF'
+#!/bin/bash
+name=${1#$PWD/}; shift
+exec /bin/mount -cit vboxsf "$name" "$@"
+EOF
+
 %post
 %_add_group_helper %{name} 1 vboxusers
 /sbin/rmmod vboxnetflt &>/dev/null
@@ -506,30 +484,7 @@ ln -s %{_libdir}/VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
 %postun
 %_del_group_helper %{name} 1 vboxusers
 
-%post -n dkms-%{name}
-set -x
-/usr/sbin/dkms --rpm_safe_upgrade add -m %{name} -v %{version}-%{release}
-/usr/sbin/dkms --rpm_safe_upgrade build -m %{name} -v %{version}-%{release} &&
-/usr/sbin/dkms --rpm_safe_upgrade install -m %{name} -v %{version}-%{release}
-/sbin/rmmod vboxnetflt &>/dev/null
-/sbin/rmmod vboxnetadp &>/dev/null
-/sbin/rmmod %{kname} &>/dev/null
-/sbin/modprobe %{kname} &>/dev/null
-/sbin/modprobe vboxnetflt &>/dev/null
-/sbin/modprobe vboxnetadp &>/dev/null
-:
-
-%preun -n dkms-%{name}
-if [ "$1" = "0" ]; then
-    /sbin/rmmod vboxnetadp >/dev/null 2>&1
-    /sbin/rmmod vboxnetflt >/dev/null 2>&1
-    /sbin/rmmod %{kname} >/dev/null 2>&1
-fi
-set -x
-/usr/sbin/dkms --rpm_safe_upgrade remove -m %{name} -v %{version}-%{release} --all || :
-
 %if %{build_additions}
-
 %post guest-additions
 # (Debian) Build usb device tree
 for i in /sys/bus/usb/devices/*; do
@@ -541,21 +496,6 @@ class="`cat $i/bDeviceClass 2> /dev/null || true`"
 /usr/share/virtualbox/VBoxCreateUSBNode.sh "$major" "$minor" "$class" vboxusers 2>/dev/null || true
 fi
 done
-
-%post -n dkms-vboxadditions
-set -x
-/usr/sbin/dkms --rpm_safe_upgrade add -m vboxadditions -v %{version}-%{release}
-/usr/sbin/dkms --rpm_safe_upgrade build -m vboxadditions -v %{version}-%{release} &&
-/usr/sbin/dkms --rpm_safe_upgrade install -m vboxadditions -v %{version}-%{release}
-:
-
-systemctl try-restart --quiet systemd-modules-load || :
-
-%preun -n dkms-vboxadditions
-set -x
-/usr/sbin/dkms --rpm_safe_upgrade remove -m vboxadditions -v %{version}-%{release} --all
-:
-
 %endif
 
 %files
@@ -570,6 +510,7 @@ set -x
 %{_bindir}/VBoxNetDHCP
 %{_bindir}/vboxwebsrv
 %{_unitdir}/vboxweb.service
+%{vboxlibdir}/bldRTLdrCheckImports
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
@@ -585,13 +526,12 @@ set -x
 %{vboxlibdir}/VBoxEFI64.fd
 %{vboxlibdir}/VBoxExtPackHelperApp
 %{vboxlibdir}/VBoxManage
-%{vboxlibdir}/VBoxNetNAT
 %{vboxlibdir}/VBoxSVC
 %{vboxlibdir}/VBoxTestOGL
 %{vboxlibdir}/VBoxTunctl
 %{vboxlibdir}/VBoxVMMPreload
-%{vboxlibdir}/VBoxVolInfo
 %{vboxlibdir}/VBoxXPCOMIPCD
+%{vboxlibdir}/VirtualBox
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
 %{vboxlibdir}/__pycache__
@@ -607,9 +547,11 @@ set -x
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
-%attr(4711,root,root) %{vboxlibdir}/VirtualBox
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetAdpCtl
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
+%attr(4711,root,root) %{vboxlibdir}/VBoxNetNAT
+%attr(4711,root,root) %{vboxlibdir}/VBoxVolInfo
+%attr(4711,root,root) %{vboxlibdir}/VirtualBoxVM
 %attr(644,root,root) %{vboxlibdir}/*.rc
 %attr(644,root,root) %{vboxlibdir}/*.r0
 %attr(755,root,root) %{vboxlibdir}/*.sh
@@ -623,7 +565,7 @@ set -x
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/mime/packages/virtualbox.xml
 
-%files -n dkms-%{name}
+%files kernel-module-sources
 %{_usr}/src/%{name}-%{version}-%{release}
 
 %if %{build_additions}
@@ -644,7 +586,7 @@ set -x
 %{_libdir}/VBoxOGL*
 %{_libdir}/dri/vboxvideo_dri.so
 
-%files -n dkms-vboxadditions
+%files guest-kernel-module-sources
 %{_usr}/src/vbox*-%{version}-%{release}
 %endif
 

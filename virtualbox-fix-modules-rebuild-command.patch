@@ -6,7 +6,7 @@ diff -Naur VirtualBox-5.1.0/src/VBox/Installer/linux/VBox.sh VirtualBox-5.1.0.tp
           load. Please recompile the kernel module and install it by
  
 -           sudo /sbin/vboxconfig
-+           sudo dkms autoinstall --verbose
++           sudo dnf --refresh install kernel-release-desktop-latest
  
           You will not be able to start VMs until this problem is fixed.
  EOF
@@ -15,7 +15,7 @@ diff -Naur VirtualBox-5.1.0/src/VBox/Installer/linux/VBox.sh VirtualBox-5.1.0.tp
  
             sudo /sbin/vboxconfig
 +           or
-+           sudo dkms autoinstall --verbose
++           sudo dnf --refresh install kernel-release-desktop-latest
  
           and if that is not successful, try to re-install the package.
  
@@ -25,9 +25,10 @@ diff -Naur VirtualBox-5.1.0/src/VBox/VMM/VMMR3/VM.cpp VirtualBox-5.1.0.tpg/src/V
 @@ -319,7 +319,7 @@
                      pszError = N_("One of the kernel modules was not successfully loaded. Make sure "
                                    "that no kernel modules from an older version of VirtualBox exist. "
-                                   "Then try to recompile and reload the kernel modules by executing "
+-                                  "Then try to recompile and reload the kernel modules by executing "
 -                                  "'/sbin/vboxconfig' as root");
-+                                  "'dkms autoinstall --verbose' as root");
++                                  "Then try to install the latest kernel modules by executing "
++                                  "'dnf --refresh install kernel-release-desktop-latest' as root");
                      break;
  #endif
  
@@ -36,7 +37,7 @@ diff -Naur VirtualBox-5.1.0/src/VBox/VMM/VMMR3/VM.cpp VirtualBox-5.1.0.tpg/src/V
                                    "was either not loaded or /dev/vboxdrv is not set up properly. "
                                    "Re-setup the kernel module by executing "
 -                                  "'/sbin/vboxconfig' as root");
-+                                  "'dkms autoinstall --verbose' as root");
++                                  "'dnf --refresh install kernel-release-desktop-latest' as root");
  #else
                      pszError = N_("VirtualBox kernel driver not loaded");
  #endif
@@ -45,7 +46,7 @@ diff -Naur VirtualBox-5.1.0/src/VBox/VMM/VMMR3/VM.cpp VirtualBox-5.1.0.tpg/src/V
                                    "was either not loaded or /dev/vboxdrv was not created for some "
                                    "reason. Re-setup the kernel module by executing "
 -                                  "'/sbin/vboxconfig' as root");
-+                                  "'dkms autoinstall --verbose' as root");
++                                  "'dnf --refresh install kernel-release-desktop-latest' as root");
  #else
                      pszError = N_("VirtualBox kernel driver not installed");
  #endif
