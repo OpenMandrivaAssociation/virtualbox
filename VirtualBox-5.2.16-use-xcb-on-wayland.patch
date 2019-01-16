@@ -1,12 +1,12 @@
-diff -Naur VirtualBox-5.2.16/src/VBox/Installer/linux/VBox.sh VirtualBox-5.2.16.tpg/src/VBox/Installer/linux/VBox.sh
---- VirtualBox-5.2.16/src/VBox/Installer/linux/VBox.sh	2018-07-25 12:27:21.803763000 +0000
-+++ VirtualBox-5.2.16.tpg/src/VBox/Installer/linux/VBox.sh	2018-07-25 12:31:32.200747261 +0000
-@@ -110,7 +110,7 @@
+diff -up VirtualBox-6.0.2/src/VBox/Installer/linux/VBox.sh.0201~ VirtualBox-6.0.2/src/VBox/Installer/linux/VBox.sh
+--- VirtualBox-6.0.2/src/VBox/Installer/linux/VBox.sh.0201~	2019-01-16 04:21:59.796521722 +0100
++++ VirtualBox-6.0.2/src/VBox/Installer/linux/VBox.sh	2019-01-16 04:23:04.465439672 +0100
+@@ -110,7 +110,7 @@ fi
  APP=`basename $0`
  case "$APP" in
      VirtualBox|virtualbox)
 -        exec "$INSTALL_DIR/VirtualBox" "$@"
 +        QT_QPA_PLATFORM=xcb exec "$INSTALL_DIR/VirtualBox" "$@"
          ;;
-     VBoxManage|vboxmanage)
-         exec "$INSTALL_DIR/VBoxManage" "$@"
+     VirtualBoxVM|virtualboxvm)
+         exec "$INSTALL_DIR/VirtualBoxVM" "$@"
