@@ -44,7 +44,10 @@
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
-Version:	6.0.2
+# WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
+# kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
+# AND USERSPACE ARE IN SYNC
+Version:	6.0.4
 Release:	1
 License:	GPLv2
 Group:		Emulators
