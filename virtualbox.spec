@@ -231,6 +231,11 @@ This package contains the user manual PDF file for %{name}.
 %setup -qn %{distname}
 %apply_patches
 
+
+# (crazy) - Change all back to VBoxVGA , *SVGA and *VMSVGA not yet working right.
+sed -i -e 's|GraphicsControllerType_VBoxSVGA|GraphicsControllerType_VBoxVGA|g' src/VBox/Main/src-all/Global.cpp
+sed -i -e 's|GraphicsControllerType_VMSVGA|GraphicsControllerType_VBoxVGA|g' src/VBox/Main/src-all/Global.cpp
+
 # add OpenMandriva images
 cp -a %{SOURCE20} %{SOURCE21} src/VBox/Frontends/VirtualBox/images/
 
