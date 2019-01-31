@@ -77,7 +77,6 @@ Patch8:		https://git.archlinux.org/svntogit/community.git/plain/trunk/101-vboxsf
 # - makeself: we're not going to create the stanalone .run installers
 Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 
-Patch16:	virtualbox-default-to-mandriva.patch
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
@@ -93,7 +92,8 @@ Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/deb
 Patch111:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/37-python-3.7-support.patch
 
 # (tpg) add support for OpenMandriva
-Patch200:	VirtualBox-5.2.12-add-support-for-OpenMandriva.patch
+# (crazy) this should be prepared for upstream..
+Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 
