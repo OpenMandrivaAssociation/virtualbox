@@ -48,7 +48,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.0.4
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -405,8 +405,10 @@ EOF
 
   install -m 644 %{SOURCE5} %{buildroot}%{_unitdir}/vboxadd.service
   install -d %{buildroot}%{_presetdir}
+# (crazy) race with udev / kmod and xinit file
+# seems like .service always fails, lets disable for now.
 cat > %{buildroot}%{_presetdir}/86-vboxadd.preset << EOF
-enable vboxadd.service
+disable vboxadd.service
 EOF
 
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
