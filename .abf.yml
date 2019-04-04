@@ -1,6 +1,7 @@
 removed_sources:
   VirtualBox-5.2.20.tar.bz2: 74a4626bc9f16a606f861341bdecc073756384d2
   VirtualBox-5.2.22.tar.bz2: 3c2d3efa26e1ea41a4762ecd060c2aca269b5fc2
-sources:
-  UserManual.pdf: b90be49775bb695db550868e17ce9720cf365141
   VirtualBox-5.2.24.tar.bz2: 2dd12760b6e30c9168d5b2fc27a4a39ccda10896
+sources:
+  UserManual.pdf: 29279622f5c669efa7f05cbc594d7de15e0c1930
+  VirtualBox-5.2.26.tar.bz2: 9e04b93f4c5a0999bd3f940fad6fbd8e108cc8a0
