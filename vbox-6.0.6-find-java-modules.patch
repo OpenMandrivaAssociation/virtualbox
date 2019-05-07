@@ -1,0 +1,12 @@
+diff -up VirtualBox-6.0.6/Config.kmk.omv~ VirtualBox-6.0.6/Config.kmk
+--- VirtualBox-6.0.6/Config.kmk.omv~	2019-05-04 16:43:37.794677276 +0200
++++ VirtualBox-6.0.6/Config.kmk	2019-05-04 16:46:39.260329784 +0200
+@@ -7752,7 +7752,7 @@ if defined(VBOX_JAVA_VERSION) && $(VBOX_
+  VBOX_JAVA_WS_PATH ?= /usr/share/java
+  VBOX_JAVA_WS_EXTRA_JARS ?= $(VBOX_JAVA_WS_PATH)/jws-api.jar$(VBOX_SEP)$(VBOX_JAVA_WS_PATH)/jaxb-api.jar$(VBOX_SEP)$(VBOX_JAVA_WS_PATH)/jaxws-api.jar
+ else if defined(VBOX_JAVA_VERSION) && $(VBOX_JAVA_VERSION) >= 10900
+- VBOX_JAVA_WS_OPTS ?= --add-modules java.xml.ws
++ VBOX_JAVA_WS_OPTS ?= --add-modules java.xml.ws,java.activation,java.xml.bind
+ endif
+ if defined(VBOX_JAVA_VERSION) && $(VBOX_JAVA_VERSION) >= 110000
+  VBOX_JAVAC_OPTS   = -encoding UTF-8 -source 9 -target 9 -Xlint:unchecked

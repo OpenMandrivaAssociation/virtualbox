@@ -6,6 +6,8 @@
 %global ldflags %{ldflags} -g0 -fno-lto -fuse-ld=bfd -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
 %endif
 
+%bcond_with java
+
 %define beta %{nil}
 %define kname vboxdrv
 %define oname VirtualBox
@@ -47,8 +49,8 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.0.4
-Release:	3
+Version:	6.0.6
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -96,6 +98,7 @@ Patch111:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/deb
 Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
+Patch202:	vbox-6.0.6-find-java-modules.patch
 
 ExclusiveArch:	%{ix86} %{x86_64}
 BuildRequires:	systemd-macros
@@ -106,7 +109,11 @@ BuildRequires:	gsoap
 %endif
 BuildRequires:	acpica
 BuildRequires:	yasm
-BuildRequires:	java-1.8.0-openjdk-devel
+%if %{with java}
+BuildRequires:	jdk-current
+BuildRequires:	javax.activation
+BuildRequires:	javax.xml.bind
+%endif
 BuildRequires:	xsltproc
 BuildRequires:	libcap-devel
 BuildRequires:	libstdc++-static-devel
@@ -230,7 +237,9 @@ This package contains the user manual PDF file for %{name}.
 %prep
 %setup -qn %{distname}
 %apply_patches
-
+%if %{with java}
+. %{_sysconfdir}/profile.d/90java.sh
+%endif
 
 # (crazy) - Change all back to VBoxVGA , *SVGA and *VMSVGA not yet working right.
 sed -i -e 's|GraphicsControllerType_VBoxSVGA|GraphicsControllerType_VBoxVGA|g' src/VBox/Main/src-all/Global.cpp
@@ -259,8 +268,13 @@ VBOX_PATH_APP_PRIVATE:=%{vboxlibdir}
 VBOX_WITH_VNC:=1
 VBOX_WITH_TESTCASES =
 VBOX_WITH_TESTSUITE:=
+%if %{with java}
 VBOX_JAVA_HOME := %{java_home}
+%else
+VBOX_JAVA_HOME :=
+%endif
 VBOX_WITHOUT_ADDITIONS_ISO := 1
+VBOX_WITHOUT_PRECOMPILED_HEADERS := 1
 VBOX_USE_SYSTEM_XORG_HEADERS := 1
 VBOX_USE_SYSTEM_GL_HEADERS := 1
 VBOX_NO_LEGACY_XORG_X11 := 1
@@ -273,7 +287,7 @@ VBOX_WITH_REGISTRATION_REQUEST=
 VBOX_WITH_UPDATE_REQUEST= 
 EOF
 
-sed -i 's/CXX="g++"/CXX="g++ -std=c++11"/' configure
+sed -i 's/CXX="g++"/CXX="g++ -std=gnu++14"/' configure
 sed -i "s!/usr/lib/virtualbox!%{vboxlibdir}!g" src/VBox/Installer/linux/VBox.sh
 
 %build
@@ -284,8 +298,10 @@ export PATH=$PWD/BFD:$PATH
 export LIBPATH_LIB="%{_lib}"
 ./configure \
 	--enable-vnc \
-%ifnarch %{ix86}
+%if %{with java}
 	--enable-webservice \
+%else
+	--disable-java \
 %endif
 	--disable-kmods \
 	--enable-qt5 \
@@ -334,7 +350,9 @@ ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/%{oname}
 ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/VBoxManage
 ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/VBoxSDL
 ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/VBoxHeadless
+%if %{with java}
 ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/vboxwebsrv
+%endif
 
 # provide network control tools in bindir
 ln -s %{vboxlibdir}/VBoxTunctl %{buildroot}%{_bindir}/VBoxTunctl
@@ -343,9 +361,11 @@ ln -s %{vboxlibdir}/VBoxNetDHCP %{buildroot}%{_bindir}/VBoxNetDHCP
 
 install -d %{buildroot}/var/run/%{oname}
 
+%if %{with java}
 # (tpg) install Web service
 install -d %{buildroot}%{_unitdir}
 install -m 644 %{SOURCE6} %{buildroot}%{_unitdir}/vboxweb.service
+%endif
 
 # install kernel module sources
 mkdir -p %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
@@ -519,8 +539,10 @@ done
 %{_bindir}/VBoxTunctl
 %{_bindir}/VBoxNetAdpCtl
 %{_bindir}/VBoxNetDHCP
+%if %{with java}
 %{_bindir}/vboxwebsrv
 %{_unitdir}/vboxweb.service
+%endif
 %{vboxlibdir}/bldRTLdrCheckImports
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/icons
@@ -546,7 +568,7 @@ done
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
 %{vboxlibdir}/__pycache__
-%ifnarch %{ix86}
+%if %{with java}
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/webtest
 %endif

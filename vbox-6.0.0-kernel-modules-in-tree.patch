@@ -1,17 +1,13 @@
-diff -up VirtualBox-6.0.0/src/VBox/Installer/linux/Makefile.include.header.omv~ VirtualBox-6.0.0/src/VBox/Installer/linux/Makefile.include.header
---- VirtualBox-6.0.0/src/VBox/Installer/linux/Makefile.include.header.omv~	2018-12-29 21:12:09.246865520 +0100
-+++ VirtualBox-6.0.0/src/VBox/Installer/linux/Makefile.include.header	2018-12-29 21:18:30.468070958 +0100
-@@ -134,27 +134,3 @@ else # neq($(KERNELRELEASE),)
-  KERN_VER := $(KERNELRELEASE)
- 
+diff -up VirtualBox-6.0.6/src/VBox/Installer/linux/Makefile-header.gmk.omv~ VirtualBox-6.0.6/src/VBox/Installer/linux/Makefile-header.gmk
+--- VirtualBox-6.0.6/src/VBox/Installer/linux/Makefile-header.gmk.omv~	2019-04-17 03:20:33.381165402 +0200
++++ VirtualBox-6.0.6/src/VBox/Installer/linux/Makefile-header.gmk	2019-04-17 03:22:03.993161006 +0200
+@@ -177,31 +177,6 @@ else # neq($(KERNELRELEASE),)
+  endif
  endif # neq($(KERNELRELEASE),)
--
+ 
 -# Kernel build folder
--ifeq ($(KERN_DIR),)
-- KERN_DIR := /lib/modules/$(KERN_VER)/build
--endif
 -ifneq ($(shell if test -d $(KERN_DIR); then echo yes; fi),yes)
-- $(error Error: unable to find the headers of the Linux kernel to build against. \
+- $(error Error: unable to find the headers of the Linux kernel to build against (KERN_DIR=$(KERN_DIR)). \
 -          Specify KERN_VER=<version> (currently $(KERN_VER)) and run Make again)
 -endif
 -# Kernel include folder
@@ -20,12 +16,50 @@ diff -up VirtualBox-6.0.0/src/VBox/Installer/linux/Makefile.include.header.omv~ 
 -INSTALL_MOD_DIR ?= misc
 -MODULE_DIR := $(INSTALL_MOD_PATH)/lib/modules/$(KERN_VER)/$(INSTALL_MOD_DIR)
 -
+-#
+-# The KBUILD_EXTMOD variable is used by 2.6.6 and later when build external
+-# modules (see https://lwn.net/Articles/79984/).  It will be set to SUBDIRS
+-# or M by the linux kernel makefile.  We fake it here for older kernels.
+-#
+-## @todo Drop this KBUILD_EXTMOD glue once it has been removed from all our makefiles (see sharedfolders).
+-ifndef CURDIR # for make < v3.79
+- CURDIR := $(shell pwd)
+-endif
+-ifndef KBUILD_EXTMOD
+- KBUILD_EXTMOD := $(CURDIR)
+-endif
+-
+-
+ # For VBOX_GCC_CHECK_CC
+ VBOX_CLOSEPAR := )
+ VBOX_DOLLAR   := $$
+@@ -218,29 +193,3 @@ VBOX_GCC_CHECK_CC = $(shell \
+          esac; \
+     else echo "$(3)"; fi; \
+     rm -f /tmp/$(VBOX_DOLLAR)$(VBOX_DOLLAR).check.c; )
+-
+-#
+-# Guess the module directory ASSUMING that this file is located in that directory.
+-# Note! The special MAKEFILE_LIST variable was introduced in GNU make 3.80.
+-#
+-ifdef MAKEFILE_LIST
+- VBOX_MODULE_SRC_DIR := $(dir $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
+-else
+- VBOX_MODULE_SRC_DIR := $(CURDIR)/
+-endif
+-
+-
 -# debug - show guesses.
 -ifdef DEBUG
+- ifndef VBOX_KERN_QUIET
 -$(warning dbg: INSTALL_MOD_PATH = $(INSTALL_MOD_PATH))
 -$(warning dbg: INSTALL_MOD_DIR  = $(INSTALL_MOD_DIR))
 -$(warning dbg: KERN_DIR         = $(KERN_DIR))
 -$(warning dbg: KERN_INCL        = $(KERN_INCL))
 -$(warning dbg: KERN_VERSION     = $(KERN_VERSION))
 -$(warning dbg: MODULE_DIR       = $(MODULE_DIR))
+-$(warning dbg: KBUILD_EXTMOD    = $(KBUILD_EXTMOD))
+-$(warning dbg: VBOX_MODULE_SRC_DIR = $(VBOX_MODULE_SRC_DIR))
+- endif
 -endif
+-
