@@ -50,7 +50,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.0.8
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -285,6 +285,8 @@ VBOX_GTAR:=
 TOOL_YASM_AS=yasm
 VBOX_WITH_REGISTRATION_REQUEST= 
 VBOX_WITH_UPDATE_REQUEST= 
+# Default is Oracle VM VirtualBox -- let's not advertise the bad guys
+VBOX_PRODUCT=VirtualBox
 EOF
 
 sed -i 's/CXX="g++"/CXX="g++ -std=gnu++14"/' configure
@@ -336,7 +338,12 @@ mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir}
 (cd %{buildroot}%{vboxlibdir} && tar xf -)
 
 # move noarch files to vboxdatadir
-mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,*.desktop,*.png} %{buildroot}%{vboxdatadir}
+mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,*.png} %{buildroot}%{vboxdatadir}
+# And the desktop file where it belongs
+mkdir -p %{buildroot}%{_datadir}/applications/
+mv %{buildroot}%{vboxlibdir}/*.desktop %{buildroot}%{_datadir}/applications/
+# Fix bogus space between file:// and filename
+sed -i -e 's,file:// /,file:///,' %{buildroot}%{_datadir}/applications/virtualbox.desktop
 
 # install wrappers
 mkdir -p %{buildroot}%{_sysconfdir}/vbox
@@ -441,20 +448,6 @@ EOF
 popd
 
 %endif
-
-# install menu entries
-mkdir -p %{buildroot}%{_datadir}/applications
-cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << EOF
-[Desktop Entry]
-Name=VirtualBox
-Comment=Full virtualizer for x86 hardware
-Exec=%{_bindir}/%{oname}
-Icon=%{name}
-Type=Application
-Terminal=false
-Categories=Emulator;
-MimeType=application/x-virtualbox-vbox;application/x-virtualbox-vbox-extpack;application/x-virtualbox-ovf;application/x-virtualbox-ova;
-EOF
 
 # install mime types
 install -D -m644 src/VBox/Installer/common/virtualbox.xml %{buildroot}%{_datadir}/mime/packages/virtualbox.xml
