@@ -49,7 +49,7 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.0.10
+Version:	6.0.12
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -249,15 +249,14 @@ sed -i -e 's|GraphicsControllerType_VMSVGA|GraphicsControllerType_VBoxVGA|g' src
 cp -a %{SOURCE20} %{SOURCE21} src/VBox/Frontends/VirtualBox/images/
 
 # Remove bundle X11 sources and some lib sources, before patching.
-mv src/VBox/Additions/x11/x11include/mesa-7.2 src/VBox/Additions/x11/
-rm -rf src/VBox/Additions/x11/x11include/*
-mv src/VBox/Additions/x11/mesa-7.2 src/VBox/Additions/x11/x11include/
+rm -rf src/VBox/Additions/x11/x11include
 rm -rf src/VBox/Additions/x11/x11stubs
-rm -rf src/libs/boost-1.37.0/
-#rm -rf src/libs/liblzf-3.4/
+rm include/VBox/HostServices/glext.h
+rm include/VBox/HostServices/glxext.h
+rm -rf src/libs/liblzf-3.4/
 rm -rf src/libs/libxml2-2.9.4/
-rm -rf src/libs/libpng-1.2.54/
-rm -rf src/libs/zlib-1.2.8/
+rm -rf src/libs/libpng-1.6.36/
+rm -rf src/libs/zlib-1.2.11/
 
 cat << EOF > LocalConfig.kmk
 VBOX_WITH_WARNINGS_AS_ERRORS:=
