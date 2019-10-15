@@ -73,7 +73,9 @@ Patch4:		virtualbox-fix-vboxadd-req.patch
 Patch6:		vbox-6.0.0-kernel-modules-in-tree.patch
 # (tmb) disable update notification (OpenSuSe)
 Patch7:		VirtualBox-4.3.0-noupdate-check.patch
-Patch8:		https://git.archlinux.org/svntogit/community.git/plain/trunk/101-vboxsf-automount.patch?h=packages/virtualbox
+# https://git.archlinux.org/svntogit/community.git/plain/trunk/101-vboxsf-automount.patch?h=packages/virtualbox
+Patch8:		101-vboxsf-automount.patch
+
 # don't check for:
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
@@ -99,6 +101,7 @@ Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
+Patch203:	VirtualBox-6.0.12-kernel-5.3.patch
 
 ExclusiveArch:	%{ix86} %{x86_64}
 BuildRequires:	systemd-macros
@@ -236,7 +239,7 @@ This package contains the user manual PDF file for %{name}.
 
 %prep
 %setup -qn %{distname}
-%apply_patches
+%autopatch -p1
 %if %{with java}
 . %{_sysconfdir}/profile.d/90java.sh
 %endif
@@ -265,25 +268,26 @@ VBOX_WITH_ORIGIN:=
 VBOX_WITH_RUNPATH:=%{vboxlibdir}
 VBOX_PATH_APP_PRIVATE:=%{vboxlibdir}
 VBOX_WITH_VNC:=1
-VBOX_WITH_TESTCASES =
-VBOX_WITH_TESTSUITE:=
+VBOX_WITH_TESTCASES:=0
+VBOX_WITH_TESTSUITE:=0
+VBOX_WITH_VALIDATIONKIT:=0
 %if %{with java}
-VBOX_JAVA_HOME := %{java_home}
+VBOX_JAVA_HOME:=%{java_home}
 %else
-VBOX_JAVA_HOME :=
+VBOX_JAVA_HOME:=
 %endif
-VBOX_WITHOUT_ADDITIONS_ISO := 1
-VBOX_WITHOUT_PRECOMPILED_HEADERS := 1
-VBOX_USE_SYSTEM_XORG_HEADERS := 1
-VBOX_USE_SYSTEM_GL_HEADERS := 1
-VBOX_NO_LEGACY_XORG_X11 := 1
-VBOX_USE_SYSTEM_GL_HEADERS := 1
-XSERVER_VERSION := %{x11_server_majorver}
+VBOX_WITHOUT_ADDITIONS_ISO:=1
+VBOX_WITHOUT_PRECOMPILED_HEADERS:=1
+VBOX_USE_SYSTEM_XORG_HEADERS:=1
+VBOX_USE_SYSTEM_GL_HEADERS:=1
+VBOX_NO_LEGACY_XORG_X11:=1
+XSERVER_VERSION:=%{x11_server_majorver}
 VBOX_BLD_PYTHON:=/usr/bin/python
 VBOX_GTAR:=
 TOOL_YASM_AS=yasm
-VBOX_WITH_REGISTRATION_REQUEST= 
-VBOX_WITH_UPDATE_REQUEST= 
+VBOX_WITH_REGISTRATION_REQUEST:=0
+VBOX_WITH_UPDATE_REQUEST:=0
+VBOX_GUI_WITH_SHARED_LIBRARY:=1
 # Default is Oracle VM VirtualBox -- let's not advertise the bad guys
 VBOX_PRODUCT=VirtualBox
 EOF
@@ -297,6 +301,7 @@ mkdir -p BFD
 ln -sf /usr/bin/ld.bfd BFD/ld
 export PATH=$PWD/BFD:$PATH
 export LIBPATH_LIB="%{_lib}"
+
 ./configure \
 	--enable-vnc \
 %if %{with java}
