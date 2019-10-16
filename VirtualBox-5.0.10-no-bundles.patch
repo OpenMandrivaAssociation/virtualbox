@@ -1,7 +1,7 @@
 diff -Naur VirtualBox-6.0.12/Config.kmk VirtualBox-6.0.12.tpg/Config.kmk
 --- VirtualBox-6.0.12/Config.kmk	2019-09-03 09:33:41.000000000 +0000
-+++ VirtualBox-6.0.12.tpg/Config.kmk	2019-10-15 21:21:07.108103823 +0000
-@@ -4069,19 +4069,19 @@
++++ VirtualBox-6.0.12.tpg/Config.kmk	2019-10-16 00:27:47.516303681 +0000
+@@ -4069,23 +4069,27 @@
  # SDKs for external libraries.
  #
  SDK_VBOX_LIBXML2           = .
@@ -14,56 +14,112 @@ diff -Naur VirtualBox-6.0.12/Config.kmk VirtualBox-6.0.12.tpg/Config.kmk
  
  SDK_VBOX_LIBPNG       = .
 -SDK_VBOX_LIBPNG_INCS ?= $(PATH_ROOT)/src/libs/libpng-1.6.36
+-SDK_VBOX_LIBPNG_LIBS ?= $(PATH_STAGE_LIB)/VBox-libpng$(VBOX_SUFF_LIB)
 +SDK_VBOX_LIBPNG_INCS ?= $(pkg-config libpng --variable=includedir)
- SDK_VBOX_LIBPNG_LIBS ?= $(PATH_STAGE_LIB)/VBox-libpng$(VBOX_SUFF_LIB)
++SDK_VBOX_LIBPNG_LIBS ?= $(pkg-config libpng --libs)
++
++SDK_VBOX_LIBLZF       = .
++SDK_VBOX_LIBLZF_INCS ?= $(pkg-config liblzf --variable=includedir)
++SDK_VBOX_LIBLZF_LIBS ?= $(pkg-config liblzf --libs)
  
  SDK_VBOX_ZLIB         = .
  if1of ($(KBUILD_TARGET), os2 solaris win)
-- SDK_VBOX_ZLIB_INCS  ?= $(PATH_ROOT)/src/libs/zlib-1.2.11
-+ SDK_VBOX_ZLIB_INCS  ?= $(pkg-config zlib --variable=includedir)
+  SDK_VBOX_ZLIB_INCS  ?= $(PATH_ROOT)/src/libs/zlib-1.2.11
   SDK_VBOX_ZLIB_LIBS  ?= $(PATH_STAGE_LIB)/VBox-zlib$(VBOX_SUFF_LIB)
  else
-  SDK_VBOX_ZLIB_INCS  ?=
-@@ -4134,26 +4134,26 @@
+- SDK_VBOX_ZLIB_INCS  ?=
+- SDK_VBOX_ZLIB_LIBS  ?= z
++ SDK_VBOX_ZLIB_INCS  ?= $(pkg-config zlib --variable=includedir)
++ SDK_VBOX_ZLIB_LIBS  ?= $(pkg-config zlib --libs)
+  SDK_VBOX_ZLIB_DEFS.linux ?= _LARGEFILE64_SOURCE
+ endif
+ 
+@@ -4134,28 +4138,28 @@
  
  ifdef VBOX_WITH_LIBCURL
  SDK_VBOX_LIBCURL       = .
 -SDK_VBOX_LIBCURL_INCS ?= $(PATH_ROOT)/src/libs/curl-7.64.0/include
+-SDK_VBOX_LIBCURL_LIBS ?= $(PATH_STAGE_LIB)/VBox-libcurl$(VBOX_SUFF_LIB)
 +SDK_VBOX_LIBCURL_INCS ?= $(pkg-config libcurl --variable=includedir)
- SDK_VBOX_LIBCURL_LIBS ?= $(PATH_STAGE_LIB)/VBox-libcurl$(VBOX_SUFF_LIB)
++SDK_VBOX_LIBCURL_LIBS ?= $(pkg-config libcurl --libs)
  SDK_VBOX_LIBCURL_DEFS ?= BUILDING_LIBCURL
  
  SDK_VBOX_LIBCURL-x86           = .
 -SDK_VBOX_LIBCURL-x86_INCS     ?= $(PATH_ROOT)/src/libs/curl-7.64.0/include
+-SDK_VBOX_LIBCURL-x86_LIBS.x86 ?= $(PATH_STAGE_LIB)/VBox-libcurl-x86$(VBOX_SUFF_LIB)
 +SDK_VBOX_LIBCURL-x86_INCS     ?= $(pkg-config libcurl --variable=includedir)
- SDK_VBOX_LIBCURL-x86_LIBS.x86 ?= $(PATH_STAGE_LIB)/VBox-libcurl-x86$(VBOX_SUFF_LIB)
++SDK_VBOX_LIBCURL-x86_LIBS.x86 ?= $(pkg-config libcurl --libs)
  SDK_VBOX_LIBCURL-x86_DEFS     ?= BUILDING_LIBCURL
  endif
  
  ifdef VBOX_WITH_LIBVPX
   SDK_VBOX_VPX       = .
-- SDK_VBOX_VPX_DEFAULT_INCS := $(PATH_ROOT)/src/libs/libvpx-1.6.1
-+ SDK_VBOX_VPX_DEFAULT_INCS := $(pkg-config vpx --variable=includedir)
-  SDK_VBOX_VPX_INCS ?= $(SDK_VBOX_VPX_DEFAULT_INCS)
-  SDK_VBOX_VPX_LIBS ?= $(PATH_STAGE_LIB)/VBox-libvpx$(VBOX_SUFF_LIB)
+  SDK_VBOX_VPX_DEFAULT_INCS := $(PATH_ROOT)/src/libs/libvpx-1.6.1
+- SDK_VBOX_VPX_INCS ?= $(SDK_VBOX_VPX_DEFAULT_INCS)
+- SDK_VBOX_VPX_LIBS ?= $(PATH_STAGE_LIB)/VBox-libvpx$(VBOX_SUFF_LIB)
++ SDK_VBOX_VPX_INCS ?= $(pkg-config vpx --variable=includedir)
++ SDK_VBOX_VPX_LIBS ?= $(pkg-config vpx --libs)
  endif
  
  ifdef VBOX_WITH_LIBOPUS
   SDK_VBOX_OPUS       = .
 - SDK_VBOX_OPUS_DEFAULT_INCS := $(PATH_ROOT)/src/libs/libopus-1.2.1/include
-+ SDK_VBOX_OPUS_DEFAULT_INCS := $(pkg-config opus --variable=includedir)
-  SDK_VBOX_OPUS_INCS ?= $(SDK_VBOX_OPUS_DEFAULT_INCS)
-  SDK_VBOX_OPUS_LIBS ?= $(PATH_STAGE_LIB)/VBox-libopus$(VBOX_SUFF_LIB)
+- SDK_VBOX_OPUS_INCS ?= $(SDK_VBOX_OPUS_DEFAULT_INCS)
+- SDK_VBOX_OPUS_LIBS ?= $(PATH_STAGE_LIB)/VBox-libopus$(VBOX_SUFF_LIB)
++ SDK_VBOX_OPUS_DEFAULT_INCS := $(PATH_ROOT)/src/libs/libvpx-1.2.1/include
++ SDK_VBOX_OPUS_INCS ?= $(pkg-config opus --variable=includedir)
++ SDK_VBOX_OPUS_LIBS ?= $(pkg-config opus --libs)
  endif
+ 
+ #
+@@ -5398,7 +5402,7 @@
+  	$(PATH_STAGE_LIB)/VBox-zlib-static$(VBOX_SUFF_LIB)
+ else
+  TEMPLATE_VBoxR3Static_LIBS        += \
+- 	$(PATH_STAGE_LIB)/VBox-liblzf$(VBOX_SUFF_LIB) \
++ 	$(SDK_VBOX_LIBLZF_LIBS) \
+  	$(SDK_VBOX_ZLIB_LIBS)
+  if1of ($(KBUILD_TARGET),darwin freebsd)
+   TEMPLATE_VBoxR3Static_LIBS       += iconv
 diff -Naur VirtualBox-6.0.12/src/VBox/Runtime/Makefile.kmk VirtualBox-6.0.12.tpg/src/VBox/Runtime/Makefile.kmk
 --- VirtualBox-6.0.12/src/VBox/Runtime/Makefile.kmk	2019-09-03 09:44:01.000000000 +0000
-+++ VirtualBox-6.0.12.tpg/src/VBox/Runtime/Makefile.kmk	2019-10-15 21:27:33.890346086 +0000
++++ VirtualBox-6.0.12.tpg/src/VBox/Runtime/Makefile.kmk	2019-10-16 00:31:35.382416984 +0000
 @@ -292,7 +292,7 @@
  	include \
  	$(SDK_VBOX_ZLIB_INCS)
  RuntimeR3_INCS         += \
 -	$(PATH_ROOT)/src/libs/liblzf-3.4
-+	$(pkg-config liblzf --variable=includedir)
++	$(SDK_VBOX_LIBLZF_INCS)
  
  # RuntimeR3_INCS.solaris  = \
  #    /usr/include
+@@ -2167,7 +2167,7 @@
+ VBoxRT_INCS.$(KBUILD_TARGET)  := $(RuntimeR3_INCS.$(KBUILD_TARGET))
+ VBoxRT_INCS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) := $(RuntimeR3_INCS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH))
+ VBoxRT_LIBS                    = \
+-	$(PATH_STAGE_LIB)/VBox-liblzf$(VBOX_SUFF_LIB)
++	$(SDK_VBOX_LIBLZF_LIBS)
+ if1of ($(KBUILD_TARGET_ARCH), amd64 x86)
+ VBoxRT_LIBS                   += \
+ 	$(PATH_STAGE_LIB)/SUPR3$(VBOX_SUFF_LIB)
+@@ -2314,7 +2314,7 @@
+ VBoxRT-x86_SDKS  += VBOX_OPENSSL-x86
+ 
+ VBoxRT-x86_LIBS = \
+-	$(PATH_STAGE_LIB)/VBox-liblzf-x86$(VBOX_SUFF_LIB)
++	$(SDK_VBOX_LIBLZF_LIBS)
+ if1of ($(KBUILD_TARGET_ARCH), amd64 x86)
+ VBoxRT-x86_LIBS += \
+ 	$(PATH_STAGE_LIB)/SUPR3-x86$(VBOX_SUFF_LIB)
+diff -Naur VirtualBox-6.0.12/src/libs/Makefile.kmk VirtualBox-6.0.12.tpg/src/libs/Makefile.kmk
+--- VirtualBox-6.0.12/src/libs/Makefile.kmk	2019-09-03 09:45:02.000000000 +0000
++++ VirtualBox-6.0.12.tpg/src/libs/Makefile.kmk	2019-10-16 00:29:18.374377837 +0000
+@@ -25,7 +25,7 @@
+ #
+ 
+ # Compression libs used by IPRT and <what was it again?>.
+-include $(PATH_SUB_CURRENT)/liblzf-3.4/Makefile.kmk
++#include $(PATH_SUB_CURRENT)/liblzf-3.4/Makefile.kmk
+ if  !defined(VBOX_ONLY_SDK) \
+  && "$(SDK_VBOX_ZLIB_INCS)" == "$(PATH_ROOT)/src/libs/zlib-1.2.11"
+  include $(PATH_SUB_CURRENT)/zlib-1.2.11/Makefile.kmk

@@ -111,16 +111,16 @@ BuildRequires:	gawk
 BuildRequires:	gsoap
 %endif
 BuildRequires:	acpica
-BuildRequires:	yasm
+BuildRequires:	nasm
 %if %{with java}
 BuildRequires:	jdk-current
 BuildRequires:	javax.activation
 BuildRequires:	javax.xml.bind
 %endif
 BuildRequires:	xsltproc
-BuildRequires:	libcap-devel
+BuildRequires:	pkgconfig(libcap)
 BuildRequires:	libstdc++-static-devel
-BuildRequires:	openssl-devel
+BuildRequires:	pkgconfig(openssl)
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(egl)
@@ -256,10 +256,7 @@ rm -rf src/VBox/Additions/x11/x11include
 rm -rf src/VBox/Additions/x11/x11stubs
 rm include/VBox/HostServices/glext.h
 rm include/VBox/HostServices/glxext.h
-rm -rf src/libs/liblzf-3.4/
-rm -rf src/libs/libxml2-2.9.4/
-rm -rf src/libs/libpng-1.6.36/
-rm -rf src/libs/zlib-1.2.11/
+rm -rf src/libs/{libpng-*,libxml2-*,liblzf-*,zlib-*}
 
 cat << EOF > LocalConfig.kmk
 VBOX_WITH_WARNINGS_AS_ERRORS:=
@@ -268,6 +265,9 @@ VBOX_WITH_ORIGIN:=
 VBOX_WITH_RUNPATH:=%{vboxlibdir}
 VBOX_PATH_APP_PRIVATE:=%{vboxlibdir}
 VBOX_WITH_VNC:=1
+VBOX_WITH_VPX:=1
+VBOX_WITH_LIBOPUS:=1
+VBOX_WITH_LIBCURL:=1
 VBOX_WITH_TESTCASES:=0
 VBOX_WITH_TESTSUITE:=0
 VBOX_WITH_VALIDATIONKIT:=0
@@ -284,7 +284,7 @@ VBOX_NO_LEGACY_XORG_X11:=1
 XSERVER_VERSION:=%{x11_server_majorver}
 VBOX_BLD_PYTHON:=/usr/bin/python
 VBOX_GTAR:=
-TOOL_YASM_AS=yasm
+TOOL_YASM_AS=nasm
 VBOX_WITH_REGISTRATION_REQUEST:=0
 VBOX_WITH_UPDATE_REQUEST:=0
 VBOX_GUI_WITH_SHARED_LIBRARY:=1
@@ -292,7 +292,9 @@ VBOX_GUI_WITH_SHARED_LIBRARY:=1
 VBOX_PRODUCT=VirtualBox
 EOF
 
-sed -i 's/CXX="g++"/CXX="g++ -std=gnu++14"/' configure
+# (tpg) 2019-10-16 vbox is not ready for LLVM/clang
+sed -i 's#CC="gcc"#CC="gcc"#g' configure
+sed -i 's#CXX="g++"#CXX="g++ -std=gnu++14"#g' configure
 sed -i "s!/usr/lib/virtualbox!%{vboxlibdir}!g" src/VBox/Installer/linux/VBox.sh
 
 %build
@@ -318,7 +320,7 @@ export LIBPATH_LIB="%{_lib}"
 	|| (cat configure.log && exit 1)
 
 # remove fPIC to avoid causing issues
-echo VBOX_GCC_OPT="`echo %{optflags} -fpermissive $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//'`" >> LocalConfig.kmk
+echo VBOX_GCC_OPT="$(echo %{optflags} -fpermissive $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
 #ifarch %{ix86}
 %global ldflags %{ldflags} -fuse-ld=bfd
 #endif
