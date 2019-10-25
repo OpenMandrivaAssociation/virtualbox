@@ -110,7 +110,7 @@ BuildRequires:	gawk
 BuildRequires:	gsoap
 %endif
 BuildRequires:	acpica
-BuildRequires:	nasm
+BuildRequires:	yasm
 %if %{with java}
 BuildRequires:	jdk-current
 BuildRequires:	javax.activation
@@ -285,7 +285,7 @@ VBOX_NO_LEGACY_XORG_X11:=1
 XSERVER_VERSION:=%{x11_server_majorver}
 VBOX_BLD_PYTHON:=/usr/bin/python
 VBOX_GTAR:=
-TOOL_YASM_AS=nasm
+TOOL_YASM_AS=yasm
 VBOX_WITH_REGISTRATION_REQUEST:=0
 VBOX_WITH_UPDATE_REQUEST:=0
 VBOX_GUI_WITH_SHARED_LIBRARY:=1
