@@ -23,8 +23,8 @@
 %define vboxlibdir %{_libdir}/%{name}
 %define vboxdatadir %{_datadir}/%{name}
 
-%define build_additions 1
-%define build_doc 0
+%bcond_with additions
+%bcond_with docs
 
 %ifarch %{ix86}
 %define vbox_platform linux.x86
@@ -154,15 +154,15 @@ BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
 BuildRequires:	pkgconfig(liblzf)
 BuildRequires:	pkgconfig(libpng)
-%if %{build_doc}
+%if %{with docs}
 # for building the user manual pdf file
 BuildRequires:	texlive
 BuildRequires:	texlive-fontsextra
-BuildRequires:	docbook-dtd44-xml
+BuildRequires:	docbook-dtd45-xml
+Suggests:	%{name}-doc
 %endif
 Requires(post,preun,postun):	rpm-helper
 #Requires:	kmod(vboxdrv) = %{version}
-Suggests:	%{name}-doc
 Conflicts:	dkms-%{name} < 5.0.24-1
 
 %description
@@ -182,7 +182,7 @@ you're building your own kernel.
 
 The modules in this package are required on the HOST side.
 
-%if %{build_additions}
+%if %{with additions}
 %package guest-additions
 Summary:	Additions for VirtualBox guest systems
 Group:		Emulators
@@ -228,6 +228,7 @@ Conflicts:	virtualbox-guest-additions < 2.2.0-2
 The X.org driver for video in VirtualBox guests
 %endif
 
+%if %{with docs}
 %package doc
 Summary:	The user manual PDF file for %{name}
 Group:		System/X11
@@ -235,6 +236,7 @@ BuildArch:	noarch
 
 %description doc
 This package contains the user manual PDF file for %{name}.
+%endif
 
 %prep
 %setup -qn %{distname}
@@ -312,10 +314,10 @@ export LIBPATH_LIB="%{_lib}"
 %endif
 	--disable-kmods \
 	--enable-qt5 \
-	--enable-pulse \
-%if ! %{build_doc}
+%if %{without docs}
 	--disable-docs \
 %endif
+	--enable-pulse
 	|| (cat configure.log && exit 1)
 
 # remove fPIC to avoid causing issues
@@ -325,7 +327,7 @@ echo VBOX_GCC_OPT="$(echo %{optflags} -fpermissive $(pkg-config --cflags pixman-
 #endif
 echo TOOL_GCC_LDFLAGS="%{ldflags}" >> LocalConfig.kmk
 
-%if %{build_additions}
+%if %{with additions}
 echo XSERVER_VERSION=%{x11_server_majorver} >>LocalConfig.kmk
 %else
 sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
@@ -416,12 +418,12 @@ vboxnetadp
 EOF
 
 # install additions
-%if %{build_additions}
+%if %{with additions}
 
 install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
 
-pushd out/%{vbox_platform}/release/bin/additions
+cd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri %{buildroot}%{_unitdir}
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 VBoxService %{buildroot}%{_sbindir}
@@ -450,7 +452,7 @@ EOF
     mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod
     cp -a src/$kmod/* %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}/$kmod/
   done
-popd
+cd -
 
 %endif
 
@@ -472,7 +474,7 @@ done
 # add missing makefile for kernel module
 install -m644 src/VBox/HostDrivers/Support/linux/Makefile %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
 
-%if !%{build_doc}
+%if %{with docs}
 install -m644 %{SOURCE1} %{buildroot}%{vboxlibdir}/UserManual.pdf
 %endif
 
@@ -513,7 +515,7 @@ chmod 0755 %{buildroot}/sbin/mount.vboxsf
 %postun
 %_del_group_helper %{name} 1 vboxusers
 
-%if %{build_additions}
+%if %{with additions}
 %post guest-additions
 # (Debian) Build usb device tree
 for i in /sys/bus/usb/devices/*; do
@@ -599,7 +601,7 @@ done
 %files kernel-module-sources
 %{_usr}/src/%{name}-%{version}-%{release}
 
-%if %{build_additions}
+%if %{with additions}
 %files guest-additions
 /%{_lib}/security/pam_vbox.so
 /sbin/mount.vboxsf
@@ -621,5 +623,7 @@ done
 %{_usr}/src/vbox*-%{version}-%{release}
 %endif
 
+%if %{with docs}
 %files doc
 %{vboxlibdir}/UserManual.pdf
+%endif
