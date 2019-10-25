@@ -101,7 +101,8 @@ Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
-
+# (tpg) fix compilation with recent acpica
+Patch203:	014-iasl.patch
 ExclusiveArch:	%{ix86} %{x86_64}
 BuildRequires:	systemd-macros
 BuildRequires:	dev86
