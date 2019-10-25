@@ -294,9 +294,10 @@ VBOX_PRODUCT=VirtualBox
 EOF
 
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
-sed -i 's#CC="gcc"#CC="gcc"#g' configure
-sed -i 's#CXX="g++"#CXX="g++ -std=gnu++14"#g' configure
-sed -i "s!/usr/lib/virtualbox!%{vboxlibdir}!g" src/VBox/Installer/linux/VBox.sh
+sed -i -e 's#CC="gcc"#CC="gcc"#g' configure
+sed -i -e 's#CXX="g++"#CXX="g++ -std=gnu++14"#g' configure
+sed -i -e 's#/usr/lib/virtualbox#%{vboxlibdir}#g' src/VBox/Installer/linux/VBox.sh
+sed -i -e 's#-fpermissive##g' -e 's#-finline-limit=8000##g' -e 's#-mpreferred-stack-boundary=2##g' Config.kmk
 
 %build
 # FIXME: gold linker dies with internal error in segment_precedes, at ../../gold/layout.cc:3250
