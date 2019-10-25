@@ -321,7 +321,7 @@ export LIBPATH_LIB="%{_lib}"
 	--enable-pulse || (cat configure.log && exit 1)
 
 # remove fPIC to avoid causing issues
-echo VBOX_GCC_OPT="$(echo %{optflags} -fpermissive $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
+echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
 #ifarch %{ix86}
 %global ldflags %{ldflags} -fuse-ld=bfd
 #endif
