@@ -317,8 +317,7 @@ export LIBPATH_LIB="%{_lib}"
 %if %{without docs}
 	--disable-docs \
 %endif
-	--enable-pulse
-	|| (cat configure.log && exit 1)
+	--enable-pulse || (cat configure.log && exit 1)
 
 # remove fPIC to avoid causing issues
 echo VBOX_GCC_OPT="$(echo %{optflags} -fpermissive $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
