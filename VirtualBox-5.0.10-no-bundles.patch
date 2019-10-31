@@ -1,6 +1,6 @@
-diff -Naur VirtualBox-6.0.12/Config.kmk VirtualBox-6.0.12.tpg/Config.kmk
---- VirtualBox-6.0.12/Config.kmk	2019-09-03 09:33:41.000000000 +0000
-+++ VirtualBox-6.0.12.tpg/Config.kmk	2019-10-16 00:27:47.516303681 +0000
+diff -Naur VirtualBox-6.0.14/Config.kmk VirtualBox-6.0.14.tpg/Config.kmk
+--- VirtualBox-6.0.14/Config.kmk	2019-10-10 18:25:35.000000000 +0000
++++ VirtualBox-6.0.14.tpg/Config.kmk	2019-10-31 15:08:08.235983271 +0000
 @@ -4069,23 +4069,27 @@
  # SDKs for external libraries.
  #
@@ -81,9 +81,9 @@ diff -Naur VirtualBox-6.0.12/Config.kmk VirtualBox-6.0.12.tpg/Config.kmk
   	$(SDK_VBOX_ZLIB_LIBS)
   if1of ($(KBUILD_TARGET),darwin freebsd)
    TEMPLATE_VBoxR3Static_LIBS       += iconv
-diff -Naur VirtualBox-6.0.12/src/VBox/Runtime/Makefile.kmk VirtualBox-6.0.12.tpg/src/VBox/Runtime/Makefile.kmk
---- VirtualBox-6.0.12/src/VBox/Runtime/Makefile.kmk	2019-09-03 09:44:01.000000000 +0000
-+++ VirtualBox-6.0.12.tpg/src/VBox/Runtime/Makefile.kmk	2019-10-16 00:31:35.382416984 +0000
+diff -Naur VirtualBox-6.0.14/src/VBox/Runtime/Makefile.kmk VirtualBox-6.0.14.tpg/src/VBox/Runtime/Makefile.kmk
+--- VirtualBox-6.0.14/src/VBox/Runtime/Makefile.kmk	2019-10-10 18:35:56.000000000 +0000
++++ VirtualBox-6.0.14.tpg/src/VBox/Runtime/Makefile.kmk	2019-10-31 15:08:08.237983271 +0000
 @@ -292,7 +292,7 @@
  	include \
  	$(SDK_VBOX_ZLIB_INCS)
@@ -111,9 +111,30 @@ diff -Naur VirtualBox-6.0.12/src/VBox/Runtime/Makefile.kmk VirtualBox-6.0.12.tpg
  if1of ($(KBUILD_TARGET_ARCH), amd64 x86)
  VBoxRT-x86_LIBS += \
  	$(PATH_STAGE_LIB)/SUPR3-x86$(VBOX_SUFF_LIB)
-diff -Naur VirtualBox-6.0.12/src/libs/Makefile.kmk VirtualBox-6.0.12.tpg/src/libs/Makefile.kmk
---- VirtualBox-6.0.12/src/libs/Makefile.kmk	2019-09-03 09:45:02.000000000 +0000
-+++ VirtualBox-6.0.12.tpg/src/libs/Makefile.kmk	2019-10-16 00:29:18.374377837 +0000
+diff -Naur VirtualBox-6.0.14/src/VBox/Storage/testcase/Makefile.kmk VirtualBox-6.0.14.tpg/src/VBox/Storage/testcase/Makefile.kmk
+--- VirtualBox-6.0.14/src/VBox/Storage/testcase/Makefile.kmk	2019-10-10 18:36:29.000000000 +0000
++++ VirtualBox-6.0.14.tpg/src/VBox/Storage/testcase/Makefile.kmk	2019-10-31 15:11:22.649969762 +0000
+@@ -137,7 +137,7 @@
+ 	$(PATH_STAGE_LIB)/VBox-zlib-static$(VBOX_SUFF_LIB)
+  else
+   vbox-img_LIBS += \
+-	$(PATH_STAGE_LIB)/VBox-liblzf$(VBOX_SUFF_LIB) \
++	$(SDK_VBOX_LIBLZF_LIBS) \
+ 	$(SDK_VBOX_ZLIB_LIBS)
+  endif
+  ifeq ($(KBUILD_TARGET),linux)
+@@ -183,7 +183,7 @@
+ 	$(PATH_STAGE_LIB)/VBox-zlib-static$(VBOX_SUFF_LIB)
+  else
+   vdkeystoremgr_LIBS += \
+-	$(PATH_STAGE_LIB)/VBox-liblzf$(VBOX_SUFF_LIB) \
++	$(SDK_VBOX_LIBLZF_LIBS) \
+ 	$(SDK_VBOX_ZLIB_LIBS)
+  endif
+  ifeq ($(KBUILD_TARGET),linux)
+diff -Naur VirtualBox-6.0.14/src/libs/Makefile.kmk VirtualBox-6.0.14.tpg/src/libs/Makefile.kmk
+--- VirtualBox-6.0.14/src/libs/Makefile.kmk	2019-10-10 18:36:58.000000000 +0000
++++ VirtualBox-6.0.14.tpg/src/libs/Makefile.kmk	2019-10-31 15:08:08.237983271 +0000
 @@ -25,7 +25,7 @@
  #
  
