@@ -261,6 +261,7 @@ rm include/VBox/HostServices/glxext.h
 rm -rf src/libs/{libpng-*,libxml2-*,liblzf-*,zlib-*}
 
 cat << EOF > LocalConfig.kmk
+VBOX_BUILD_PUBLISHER:=_%{_vendor}
 VBOX_WITH_WARNINGS_AS_ERRORS:=
 VBOX_PATH_APP_PRIVATE_ARCH:=%{vboxlibdir}
 VBOX_WITH_ORIGIN:=
