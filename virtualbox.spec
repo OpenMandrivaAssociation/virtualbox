@@ -311,6 +311,8 @@ VBOX_GUI_WITH_SHARED_LIBRARY:=1
 VBOX_PRODUCT=VirtualBox
 EOF
 
+cat LocalConfig.kmk
+
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
 sed -i -e 's#CC="gcc"#CC="gcc"#g' configure
 sed -i -e 's#CXX="g++"#CXX="g++ -std=gnu++14"#g' configure
