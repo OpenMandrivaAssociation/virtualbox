@@ -271,22 +271,22 @@ VBOX_WITH_VNC:=1
 VBOX_WITH_VPX:=1
 VBOX_WITH_LIBOPUS:=1
 VBOX_WITH_LIBCURL:=1
-SDK_VBOX_LIBPNG_INCS:=$(pkg-config libpng16 --cflags-only-I)
-SDK_VBOX_LIBPNG_LIBS:=$(pkg-config libpng16 --libs)
-#SDK_VBOX_LIBXML2_INCS:=$(pkg-config libxml-2.0 --cflags-only-I)
-SDK_VBOX_LIBXML2_LIBS:=$(pkg-config libxml-2.0 --libs)
-SDK_VBOX_OPENSSL_INCS:=""
-SDK_VBOX_OPENSSL_LIBS:="$(pkg-config libssl --libs) $(pkg-config libcrypto --libs)"
-SDK_VBOX_ZLIB_INCS:=""
-SDK_VBOX_ZLIB_LIBS:=$(pkg-config zlib --libs)
+SDK_VBOX_LIBPNG_INCS:="%{_includedir}/libpng16"
+SDK_VBOX_LIBPNG_LIBS:="png16"
+SDK_VBOX_LIBXML2_INCS:="%{_includedir}/libxml2"
+SDK_VBOX_LIBXML2_LIBS:="xml2"
+SDK_VBOX_OPENSSL_INCS:="%{_includedir}/openssl"
+SDK_VBOX_OPENSSL_LIBS:="ssl crypto"
+SDK_VBOX_ZLIB_INCS:="%{_includedir}"
+SDK_VBOX_ZLIB_LIBS:="z"
 SDK_VBOX_LIBLZF_INCS:=""
-SDK_VBOX_LIBLZF_LIBS:=$(pkg-config liblzf --libs)
-SDK_VBOX_OPUS_INCS:=$(pkg-config opus --cflags-only-I)
-SDK_VBOX_OPUS_LIBS:=$(pkg-config opus --libs)
-SDK_VBOX_VPX_INCS:=""
-SDK_VBOX_VPX_LIBS:=$(pkg-config vpx --libs)
-SDK_VBOX_LIBCURL_INCS:=""
-SDK_VBOX_LIBCURL_LIBS:=$(pkg-config libcurl --libs)
+SDK_VBOX_LIBLZF_LIBS:="lzf"
+SDK_VBOX_OPUS_INCS:="%{_includedir}/opus"
+SDK_VBOX_OPUS_LIBS:="opus"
+SDK_VBOX_VPX_INCS:="%{_includedir}/vpx"
+SDK_VBOX_VPX_LIBS:="vpx"
+SDK_VBOX_LIBCURL_INCS:="%{_includedir}/curl"
+SDK_VBOX_LIBCURL_LIBS:="curl"
 VBOX_WITH_TESTCASES:=0
 VBOX_WITH_TESTSUITE:=0
 VBOX_WITH_VALIDATIONKIT:=0
@@ -310,8 +310,6 @@ VBOX_GUI_WITH_SHARED_LIBRARY:=1
 # Default is Oracle VM VirtualBox -- let's not advertise the bad guys
 VBOX_PRODUCT=VirtualBox
 EOF
-
-cat LocalConfig.kmk
 
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
 sed -i -e 's#CC="gcc"#CC="gcc"#g' configure
