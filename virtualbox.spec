@@ -147,6 +147,7 @@ BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xmu)
 BuildRequires:	pkgconfig(xorg-server) >= 1.18
 BuildRequires:	pkgconfig(libxslt)
+BuildRequires:	pkgconfig(xdamage)
 BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xt)
 BuildRequires:	pkgconfig(zlib)
