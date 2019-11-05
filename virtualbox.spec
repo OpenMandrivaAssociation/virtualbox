@@ -257,7 +257,6 @@ cp -a %{SOURCE20} %{SOURCE21} src/VBox/Frontends/VirtualBox/images/
 find -name '*.py[co]' -delete
 rm -r src/VBox/Additions/WINNT
 rm -r src/VBox/Additions/os2
-rm -r kBuild/
 rm -r tools/
 # Remove bundle X11 sources and some lib sources, before patching.
 rm -rf src/VBox/Additions/x11/x11include
