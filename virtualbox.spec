@@ -23,7 +23,7 @@
 %define vboxlibdir %{_libdir}/%{name}
 %define vboxdatadir %{_datadir}/%{name}
 
-%bcond_with additions
+%bcond_without additions
 %bcond_with docs
 
 %ifarch %{ix86}
@@ -345,7 +345,7 @@ echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e '
 #endif
 echo TOOL_GCC_LDFLAGS="%{ldflags}" >> LocalConfig.kmk
 
-%if %{with additions}
+%if %{without additions}
 echo XSERVER_VERSION=%{x11_server_majorver} >>LocalConfig.kmk
 %else
 sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
@@ -538,10 +538,10 @@ chmod 0755 %{buildroot}/sbin/mount.vboxsf
 # (Debian) Build usb device tree
 for i in /sys/bus/usb/devices/*; do
 if test -r "$i/dev"; then
-dev="`cat "$i/dev" 2> /dev/null || true`"
-major="`expr "$dev" : '\(.*\):' 2> /dev/null || true`"
-minor="`expr "$dev" : '.*:\(.*\)' 2> /dev/null || true`"
-class="`cat $i/bDeviceClass 2> /dev/null || true`"
+dev="$(cat "$i/dev" 2> /dev/null || true)"
+major="$(expr "$dev" : '\(.*\):' 2> /dev/null || true)"
+minor="$(expr "$dev" : '.*:\(.*\)' 2> /dev/null || true)"
+class="$(cat $i/bDeviceClass 2> /dev/null || true)"
 /usr/share/virtualbox/VBoxCreateUSBNode.sh "$major" "$minor" "$class" vboxusers 2>/dev/null || true
 fi
 done
