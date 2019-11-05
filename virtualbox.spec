@@ -523,6 +523,7 @@ ln -s %{_libdir}/VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
 
 # Replace the vboxsf mount wrapper with one that works for
 # the in-tree version of the kernel module
+mkdir -p %{buildroot}/sbin
 cat >%{buildroot}/sbin/mount.vboxsf <<'EOF'
 #!/bin/bash
 name=${1#$PWD/}; shift
