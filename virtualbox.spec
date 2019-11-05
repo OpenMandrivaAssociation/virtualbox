@@ -83,7 +83,7 @@ Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
-Patch23:	VirtualBox-5.0.10-no-bundles.patch
+#Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 
 # "Borrowed" from Debian
@@ -258,7 +258,8 @@ rm -rf src/VBox/Additions/x11/x11include
 rm -rf src/VBox/Additions/x11/x11stubs
 rm include/VBox/HostServices/glext.h
 rm include/VBox/HostServices/glxext.h
-rm -rf src/libs/{libpng-*,libxml2-*,liblzf-*,zlib-*}
+# (tpg) somehow this does not work with system-wide liblzf, so do not remove liblzf-*
+rm -rf src/libs/{libpng-*,libxml2-*,zlib-*}
 
 cat << EOF > LocalConfig.kmk
 VBOX_BUILD_PUBLISHER:=_omv
