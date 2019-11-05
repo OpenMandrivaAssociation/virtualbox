@@ -518,6 +518,7 @@ rm  -f %{buildroot}%{vboxlibdir}/*.debug
 install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
 # Put a symlink to VBoxOGL where it will be found
+mkdir -p %{buildroot}%{_libdir}/dri
 ln -s %{_libdir}/VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
 
 # Replace the vboxsf mount wrapper with one that works for
