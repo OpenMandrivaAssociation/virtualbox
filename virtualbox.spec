@@ -23,7 +23,7 @@
 %define vboxlibdir %{_libdir}/%{name}
 %define vboxdatadir %{_datadir}/%{name}
 
-%bcond_without additions
+%bcond_with additions
 %bcond_with docs
 
 %ifarch %{ix86}
@@ -253,6 +253,12 @@ sed -i -e 's|GraphicsControllerType_VMSVGA|GraphicsControllerType_VBoxVGA|g' src
 # add OpenMandriva images
 cp -a %{SOURCE20} %{SOURCE21} src/VBox/Frontends/VirtualBox/images/
 
+# Remove prebuilt binary tools
+find -name '*.py[co]' -delete
+rm -r src/VBox/Additions/WINNT
+rm -r src/VBox/Additions/os2
+rm -r kBuild/
+rm -r tools/
 # Remove bundle X11 sources and some lib sources, before patching.
 rm -rf src/VBox/Additions/x11/x11include
 rm -rf src/VBox/Additions/x11/x11stubs
@@ -472,6 +478,9 @@ EOF
   done
 cd -
 
+# install PAM module:
+install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
+
 %endif
 
 # install mime types
@@ -504,8 +513,6 @@ rm  -f %{buildroot}%{vboxlibdir}/SUP*
 rm  -f %{buildroot}%{vboxlibdir}/xpidl
 rm  -f %{buildroot}%{vboxlibdir}/*.debug
 
-# install PAM module:
-install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
 
 install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
