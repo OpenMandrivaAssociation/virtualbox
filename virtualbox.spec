@@ -419,10 +419,12 @@ SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", RUN+="%{_datadir}/%
 SUBSYSTEM=="usb_device", ACTION=="remove", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh --remove \$major \$minor"
 SUBSYSTEM=="usb", ACTION=="remove", ENV{DEVTYPE}=="usb_device", RUN+="%{_datadir}/%{name}/VBoxCreateUSBNode.sh --remove \$major \$minor"
 EOF
+%if %{with additions}
 cat > %{buildroot}%{_udevrulesdir}/vbox-additions.rules << EOF
 KERNEL=="vboxguest", NAME="vboxguest", OWNER="root", MODE="0660"
 KERNEL=="vboxuser", NAME="vboxuser", OWNER="root", MODE="0666"
 EOF
+%endif
 
 # (tpg) create modules to load
 install -d %{buildroot}%{_sysconfdir}/modules-load.d
@@ -507,6 +509,7 @@ rm  -f %{buildroot}%{vboxlibdir}/*.debug
 
 install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
+%if %{with additions}
 # Put a symlink to VBoxOGL where it will be found
 mkdir -p %{buildroot}%{_libdir}/dri
 ln -s %{_libdir}/VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
@@ -520,6 +523,7 @@ name=${1#$PWD/}; shift
 exec /bin/mount -cit vboxsf "$name" "$@"
 EOF
 chmod 0755 %{buildroot}/sbin/mount.vboxsf
+%endif
 
 %post
 %_add_group_helper %{name} 1 vboxusers
@@ -566,7 +570,6 @@ done
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
 %{vboxlibdir}/*.so
-%{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/UnattendedTemplates
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBalloonCtrl
@@ -595,6 +598,7 @@ done
 %{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
 %{vboxlibdir}/rdesktop-vrdp*
+%{vboxlibdir}/vbox-img
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
