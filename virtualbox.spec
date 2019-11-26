@@ -603,10 +603,11 @@ done
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetNAT
 %attr(4711,root,root) %{vboxlibdir}/VBoxVolInfo
 %attr(4711,root,root) %{vboxlibdir}/VirtualBoxVM
-%attr(644,root,root) %{vboxlibdir}/*.rc
 %attr(644,root,root) %{vboxlibdir}/*.r0
 %attr(755,root,root) %{vboxlibdir}/*.sh
+%if %{without docs}
 %exclude %{vboxlibdir}/UserManual.pdf
+%endif
 %{vboxdatadir}
 %config %{_udevrulesdir}/%{name}.rules
 %{_tmpfilesdir}/%{name}.conf
