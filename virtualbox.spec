@@ -8,16 +8,11 @@
 
 %bcond_with java
 
-%define beta %{nil}
+%define beta RC1
 %define kname vboxdrv
 %define oname VirtualBox
-%if "%{beta}" != ""
-%define srcname %{oname}-%{version}_%{beta}
-%define distname %{oname}-%{version}_%{beta}
-%else
-%define srcname %{oname}-%{version}
-%define distname %{oname}-%{version}
-%endif
+%define srcname %{oname}-%{version}%{?beta:_%{beta}}
+%define distname %{oname}-%{version}%{?beta:_%{beta}}
 %define pkgver %{ver}
 
 %define vboxlibdir %{_libdir}/%{name}
@@ -33,7 +28,7 @@
 %define vbox_platform linux.amd64
 %endif
 
-# nuke vbox-specific dependencies, dont provide libGL.so.1
+# nuke vbox-specific dependencies, don't provide libGL.so.1
 %global __provides_exclude ^VBox|\^libGL\\.so\\.1|\^libEGL\\.so\\.1
 %global __requires_exclude ^VBox
 
@@ -49,13 +44,13 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.0.14
-Release:	1
+Version:	6.1.0
+Release:	%{?beta:0.%{beta}.}1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
-Source0:	http://download.virtualbox.org/virtualbox/%{version}/%{srcname}.tar.bz2
-Source1:	http://download.virtualbox.org/virtualbox/UserManual.pdf
+Source0:	http://download.virtualbox.org/virtualbox/%{version}%{?beta:_%{beta}}/%{srcname}.tar.bz2
+Source1:	http://download.virtualbox.org/virtualbox/%{version}%{?beta:_%{beta}}/UserManual.pdf
 Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
@@ -93,7 +88,6 @@ Patch107:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/deb
 Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/18-system-xorg.patch
 Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/27-hide-host-cache-warning.patch
 Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/29-fix-ftbfs-as-needed.patch
-Patch111:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/37-python-3.7-support.patch
 
 # (tpg) add support for OpenMandriva
 # (crazy) this should be prepared for upstream..
@@ -103,8 +97,6 @@ Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
 # (tpg) fix compilation with recent acpica
 Patch203:	014-iasl.patch
-# (tpg) fix compilation with libglvnd
-Patch204:	015-libglvnd-headers.patch
 ExclusiveArch:	%{ix86} %{x86_64}
 BuildRequires:	systemd-macros
 BuildRequires:	dev86
@@ -263,8 +255,6 @@ rm -r src/VBox/Additions/os2
 # Remove bundle X11 sources and some lib sources, before patching.
 rm -rf src/VBox/Additions/x11/x11include
 rm -rf src/VBox/Additions/x11/x11stubs
-rm include/VBox/HostServices/glext.h
-rm include/VBox/HostServices/glxext.h
 # (tpg) somehow this does not work with system-wide liblzf, so do not remove liblzf-*
 rm -rf src/libs/{libpng-*,libxml2-*,zlib-*}
 
