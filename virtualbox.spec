@@ -18,7 +18,7 @@
 %define vboxlibdir %{_libdir}/%{name}
 %define vboxdatadir %{_datadir}/%{name}
 
-%bcond_with additions
+%bcond_without additions
 %bcond_with docs
 
 %ifarch %{ix86}
@@ -342,7 +342,7 @@ echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e '
 #endif
 echo TOOL_GCC_LDFLAGS="%{ldflags}" >> LocalConfig.kmk
 
-%if %{without additions}
+%if %{with additions}
 echo XSERVER_VERSION=%{x11_server_majorver} >>LocalConfig.kmk
 %else
 sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
@@ -445,8 +445,6 @@ cd out/%{vbox_platform}/release/bin/additions
   install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 VBoxControl %{buildroot}%{_bindir}
 
-  install -m755 VBox*.so %{buildroot}%{_libdir}
-
   cat > %{buildroot}%{_sysconfdir}/modules-load.d/vbox-guest-additions.conf << EOF
 vboxguest
 vboxsf
@@ -492,7 +490,7 @@ done
 # add missing makefile for kernel module
 install -m644 src/VBox/HostDrivers/Support/linux/Makefile %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
 
-%if %{with docs}
+%if ! %{with docs}
 install -m644 %{SOURCE1} %{buildroot}%{vboxlibdir}/UserManual.pdf
 %endif
 
@@ -603,7 +601,6 @@ done
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetNAT
 %attr(4711,root,root) %{vboxlibdir}/VBoxVolInfo
 %attr(4711,root,root) %{vboxlibdir}/VirtualBoxVM
-%attr(644,root,root) %{vboxlibdir}/*.rc
 %attr(644,root,root) %{vboxlibdir}/*.r0
 %attr(755,root,root) %{vboxlibdir}/*.sh
 %exclude %{vboxlibdir}/UserManual.pdf
@@ -631,10 +628,9 @@ done
 %{_udevrulesdir}/vbox-additions.rules
 %{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
 %{_sysconfdir}/modules-load.d/vbox-guest-additions.conf
+%{_libdir}/virtualbox/vbox-img
 
 %files -n x11-driver-video-vboxvideo
-%{_libdir}/VBoxEGL*
-%{_libdir}/VBoxOGL*
 %{_libdir}/dri/vboxvideo_dri.so
 
 %files guest-kernel-module-sources
