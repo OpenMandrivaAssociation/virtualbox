@@ -570,6 +570,7 @@ done
 %{vboxlibdir}/icons
 %{vboxlibdir}/components
 %{vboxlibdir}/*.so
+%{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/UnattendedTemplates
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBalloonCtrl
