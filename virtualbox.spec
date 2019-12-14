@@ -8,7 +8,7 @@
 
 %bcond_with java
 
-%define beta RC1
+# %define beta RC1
 %define kname vboxdrv
 %define oname VirtualBox
 %define srcname %{oname}-%{version}%{?beta:_%{beta}}
@@ -45,7 +45,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.0
-Release:	%{?beta:0.%{beta}.}1
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
