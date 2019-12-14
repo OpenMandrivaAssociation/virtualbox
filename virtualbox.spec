@@ -8,7 +8,6 @@
 
 %bcond_with java
 
-# %define beta RC1
 %define kname vboxdrv
 %define oname VirtualBox
 %define srcname %{oname}-%{version}%{?beta:_%{beta}}
