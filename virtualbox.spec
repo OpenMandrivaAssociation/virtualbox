@@ -48,8 +48,8 @@ Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
-Source0:	http://download.virtualbox.org/virtualbox/%{version}%{?beta:_%{beta}}/%{srcname}.tar.bz2
-Source1:	http://download.virtualbox.org/virtualbox/%{version}%{?beta:_%{beta}}/UserManual.pdf
+Source0:	http://download.virtualbox.org/virtualbox/%{version}/%{srcname}.tar.bz2
+Source1:	http://download.virtualbox.org/virtualbox/%{version}/UserManual.pdf
 Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
@@ -60,7 +60,7 @@ Source100:	virtualbox.rpmlintrc
 # Update docs on kernel modules
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
 # Fix docs to give the right mount command for the in-tree version of vboxsf
-Patch2:		http://crazy.dev.frugalware.org/vboxsf-mainline-mount-help.patch
+#Patch2:		http://crazy.dev.frugalware.org/vboxsf-mainline-mount-help.patch
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
 # We build the kernel modules in-tree -- adjust the Makefiles to support it
@@ -80,13 +80,17 @@ Patch22:	virtualbox-no-prehistoric-xfree86.patch
 #Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 
-# "Borrowed" from Debian
-Patch103:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/06-xsession.patch
-Patch104:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/07-vboxnetflt-reference.patch
-Patch107:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/16-no-update.patch
-Patch108:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/18-system-xorg.patch
-Patch109:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/27-hide-host-cache-warning.patch
-Patch110:	https://sources.debian.org/data/contrib/v/virtualbox/5.2.16-dfsg-3/debian/patches/29-fix-ftbfs-as-needed.patch
+# "Borrowed" from Debian https://salsa.debian.org/pkg-virtualbox-team/virtualbox/blob/master/debian/patches
+Patch102:	01-build-arch.patch
+Patch103:	06-xsession.patch
+Patch104:	07-vboxnetflt-reference.patch
+Patch105:	12-make-module.patch
+Patch107:	16-no-update.patch
+Patch108:	18-system-xorg.patch
+Patch109:	27-hide-host-cache-warning.patch
+Patch110:	29-fix-ftbfs-as-needed.patch
+Patch111:	32-disable-guest-version-check.patch
+Patch112:	35-libvdeplug-soname.patch
 
 # (tpg) add support for OpenMandriva
 # (crazy) this should be prepared for upstream..
@@ -94,9 +98,9 @@ Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
-# (tpg) fix compilation with recent acpica
-Patch203:	014-iasl.patch
+
 ExclusiveArch:	%{ix86} %{x86_64}
+%if 0
 BuildRequires:	systemd-macros
 BuildRequires:	dev86
 BuildRequires:	gawk
@@ -159,7 +163,7 @@ Suggests:	%{name}-doc
 Requires(post,preun,postun):	rpm-helper
 #Requires:	kmod(vboxdrv) = %{version}
 Conflicts:	dkms-%{name} < 5.0.24-1
-
+%endif
 %description
 VirtualBox is a general-purpose full virtualizer for x86 hardware.
 
@@ -285,6 +289,7 @@ SDK_VBOX_VPX_LIBS:=vpx
 SDK_VBOX_LIBCURL_INCS:=%{_includedir}/curl
 SDK_VBOX_LIBCURL_LIBS:=curl
 VBOX_WITH_TESTCASES:=0
+VBOX_WITH_PCI_PASSTHROUGH:=1
 VBOX_WITH_VALIDATIONKIT:=0
 %if %{with java}
 VBOX_JAVA_HOME:=%{java_home}
