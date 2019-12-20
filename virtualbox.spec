@@ -91,7 +91,6 @@ Patch109:	27-hide-host-cache-warning.patch
 Patch110:	29-fix-ftbfs-as-needed.patch
 Patch111:	32-disable-guest-version-check.patch
 Patch112:	35-libvdeplug-soname.patch
-
 # (tpg) add support for OpenMandriva
 # (crazy) this should be prepared for upstream..
 Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
@@ -100,7 +99,6 @@ Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
 
 ExclusiveArch:	%{ix86} %{x86_64}
-%if 0
 BuildRequires:	systemd-macros
 BuildRequires:	dev86
 BuildRequires:	gawk
@@ -163,7 +161,7 @@ Suggests:	%{name}-doc
 Requires(post,preun,postun):	rpm-helper
 #Requires:	kmod(vboxdrv) = %{version}
 Conflicts:	dkms-%{name} < 5.0.24-1
-%endif
+
 %description
 VirtualBox is a general-purpose full virtualizer for x86 hardware.
 
@@ -240,6 +238,7 @@ This package contains the user manual PDF file for %{name}.
 %prep
 %setup -qn %{distname}
 %autopatch -p1
+
 %if %{with java}
 . %{_sysconfdir}/profile.d/90java.sh
 %endif
