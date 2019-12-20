@@ -318,6 +318,9 @@ sed -i -e 's#CXX="g++"#CXX="g++ -std=gnu++14"#g' configure
 sed -i -e 's#/usr/lib/virtualbox#%{vboxlibdir}#g' src/VBox/Installer/linux/VBox.sh
 sed -i -e 's#-fpermissive##g' -e 's#-finline-limit=8000##g' -e 's#-mpreferred-stack-boundary=2##g' Config.kmk
 
+# (tpg) use our target
+sed -i -e 's#RPM_TARGET_CPU#%_target_cpu#g' configure
+
 %build
 # FIXME: gold linker dies with internal error in segment_precedes, at ../../gold/layout.cc:3250
 mkdir -p BFD
