@@ -361,15 +361,17 @@ mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir}
 
 (cd out/%{vbox_platform}/release/bin && tar cf - --exclude=additions .) | \
 (cd %{buildroot}%{vboxlibdir} && tar xf -)
+# (tpg) looks like these are not available on ix86
 %ifnarch %{ix86}
 # move noarch files to vboxdatadir
 mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,*.png} %{buildroot}%{vboxdatadir}
-%endif
+
 # And the desktop file where it belongs
 mkdir -p %{buildroot}%{_datadir}/applications/
 mv %{buildroot}%{vboxlibdir}/*.desktop %{buildroot}%{_datadir}/applications/
 # Fix bogus space between file:// and filename
 sed -i -e 's,file:// /,file:///,' %{buildroot}%{_datadir}/applications/virtualbox.desktop
+%endif
 
 # install wrappers
 mkdir -p %{buildroot}%{_sysconfdir}/vbox
