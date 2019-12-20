@@ -97,8 +97,9 @@ Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
-
 ExclusiveArch:	%{ix86} %{x86_64}
+# (tpg) 2019-10-16 vbox is not ready for LLVM/clang
+BuildRequires:	gcc-c++
 BuildRequires:	systemd-macros
 BuildRequires:	dev86
 BuildRequires:	gawk
