@@ -361,9 +361,10 @@ mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir}
 
 (cd out/%{vbox_platform}/release/bin && tar cf - --exclude=additions .) | \
 (cd %{buildroot}%{vboxlibdir} && tar xf -)
-
+%ifnarch %{ix86}
 # move noarch files to vboxdatadir
 mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,*.png} %{buildroot}%{vboxdatadir}
+%endif
 # And the desktop file where it belongs
 mkdir -p %{buildroot}%{_datadir}/applications/
 mv %{buildroot}%{vboxlibdir}/*.desktop %{buildroot}%{_datadir}/applications/
