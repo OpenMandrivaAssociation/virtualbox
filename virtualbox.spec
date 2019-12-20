@@ -414,7 +414,10 @@ make -C vboxnetflt KERN_DIR=\$1
 make -C vboxnetadp KERN_DIR=\$1
 EOF
 install -m 0755 vboxbuild %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
+# (tpg) looks like these are not available on ix86
+%ifnarch %{ix86}
 mv %{buildroot}%{vboxlibdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
+%endif
 
 # install udev rules
 mkdir -p %{buildroot}%{_udevrulesdir}
@@ -509,7 +512,6 @@ rm  -f %{buildroot}%{vboxlibdir}/vboxkeyboard.tar.gz
 rm  -f %{buildroot}%{vboxlibdir}/SUP*
 rm  -f %{buildroot}%{vboxlibdir}/xpidl
 rm  -f %{buildroot}%{vboxlibdir}/*.debug
-
 
 install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
