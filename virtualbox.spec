@@ -1,11 +1,3 @@
-%ifarch %{ix86}
-# This is bogus, but at normal optimization levels, gcc
-# tries to allocate more memory than 32-bit address space
-# can hold :/
-%global optflags %{optflags} -g0 -fno-lto -fuse-ld=bfd -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
-%global ldflags %{ldflags} -g0 -fno-lto -fuse-ld=bfd -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
-%endif
-
 %bcond_with java
 
 %define kname vboxdrv
@@ -20,9 +12,6 @@
 %bcond_without additions
 %bcond_with docs
 
-%ifarch %{ix86}
-%define vbox_platform linux.x86
-%endif
 %ifarch %{x86_64}
 %define vbox_platform linux.amd64
 %endif
@@ -96,15 +85,13 @@ Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
-ExclusiveArch:	%{ix86} %{x86_64}
+ExclusiveArch:	%{x86_64}
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
 BuildRequires:	gcc-c++
 BuildRequires:	systemd-macros
 BuildRequires:	dev86
 BuildRequires:	gawk
-%ifnarch %{ix86}
 BuildRequires:	gsoap
-%endif
 BuildRequires:	acpica
 BuildRequires:	yasm
 %if %{with java}
@@ -340,9 +327,7 @@ export LIBPATH_LIB="%{_lib}"
 
 # remove fPIC to avoid causing issues
 echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
-#ifarch %{ix86}
 %global ldflags %{ldflags} -fuse-ld=bfd
-#endif
 echo TOOL_GCC_LDFLAGS="%{ldflags}" >> LocalConfig.kmk
 
 %if %{with additions}
@@ -361,8 +346,6 @@ mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir}
 
 (cd out/%{vbox_platform}/release/bin && tar cf - --exclude=additions .) | \
 (cd %{buildroot}%{vboxlibdir} && tar xf -)
-# (tpg) looks like these are not available on ix86
-%ifnarch %{ix86}
 # move noarch files to vboxdatadir
 mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,*.png} %{buildroot}%{vboxdatadir}
 
@@ -371,7 +354,6 @@ mkdir -p %{buildroot}%{_datadir}/applications/
 mv %{buildroot}%{vboxlibdir}/*.desktop %{buildroot}%{_datadir}/applications/
 # Fix bogus space between file:// and filename
 sed -i -e 's,file:// /,file:///,' %{buildroot}%{_datadir}/applications/virtualbox.desktop
-%endif
 
 # install wrappers
 mkdir -p %{buildroot}%{_sysconfdir}/vbox
@@ -414,10 +396,7 @@ make -C vboxnetflt KERN_DIR=\$1
 make -C vboxnetadp KERN_DIR=\$1
 EOF
 install -m 0755 vboxbuild %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}
-# (tpg) looks like these are not available on ix86
-%ifnarch %{ix86}
 mv %{buildroot}%{vboxlibdir}/src/* %{buildroot}%{_usr}/src/%{name}-%{version}-%{release}/
-%endif
 
 # install udev rules
 mkdir -p %{buildroot}%{_udevrulesdir}
