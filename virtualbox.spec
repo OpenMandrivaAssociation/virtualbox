@@ -81,7 +81,6 @@ Patch22:	virtualbox-no-prehistoric-xfree86.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 
 # "Borrowed" from Debian https://salsa.debian.org/pkg-virtualbox-team/virtualbox/blob/master/debian/patches
-Patch102:	01-build-arch.patch
 Patch103:	06-xsession.patch
 Patch104:	07-vboxnetflt-reference.patch
 Patch105:	12-make-module.patch
@@ -317,9 +316,6 @@ sed -i -e 's#CC="gcc"#CC="gcc"#g' configure
 sed -i -e 's#CXX="g++"#CXX="g++ -std=gnu++14"#g' configure
 sed -i -e 's#/usr/lib/virtualbox#%{vboxlibdir}#g' src/VBox/Installer/linux/VBox.sh
 sed -i -e 's#-fpermissive##g' -e 's#-finline-limit=8000##g' -e 's#-mpreferred-stack-boundary=2##g' Config.kmk
-
-# (tpg) use our target
-sed -i -e 's#RPM_TARGET_CPU#%_target_cpu#g' configure
 
 %build
 # FIXME: gold linker dies with internal error in segment_precedes, at ../../gold/layout.cc:3250
