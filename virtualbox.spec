@@ -33,7 +33,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.2
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -46,6 +46,13 @@ Source6:	vboxweb.service
 Source20:	os_openmandriva.png
 Source21:	os_openmandriva_64.png
 Source100:	virtualbox.rpmlintrc
+# Revert upstream's (between 6.1.0 and 6.1.2) removal of symbols
+# that are used everywhere -- without this patch, starting
+# any VM results in
+# Failed to load R0 module /usr/lib64/virtualbox/VMMR0.r0:
+# Unable to locate imported symbol 'PciRawR0Term' for module
+# 'VMMR0.r0' (VERR_SYMBOL_NOT_FOUND).
+Patch0:		VirtualBox-6.1.2-revert-removal-of-vital-symbols.patch
 # Update docs on kernel modules
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
 # Fix docs to give the right mount command for the in-tree version of vboxsf
