@@ -1,0 +1,25 @@
+diff -up VirtualBox-6.1.4/Config.kmk.omv~ VirtualBox-6.1.4/Config.kmk
+--- VirtualBox-6.1.4/Config.kmk.omv~	2020-02-20 15:25:17.524276588 +0100
++++ VirtualBox-6.1.4/Config.kmk	2020-02-20 15:25:44.484277776 +0100
+@@ -2685,7 +2685,7 @@ else
+  # Some versions of gcc (e.g. openSUSE11) return only major.minor on `gcc -dumpversion`.
+  # gcc-5 of openSUSE42.1 only returns the major version on `gcc -dumpversion`!
+  VBOX_GCC_VERSION = $(shell ($(1) -dumpfullversion 2>/dev/null || $(1) -dumpversion) | \
+-    $(SED_EXT) 's|\([0-9]\)\.\{0,1\}\([0-9]\{0,1\}\)\.\{0,1\}\([0-9]\{0,1\}\).*|$$(int-add $$(int-mul 10000, \1), $$(int-mul 100, $$(firstword \2 0)), $$(firstword \3 0))|' )
++    $(SED_EXT) 's|\([0-9]*\)\.\{0,1\}\([0-9]\{0,1\}\)\.\{0,1\}\([0-9]\{0,1\}\).*|$$(int-add $$(int-mul 10000, \1), $$(int-mul 100, $$(firstword \2 0)), $$(firstword \3 0))|' )
+ endif
+ 
+ # YASM macros
+diff -up VirtualBox-6.1.4/Makefile.kmk.omv~ VirtualBox-6.1.4/Makefile.kmk
+diff -up VirtualBox-6.1.4/include/iprt/formats/mach-o.h.omv~ VirtualBox-6.1.4/include/iprt/formats/mach-o.h
+--- VirtualBox-6.1.4/include/iprt/formats/mach-o.h.omv~	2020-02-20 15:30:56.072291516 +0100
++++ VirtualBox-6.1.4/include/iprt/formats/mach-o.h	2020-02-20 15:31:07.047292000 +0100
+@@ -38,7 +38,7 @@
+ /* cputype */
+ #define CPU_ARCH_MASK               INT32_C(0xff000000)
+ #define CPU_ARCH_ABI64              INT32_C(0x01000000)
+-#define CPU_TYPE_ANY                INT32_C(-1)
++#define CPU_TYPE_ANY                INT32_C(0xffffffff)
+ #define CPU_TYPE_VAX                INT32_C(1)
+ #define CPU_TYPE_MC680x0            INT32_C(6)
+ #define CPU_TYPE_X86                INT32_C(7)

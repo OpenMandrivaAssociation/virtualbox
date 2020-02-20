@@ -32,8 +32,8 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.1.2
-Release:	2
+Version:	6.1.4
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -59,6 +59,7 @@ Patch1:		virtualbox-fix-modules-rebuild-command.patch
 #Patch2:		http://crazy.dev.frugalware.org/vboxsf-mainline-mount-help.patch
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
+Patch5:		vbox-6.1.4-gcc10.patch
 # We build the kernel modules in-tree -- adjust the Makefiles to support it
 Patch6:		vbox-6.0.0-kernel-modules-in-tree.patch
 # (tmb) disable update notification (OpenSuSe)
@@ -581,7 +582,6 @@ done
 %{vboxlibdir}/VirtualBox
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
-%{vboxlibdir}/__pycache__
 %if %{with java}
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/webtest
