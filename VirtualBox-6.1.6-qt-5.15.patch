@@ -1,0 +1,52 @@
+diff -up VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/globals/UIImageTools.cpp.omv~ VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/globals/UIImageTools.cpp
+--- VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/globals/UIImageTools.cpp.omv~	2020-04-15 21:19:58.339606055 +0200
++++ VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/globals/UIImageTools.cpp	2020-04-15 21:20:04.781621130 +0200
+@@ -17,6 +17,7 @@
+ 
+ /* Qt includes: */
+ #include <QPainter>
++#include <QPainterPath>
+ 
+ /* GUI include */
+ #include "UIImageTools.h"
+diff -up VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIMenuToolBar.cpp.omv~ VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIMenuToolBar.cpp
+--- VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIMenuToolBar.cpp.omv~	2020-04-15 21:24:40.142572000 +0200
++++ VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIMenuToolBar.cpp	2020-04-15 21:24:45.077593575 +0200
+@@ -19,6 +19,7 @@
+ #include <QApplication>
+ #include <QHBoxLayout>
+ #include <QPainter>
++#include <QPainterPath>
+ #include <QStyle>
+ #include <QToolButton>
+ 
+diff -up VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIMiniToolBar.cpp.omv~ VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIMiniToolBar.cpp
+--- VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIMiniToolBar.cpp.omv~	2020-04-15 21:23:26.515266604 +0200
++++ VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIMiniToolBar.cpp	2020-04-15 21:23:35.275301242 +0200
+@@ -21,6 +21,7 @@
+ #include <QMenu>
+ #include <QMoveEvent>
+ #include <QPainter>
++#include <QPainterPath>
+ #include <QStateMachine>
+ #include <QStyle>
+ #include <QTimer>
+diff -up VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIPopupBox.h.omv~ VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIPopupBox.h
+--- VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIPopupBox.h.omv~	2020-04-15 21:21:57.783944433 +0200
++++ VirtualBox-6.1.6/src/VBox/Frontends/VirtualBox/src/widgets/UIPopupBox.h	2020-04-15 21:22:05.707970951 +0200
+@@ -24,6 +24,7 @@
+ /* Qt includes: */
+ #include <QIcon>
+ #include <QWidget>
++#include <QPainterPath>
+ 
+ /* GUI includes: */
+ #include "UILibraryDefs.h"
+@@ -34,7 +35,6 @@ class QIcon;
+ class QLabel;
+ class QMouseEvent;
+ class QObject;
+-class QPainterPath;
+ class QPaintEvent;
+ class QResizeEvent;
+ class QString;
