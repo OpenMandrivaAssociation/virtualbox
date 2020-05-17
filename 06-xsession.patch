@@ -1,20 +1,18 @@
-diff -up VirtualBox-6.0.0/src/VBox/Additions/x11/Installer/98vboxadd-xclient.0103~ VirtualBox-6.0.0/src/VBox/Additions/x11/Installer/98vboxadd-xclient
---- VirtualBox-6.0.0/src/VBox/Additions/x11/Installer/98vboxadd-xclient.0103~	2018-12-19 00:14:55.357130644 +0100
-+++ VirtualBox-6.0.0/src/VBox/Additions/x11/Installer/98vboxadd-xclient	2018-12-19 00:15:40.907908724 +0100
-@@ -30,10 +30,10 @@ elif test -z "${SSH_CONNECTION}"; then
+diff -up VirtualBox-6.1.8/src/VBox/Additions/x11/Installer/98vboxadd-xclient.14~ VirtualBox-6.1.8/src/VBox/Additions/x11/Installer/98vboxadd-xclient
+--- VirtualBox-6.1.8/src/VBox/Additions/x11/Installer/98vboxadd-xclient.14~	2020-05-16 23:08:41.908140299 +0200
++++ VirtualBox-6.1.8/src/VBox/Additions/x11/Installer/98vboxadd-xclient	2020-05-16 23:10:14.940076294 +0200
+@@ -30,9 +30,9 @@ elif test -z "${SSH_CONNECTION}"; then
     # This script can also be triggered by a connection over SSH, which is not
     # what we had in mind, so we do not start VBoxClient in that case.  We do
     # not use "exit" here as this script is "source"d, not executed.
 -  /usr/bin/VBoxClient --clipboard
 -  /usr/bin/VBoxClient --checkhostversion
--  /usr/bin/VBoxClient --display
 -  /usr/bin/VBoxClient --seamless
 -  /usr/bin/VBoxClient --draganddrop
 -  /usr/bin/VBoxClient --vmsvga-x11  # In case VMSVGA emulation is enabled
 +  /usr/bin/VBoxClient --clipboard || true
 +  /usr/bin/VBoxClient --checkhostversion || true
-+  /usr/bin/VBoxClient --display || true
 +  /usr/bin/VBoxClient --seamless || true
 +  /usr/bin/VBoxClient --draganddrop || true
-+  /usr/bin/VBoxClient --vmsvga-x11 || true  # In case VMSVGA emulation is enabled
++  /usr/bin/VBoxClient --vmsvga-x11 || true # In case VMSVGA emulation is enabled
  fi
