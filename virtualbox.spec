@@ -27,12 +27,14 @@
 # error: Missing # define COM __gnu_lto_v1
 %define _disable_lto 1
 
+%bcond_with clang
+
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.1.10
+Version:	6.1.12
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -71,7 +73,6 @@ Patch8:		101-vboxsf-automount.patch
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
 Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
-Patch10:	VirtualBox-6.1.6-qt-5.15.patch
 Patch11:	vbox-6.1.10-compile.patch
 
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
@@ -309,10 +310,14 @@ VBOX_PRODUCT=VirtualBox
 EOF
 
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
-sed -i -e 's#CC="gcc"#CC="gcc"#g' configure
-sed -i -e 's#CXX="g++"#CXX="g++ -std=gnu++14"#g' configure
+%if %{with clang}
+sed -i -e 's#CC="gcc"#CC="clang"#g' configure
+sed -i -e 's#CXX="g++"#CXX="clang++"#g' configure
+sed -i -e 's,-mpreferred-stack-boundary=2,,g' Config.kmk src/VBox/Devices/PC/ipxe/Makefile.kmk src/VBox/Devices/PC/ipxe/src/arch/i386/Makefile
+%endif
 sed -i -e 's#/usr/lib/virtualbox#%{vboxlibdir}#g' src/VBox/Installer/linux/VBox.sh
-sed -i -e 's#-fpermissive##g' -e 's#-finline-limit=8000##g' -e 's#-mpreferred-stack-boundary=2##g' Config.kmk
+sed -i -e 's#-fpermissive##g' -e 's#-finline-limit=8000##g' Config.kmk
+
 
 %build
 # FIXME: gold linker dies with internal error in segment_precedes, at ../../gold/layout.cc:3250
@@ -336,9 +341,13 @@ export LIBPATH_LIB="%{_lib}"
 	--enable-pulse || (cat configure.log && exit 1)
 
 # remove fPIC to avoid causing issues
+%if %{with clang}
+echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -rtlib=libgcc" >> LocalConfig.kmk
+%else
 echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
-%global ldflags %{ldflags} -fuse-ld=bfd
+%endif
 echo TOOL_GCC_LDFLAGS="%{ldflags}" >> LocalConfig.kmk
+sed -i -e 's,^VBOX_WITH_CLOUD_NET,# VBOX_WITH_CLOUD_NET,g' Config.kmk
 
 %if %{with additions}
 echo XSERVER_VERSION=%{x11_server_majorver} >>LocalConfig.kmk
