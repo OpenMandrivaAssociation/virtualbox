@@ -34,13 +34,13 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.1.12
+Version:	6.1.12a
 Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
-Source0:	http://download.virtualbox.org/virtualbox/%{version}/%{srcname}.tar.bz2
-Source1:	http://download.virtualbox.org/virtualbox/%{version}/UserManual.pdf
+Source0:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')/%{srcname}.tar.bz2
+Source1:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')/UserManual.pdf
 Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
@@ -234,7 +234,7 @@ This package contains the user manual PDF file for %{name}.
 %endif
 
 %prep
-%setup -qn %{distname}
+%setup -qn %(echo %{distname} |sed -e 's,[a-z]*$,,')
 %autopatch -p1
 
 %if %{with java}
@@ -347,7 +347,6 @@ echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e '
 echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
 %endif
 echo TOOL_GCC_LDFLAGS="%{ldflags}" >> LocalConfig.kmk
-sed -i -e 's,^VBOX_WITH_CLOUD_NET,# VBOX_WITH_CLOUD_NET,g' Config.kmk
 
 %if %{with additions}
 echo XSERVER_VERSION=%{x11_server_majorver} >>LocalConfig.kmk
@@ -593,6 +592,7 @@ done
 %{vboxlibdir}/VirtualBox
 %{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
+%{vboxlibdir}/vboximg-mount
 %if %{with java}
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/webtest
