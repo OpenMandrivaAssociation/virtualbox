@@ -73,6 +73,8 @@ Patch8:		101-vboxsf-automount.patch
 # - mkisofs: we're not going to build the additions .iso file
 # - makeself: we're not going to create the stanalone .run installers
 Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
+# Default to a reasonable size in guest additions
+Patch10:	VirtualBox-6.1.12a-default-to-1024x768.patch
 Patch11:	vbox-6.1.10-compile.patch
 
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
@@ -234,8 +236,7 @@ This package contains the user manual PDF file for %{name}.
 %endif
 
 %prep
-%setup -qn %(echo %{distname} |sed -e 's,[a-z]*$,,')
-%autopatch -p1
+%autosetup -p1 -n %(echo %{distname} |sed -e 's,[a-z]*$,,')
 
 %if %{with java}
 . %{_sysconfdir}/profile.d/90java.sh

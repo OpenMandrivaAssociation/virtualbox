@@ -1,0 +1,26 @@
+diff -up VirtualBox-6.1.12/src/VBox/Additions/x11/vboxvideo/getmode.c.omv~ VirtualBox-6.1.12/src/VBox/Additions/x11/vboxvideo/getmode.c
+--- VirtualBox-6.1.12/src/VBox/Additions/x11/vboxvideo/getmode.c.omv~	2020-07-18 02:05:37.579516322 +0200
++++ VirtualBox-6.1.12/src/VBox/Additions/x11/vboxvideo/getmode.c	2020-07-18 02:06:27.753962556 +0200
+@@ -143,9 +143,9 @@ void vboxAddModes(ScrnInfoPtr pScrn)
+     /* Add two dynamic mode entries.  When we receive a new size hint we will
+      * update whichever of these is not current. */
+     pMode = vboxAddEmptyScreenMode(pScrn);
+-    vboxFillDisplayMode(pScrn, pMode, NULL, 800, 600);
++    vboxFillDisplayMode(pScrn, pMode, NULL, 1024, 768);
+     pMode = vboxAddEmptyScreenMode(pScrn);
+-    vboxFillDisplayMode(pScrn, pMode, NULL, 800, 600);
++    vboxFillDisplayMode(pScrn, pMode, NULL, 1024, 768);
+     /* Add any modes specified by the user.  We assume here that the mode names
+      * reflect the mode sizes. */
+     for (i = 0; pScrn->display->modes && pScrn->display->modes[i]; i++)
+@@ -167,8 +167,8 @@ void VBoxInitialiseSizeHints(ScrnInfoPtr
+ 
+     for (i = 0; i < pVBox->cScreens; ++i)
+     {
+-        pVBox->pScreens[i].aPreferredSize.cx = 800;
+-        pVBox->pScreens[i].aPreferredSize.cy = 600;
++        pVBox->pScreens[i].aPreferredSize.cx = 1024;
++        pVBox->pScreens[i].aPreferredSize.cy = 768;
+         pVBox->pScreens[i].afConnected       = true;
+     }
+     /* Set up the first mode correctly to match the requested initial mode. */
