@@ -357,7 +357,9 @@ echo VBOX_WITHOUT_ADDITIONS=1 >> LocalConfig.kmk
 %endif
 
 . ./env.sh
-kmk %{_smp_mflags} all VERBOSE=1
+# (crazy) we want this package in kmk *very verbose* mode to see what the hell they do
+# DO NOT REMOVE!
+kmk %{_smp_mflags} KBUILD_VERBOSE=2 all
 
 %install
 # install vbox components
