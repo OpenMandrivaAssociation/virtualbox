@@ -1,7 +1,8 @@
 [Unit]
 Description=VirtualBox Guest Addons
-Before=time-sync.target
 ConditionVirtualization=oracle
+Wants=vboxdrmclient.path
+Before=display-manager.service
 
 [Service]
 ExecStartPre=-/sbin/modprobe vboxguest

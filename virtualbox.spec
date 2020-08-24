@@ -1,4 +1,3 @@
-%bcond_with java
 
 %define kname vboxdrv
 %define oname VirtualBox
@@ -8,9 +7,6 @@
 
 %define vboxlibdir %{_libdir}/%{name}
 %define vboxdatadir %{_datadir}/%{name}
-
-%bcond_without additions
-%bcond_with docs
 
 %ifarch %{x86_64}
 %define vbox_platform linux.amd64
@@ -27,7 +23,12 @@
 # error: Missing # define COM __gnu_lto_v1
 %define _disable_lto 1
 
+%bcond_with java
 %bcond_with clang
+%bcond_with docs
+
+%bcond_without additions
+%bcond_without vnc_ext_pack
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
@@ -35,7 +36,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.12a
-Release:	3
+Release:	4
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -45,6 +46,8 @@ Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
 Source6:	vboxweb.service
+Source7:    vboxdrmclient.service
+Source8:    vboxdrmclient.path
 Source20:	os_openmandriva.png
 Source21:	os_openmandriva_64.png
 Source100:	virtualbox.rpmlintrc
@@ -58,7 +61,6 @@ Patch0:		VirtualBox-6.1.2-revert-removal-of-vital-symbols.patch
 # Update docs on kernel modules
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
 # Fix docs to give the right mount command for the in-tree version of vboxsf
-#Patch2:		http://crazy.dev.frugalware.org/vboxsf-mainline-mount-help.patch
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
 Patch5:		vbox-6.1.4-gcc10.patch
@@ -107,6 +109,7 @@ BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	acpica
 BuildRequires:	yasm
+BuildRequires:  vde2
 %if %{with java}
 BuildRequires:	jdk-current
 BuildRequires:	javax.activation
@@ -183,10 +186,8 @@ The modules in this package are required on the HOST side.
 %package guest-additions
 Summary:	Additions for VirtualBox guest systems
 Group:		Emulators
-#Requires:	kmod(vboxguest) = %{version}
-#Requires:	kmod(vboxsf) = %{version}
-#Requires:	kmod(vboxvideo) = %{version}
-Requires:	x11-driver-video-vboxvideo
+Requires:   x11-driver-video-vmware
+Requires:   libdri-drivers-vmwgfx
 Requires:	libnotify
 Requires(post,preun): rpm-helper
 
@@ -214,16 +215,6 @@ you're building your own kernel.
 
 The modules in this package are required on the GUEST side.
 
-%package -n x11-driver-video-vboxvideo
-Summary:	The X.org driver for video in VirtualBox guests
-Group:		System/X11
-Requires:	x11-server-common
-Suggests:	virtualbox-guest-additions
-Conflicts:	virtualbox-guest-additions < 2.2.0-2
-
-%description -n x11-driver-video-vboxvideo
-The X.org driver for video in VirtualBox guests
-%endif
 
 %if %{with docs}
 %package doc
@@ -241,10 +232,6 @@ This package contains the user manual PDF file for %{name}.
 %if %{with java}
 . %{_sysconfdir}/profile.d/90java.sh
 %endif
-
-# (crazy) - Change all back to VBoxVGA , *SVGA and *VMSVGA not yet working right.
-sed -i -e 's|GraphicsControllerType_VBoxSVGA|GraphicsControllerType_VBoxVGA|g' src/VBox/Main/src-all/Global.cpp
-sed -i -e 's|GraphicsControllerType_VMSVGA|GraphicsControllerType_VBoxVGA|g' src/VBox/Main/src-all/Global.cpp
 
 # add OpenMandriva images
 cp -a %{SOURCE20} %{SOURCE21} src/VBox/Frontends/VirtualBox/images/
@@ -327,20 +314,6 @@ ln -sf /usr/bin/ld.bfd BFD/ld
 export PATH=$PWD/BFD:$PATH
 export LIBPATH_LIB="%{_lib}"
 
-./configure \
-	--enable-vnc \
-%if %{with java}
-	--enable-webservice \
-%else
-	--disable-java \
-%endif
-	--disable-kmods \
-	--enable-qt5 \
-%if %{without docs}
-	--disable-docs \
-%endif
-	--enable-pulse || (cat configure.log && exit 1)
-
 # remove fPIC to avoid causing issues
 %if %{with clang}
 echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -rtlib=libgcc" >> LocalConfig.kmk
@@ -356,19 +329,58 @@ sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
 echo VBOX_WITHOUT_ADDITIONS=1 >> LocalConfig.kmk
 %endif
 
+# (crazy) /opt is the wrong location
+sed -i -e 's|opt/VirtualBox|usr/share/virtualbox|g' src/VBox/RDP/client-1.8.4/Makefile.kmk
+
+./configure \
+    --enable-vnc \
+    --enable-vde \
+%if %{with java}
+    --enable-webservice \
+%else
+    --disable-java \
+%endif
+    --disable-kmods \
+    --enable-qt5 \
+%if %{without docs}
+    --disable-docs \
+%endif
+    --enable-pulse || (cat configure.log && exit 1)
+
+
 . ./env.sh
 # (crazy) we want this package in kmk *very verbose* mode to see what the hell they do
 # DO NOT REMOVE!
 kmk %{_smp_mflags} KBUILD_VERBOSE=2 all
 
+%if %{with vnc_ext_pack}
+# (crazy) package that as extension pack, users can istall from UI. Needs just some docs.
+kmk -C %{_smp_mflags} KBUILD_VERBOSE=2 src/VBox/ExtPacks/VNC packing
+%endif
+
 %install
 # install vbox components
 mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir}
 
+# NOTE: packaging like this is wrong!
 (cd out/%{vbox_platform}/release/bin && tar cf - --exclude=additions .) | \
 (cd %{buildroot}%{vboxlibdir} && tar xf -)
 # move noarch files to vboxdatadir
-mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,*.png} %{buildroot}%{vboxdatadir}
+# (crazy) _WHY_ is VBox.sh in datadir?
+mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,rdesktop-vrdp-keymaps,*.png} %{buildroot}%{vboxdatadir}
+
+# wipe crap/duplicates
+# (crazy) broken symlink
+rm -f %{buildroot}%{vboxlibdir}/components/VBoxREM.so
+# packaged in mime 
+rm -f %{buildroot}%{vboxlibdir}/virtualbox.xml
+# those service.sh etc scripts ( no such init here ) are junk, don't package
+rm -f %{buildroot}%{vboxlibdir}/*.sh
+# don't package source archives, that is the open source version, we don't need to provide any source in this case
+rm -f %{buildroot}%{vboxlibdir}/rdesktop-vrdp.tar.gz
+rm -f %{buildroot}%{vboxlibdir}/vboxkeyboard.tar.bz2
+# FIXME: use that to install icons, but until then remove it
+rm -rf %{buildroot}%{vboxlibdir}/icons
 
 # And the desktop file where it belongs
 mkdir -p %{buildroot}%{_datadir}/applications/
@@ -396,6 +408,10 @@ ln -s %{vboxdatadir}/VBox.sh %{buildroot}%{_bindir}/vboxwebsrv
 ln -s %{vboxlibdir}/VBoxTunctl %{buildroot}%{_bindir}/VBoxTunctl
 ln -s %{vboxlibdir}/VBoxNetAdpCtl %{buildroot}%{_bindir}/VBoxNetAdpCtl
 ln -s %{vboxlibdir}/VBoxNetDHCP %{buildroot}%{_bindir}/VBoxNetDHCP
+# other symlinks
+ln -s %{vboxlibdir}/vbox-img %{buildroot}%{_bindir}/vbox-img
+ln -s %{vboxlibdir}/vboximg-mount %{buildroot}%{_bindir}/vboximg-mount
+ln -s %{vboxlibdir}/rdesktop-vrdp %{buildroot}%{_bindir}/rdesktop-vrdp
 
 install -d %{buildroot}/var/run/%{oname}
 
@@ -443,18 +459,27 @@ vboxnetflt
 vboxnetadp
 EOF
 
+%if %{with vnc_ext_pack}
+## could be any other folder, just not the origial one vbox uses itself
+mkdir -p %{buildroot}%{vboxdatadir}/extensions
+install -m644 out/%{vbox_platform}/release/packages/VNC-*.vbox-extpack %{buildroot}%{vboxdatadir}/extensions
+%endif
+
 # install additions
 %if %{with additions}
-
-install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
-install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_sysconfdir}/X11/xinit.d
+# (crazy) fix script, --vmsvga cannot be run form xinit or .desktop file
+sed -i -e 's|/usr/bin/VBoxClient --vmsvga|#/usr/bin/VBoxClient --vmsvga|g' src/VBox/Additions/x11/Installer/98vboxadd-xclient
+mkdir -p %{buildroot}%{_sysconfdir}/xdg/autostart
+install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_bindir}/VBoxClient-all
+install -m755 src/VBox/Additions/x11/Installer/vboxclient.desktop %{buildroot}%{_sysconfdir}/xdg/autostart/vboxclient.desktop
 
 cd out/%{vbox_platform}/release/bin/additions
-  install -d %{buildroot}/sbin %{buildroot}%{_sbindir} %{buildroot}/%{_libdir}/dri %{buildroot}%{_unitdir}
+  install -d %{buildroot}/sbin %{buildroot}%{_sbindir}  %{buildroot}%{_unitdir}
   install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
   install -m755 VBoxService %{buildroot}%{_sbindir}
   install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 VBoxControl %{buildroot}%{_bindir}
+  install -m755 VBoxDRMClient %{buildroot}%{_bindir}
 
   cat > %{buildroot}%{_sysconfdir}/modules-load.d/vbox-guest-additions.conf << EOF
 vboxguest
@@ -462,13 +487,16 @@ vboxsf
 EOF
 
   install -m 644 %{SOURCE5} %{buildroot}%{_unitdir}/vboxadd.service
+  install -m 644 %{SOURCE7} %{buildroot}%{_unitdir}/vboxdrmclient.service
+  install -m 644 %{SOURCE8} %{buildroot}%{_unitdir}/vboxdrmclient.path
   install -d %{buildroot}%{_presetdir}
-# (crazy) race with udev / kmod and xinit file
-# seems like .service always fails, lets disable for now.
-cat > %{buildroot}%{_presetdir}/86-vboxadd.preset << EOF
-disable vboxadd.service
+## FIXME: (crazy) figure the loading of vboxvideo, it looks to me vbox is trying to load stuff
+## based on what UI options are set.
+cat > %{buildroot}%{_presetdir}/86-virtualbox-guest-additions.preset << EOF
+enable vboxadd.service
+enable vboxdrmclient.service
+enable vboxdrmclient.path
 EOF
-
   install -d %{buildroot}%{_libdir}/xorg/modules/{input,drivers}
 
   mkdir -p %{buildroot}%{_usr}/src/vboxadditions-%{version}-%{release}
@@ -486,6 +514,7 @@ install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildr
 # install mime types
 install -D -m644 src/VBox/Installer/common/virtualbox.xml %{buildroot}%{_datadir}/mime/packages/virtualbox.xml
 
+## FIXME: INSTALL from /icons/ folder
 # install shipped icons for apps and mimetypes
 for i in 16 20 32 40 48 64 128; do
     install -D -m0644 src/VBox/Artwork/OSE/virtualbox-${i}px.png %{buildroot}%{_iconsdir}/hicolor/${i}x${i}/apps/virtualbox.png
@@ -508,7 +537,6 @@ install -m644 %{SOURCE1} %{buildroot}%{vboxlibdir}/UserManual.pdf
 # remove unpackaged files
 rm -rf %{buildroot}%{vboxlibdir}/{src,sdk,testcase}
 rm  -f %{buildroot}%{vboxlibdir}/tst*
-rm  -f %{buildroot}%{vboxlibdir}/vboxkeyboard.tar.gz
 rm  -f %{buildroot}%{vboxlibdir}/SUP*
 rm  -f %{buildroot}%{vboxlibdir}/xpidl
 rm  -f %{buildroot}%{vboxlibdir}/*.debug
@@ -516,10 +544,6 @@ rm  -f %{buildroot}%{vboxlibdir}/*.debug
 install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
 %if %{with additions}
-# Put a symlink to VBoxOGL where it will be found
-mkdir -p %{buildroot}%{_libdir}/dri
-ln -s %{_libdir}/VBoxOGL.so %{buildroot}%{_libdir}/dri/vboxvideo_dri.so
-
 # Replace the vboxsf mount wrapper with one that works for
 # the in-tree version of the kernel module
 mkdir -p %{buildroot}/sbin
@@ -533,12 +557,6 @@ chmod 0755 %{buildroot}/sbin/mount.vboxsf
 
 %post
 %_add_group_helper %{name} 1 vboxusers
-/sbin/rmmod vboxnetflt &>/dev/null
-/sbin/rmmod vboxnetadp &>/dev/null
-/sbin/rmmod %{kname} &>/dev/null
-/sbin/modprobe %{kname} &>/dev/null
-/sbin/modprobe vboxnetflt &>/dev/null
-/sbin/modprobe vboxnetadp &>/dev/null
 
 %postun
 %_del_group_helper %{name} 1 vboxusers
@@ -567,13 +585,15 @@ done
 %{_bindir}/VBoxTunctl
 %{_bindir}/VBoxNetAdpCtl
 %{_bindir}/VBoxNetDHCP
+%{_bindir}/vboximg-mount
+%{_bindir}/vbox-img
+%{_bindir}/rdesktop-vrdp
 %if %{with java}
 %{_bindir}/vboxwebsrv
 %{_unitdir}/vboxweb.service
 %endif
 %{vboxlibdir}/bldRTLdrCheckImports
 %{vboxlibdir}/dtrace
-%{vboxlibdir}/icons
 %{vboxlibdir}/components
 %{vboxlibdir}/*.so
 %{vboxlibdir}/iPxeBaseBin
@@ -593,18 +613,19 @@ done
 %{vboxlibdir}/VBoxVMMPreload
 %{vboxlibdir}/VBoxXPCOMIPCD
 %{vboxlibdir}/VirtualBox
-%{vboxlibdir}/vboxkeyboard.tar.bz2
 %{vboxlibdir}/vboxshell.py
 %{vboxlibdir}/vboximg-mount
 %if %{with java}
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/webtest
 %endif
-%{vboxlibdir}/virtualbox.xml
+%if %{with vnc_ext_pack}
+%{vboxdatadir}/extensions/VNC-*
+%endif
 %{vboxlibdir}/scripts
 %{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
-%{vboxlibdir}/rdesktop-vrdp*
+%{vboxlibdir}/rdesktop-vrdp
 %{vboxlibdir}/vbox-img
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
@@ -615,7 +636,6 @@ done
 %attr(4711,root,root) %{vboxlibdir}/VBoxVolInfo
 %attr(4711,root,root) %{vboxlibdir}/VirtualBoxVM
 %attr(644,root,root) %{vboxlibdir}/*.r0
-%attr(755,root,root) %{vboxlibdir}/*.sh
 %if %{without docs}
 %exclude %{vboxlibdir}/UserManual.pdf
 %endif
@@ -635,18 +655,17 @@ done
 %files guest-additions
 /%{_lib}/security/pam_vbox.so
 /sbin/mount.vboxsf
-%{_presetdir}/86-vboxadd.preset
+%{_presetdir}/86-virtualbox-guest-additions.preset
 %{_unitdir}/vboxadd.service
 %{_sbindir}/VBoxService
 %{_bindir}/VBoxClient
 %{_bindir}/VBoxControl
+%{_bindir}/VBoxDRMClient
+%{_bindir}/VBoxClient-all
 %{_udevrulesdir}/vbox-additions.rules
-%{_sysconfdir}/X11/xinit.d/98vboxadd-xclient
+%{_sysconfdir}/xdg/autostart/*
 %{_sysconfdir}/modules-load.d/vbox-guest-additions.conf
-%{_libdir}/virtualbox/vbox-img
 
-%files -n x11-driver-video-vboxvideo
-%{_libdir}/dri/vboxvideo_dri.so
 
 %files guest-kernel-module-sources
 %{_usr}/src/vbox*-%{version}-%{release}
