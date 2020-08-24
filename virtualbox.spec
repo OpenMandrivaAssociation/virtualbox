@@ -183,7 +183,6 @@ you're building your own kernel.
 
 The modules in this package are required on the HOST side.
 
-%if %{with additions}
 %package guest-additions
 Summary:	Additions for VirtualBox guest systems
 Group:		Emulators
