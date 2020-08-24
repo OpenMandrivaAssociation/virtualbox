@@ -110,6 +110,7 @@ BuildRequires:	gsoap
 BuildRequires:	acpica
 BuildRequires:	yasm
 BuildRequires:  vde2
+BuildRequires: pkgconfig(xorg-server)
 %if %{with java}
 BuildRequires:	jdk-current
 BuildRequires:	javax.activation
