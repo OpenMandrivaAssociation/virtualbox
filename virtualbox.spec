@@ -355,7 +355,7 @@ kmk %{_smp_mflags} KBUILD_VERBOSE=2 all
 
 %if %{with vnc_ext_pack}
 # (crazy) package that as extension pack, users can istall from UI. Needs just some docs.
-kmk -C %{_smp_mflags} KBUILD_VERBOSE=2 src/VBox/ExtPacks/VNC packing
+kmk %{_smp_mflags} KBUILD_VERBOSE=2 -C src/VBox/ExtPacks/VNC packing
 %endif
 
 %install
