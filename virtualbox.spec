@@ -657,6 +657,8 @@ done
 /sbin/mount.vboxsf
 %{_presetdir}/86-virtualbox-guest-additions.preset
 %{_unitdir}/vboxadd.service
+%{_unitdir}/vboxdrmclient.service
+%{_unitdir}/vboxdrmclient.path
 %{_sbindir}/VBoxService
 %{_bindir}/VBoxClient
 %{_bindir}/VBoxControl
