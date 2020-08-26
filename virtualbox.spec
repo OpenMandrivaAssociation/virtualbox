@@ -83,7 +83,7 @@ Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
 #Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
-
+Patch25:    fix-vboxadd-xclient.patch
 # "Borrowed" from Debian https://salsa.debian.org/pkg-virtualbox-team/virtualbox/blob/master/debian/patches
 Patch103:	06-xsession.patch
 Patch104:	07-vboxnetflt-reference.patch
@@ -467,8 +467,6 @@ install -m644 out/%{vbox_platform}/release/packages/VNC-*.vbox-extpack %{buildro
 
 # install additions
 %if %{with additions}
-# (crazy) fix script, --vmsvga cannot be run form xinit or .desktop file
-sed -i -e 's|/usr/bin/VBoxClient --vmsvga|#/usr/bin/VBoxClient --vmsvga|g' src/VBox/Additions/x11/Installer/98vboxadd-xclient
 mkdir -p %{buildroot}%{_sysconfdir}/xdg/autostart
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_bindir}/VBoxClient-all
 install -m755 src/VBox/Additions/x11/Installer/vboxclient.desktop %{buildroot}%{_sysconfdir}/xdg/autostart/vboxclient.desktop
