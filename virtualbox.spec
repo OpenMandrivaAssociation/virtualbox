@@ -36,7 +36,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.12a
-Release:	4
+Release:	5
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
