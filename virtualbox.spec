@@ -85,7 +85,7 @@ Patch22:	virtualbox-no-prehistoric-xfree86.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 Patch25:    fix-vboxadd-xclient.patch
 # "Borrowed" from Debian https://salsa.debian.org/pkg-virtualbox-team/virtualbox/blob/master/debian/patches
-Patch103:	06-xsession.patch
+#Patch103:	06-xsession.patch
 Patch104:	07-vboxnetflt-reference.patch
 Patch105:	12-make-module.patch
 Patch107:	16-no-update.patch
