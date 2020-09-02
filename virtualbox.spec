@@ -36,7 +36,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.12a
-Release:	5
+Release:	6
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -232,6 +232,10 @@ This package contains the user manual PDF file for %{name}.
 %if %{with java}
 . %{_sysconfdir}/profile.d/90java.sh
 %endif
+
+# (crazy) - Change all back to VBoxSVGA until I fix VMSVGA and make it somewhat work with wayland.
+# NOTE: VMSVGA does NOT work right with wayland, complain to vbox folks & the wayland project. Thx.
+sed -i -e 's|GraphicsControllerType_VMSVGA|GraphicsControllerType_VBoxSVGA|g' src/VBox/Main/src-all/Global.cpp
 
 # add OpenMandriva images
 cp -a %{SOURCE20} %{SOURCE21} src/VBox/Frontends/VirtualBox/images/
