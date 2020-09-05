@@ -36,7 +36,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.12a
-Release:	6
+Release:	7
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -256,7 +256,7 @@ VBOX_WITH_WARNINGS_AS_ERRORS:=
 VBOX_PATH_APP_PRIVATE_ARCH:=%{vboxlibdir}
 VBOX_WITH_ORIGIN:=
 VBOX_WITH_RUNPATH:=%{vboxlibdir}
-VBOX_PATH_APP_PRIVATE:=%{vboxlibdir}
+VBOX_PATH_APP_PRIVATE:=/usr/share/virtualbox
 VBOX_WITH_VNC:=1
 VBOX_WITH_VPX:=1
 VBOX_WITH_LIBOPUS:=1
