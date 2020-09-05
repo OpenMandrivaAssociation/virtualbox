@@ -5,7 +5,7 @@
 %define distname %{oname}-%{version}%{?beta:_%{beta}}
 %define pkgver %{ver}
 
-%define vboxlibdir %{_libdir}/%{name}
+%define vboxlibdir %{_prefix}/lib/%{name}
 %define vboxdatadir %{_datadir}/%{name}
 
 %ifarch %{x86_64}
@@ -27,6 +27,7 @@
 %bcond_with clang
 %bcond_with docs
 
+## (crazy) fixem that is always true these days
 %bcond_without additions
 %bcond_without vnc_ext_pack
 
@@ -36,7 +37,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.12a
-Release:	7
+Release:	8
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -251,11 +252,11 @@ rm -rf src/VBox/Additions/x11/x11stubs
 rm -rf src/libs/{libpng-*,libxml2-*,zlib-*}
 
 cat << EOF > LocalConfig.kmk
-VBOX_BUILD_PUBLISHER:=_omv
 VBOX_WITH_WARNINGS_AS_ERRORS:=
 VBOX_PATH_APP_PRIVATE_ARCH:=%{vboxlibdir}
-VBOX_WITH_ORIGIN:=
+VBOX_PATH_SHARED_LIBS:=%{vboxlibdir}
 VBOX_WITH_RUNPATH:=%{vboxlibdir}
+VBOX_WITH_ORIGIN:=
 VBOX_PATH_APP_PRIVATE:=/usr/share/virtualbox
 VBOX_WITH_VNC:=1
 VBOX_WITH_VPX:=1
@@ -263,10 +264,7 @@ VBOX_WITH_LIBOPUS:=1
 VBOX_WITH_LIBCURL:=1
 SDK_VBOX_LIBPNG_INCS:=%{_includedir}/libpng16
 SDK_VBOX_LIBPNG_LIBS:=png16
-#SDK_VBOX_LIBXML2_INCS:=""
 SDK_VBOX_LIBXML2_LIBS:=xml2
-#SDK_VBOX_OPENSSL_INCS:=""
-#SDK_VBOX_OPENSSL_LIBS:=""
 SDK_VBOX_ZLIB_INCS:=""
 SDK_VBOX_ZLIB_LIBS:=z
 SDK_VBOX_LIBLZF_INCS:=""
@@ -307,8 +305,9 @@ sed -i -e 's#CC="gcc"#CC="clang"#g' configure
 sed -i -e 's#CXX="g++"#CXX="clang++"#g' configure
 sed -i -e 's,-mpreferred-stack-boundary=2,,g' Config.kmk src/VBox/Devices/PC/ipxe/Makefile.kmk src/VBox/Devices/PC/ipxe/src/arch/i386/Makefile
 %endif
-sed -i -e 's#/usr/lib/virtualbox#%{vboxlibdir}#g' src/VBox/Installer/linux/VBox.sh
-sed -i -e 's#-fpermissive##g' -e 's#-finline-limit=8000##g' Config.kmk
+
+# (crazy) why? needs to go
+#sed -i -e 's#-fpermissive##g' -e 's#-finline-limit=8000##g' Config.kmk
 
 
 %build
@@ -325,13 +324,6 @@ echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e '
 echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
 %endif
 echo TOOL_GCC_LDFLAGS="%{ldflags}" >> LocalConfig.kmk
-
-%if %{with additions}
-echo XSERVER_VERSION=%{x11_server_majorver} >>LocalConfig.kmk
-%else
-sed -rie 's/(VBOX_WITH_LINUX_ADDITIONS\s+:=\s+).*/\1/' AutoConfig.kmk
-echo VBOX_WITHOUT_ADDITIONS=1 >> LocalConfig.kmk
-%endif
 
 # (crazy) /opt is the wrong location
 sed -i -e 's|opt/VirtualBox|usr/share/virtualbox|g' src/VBox/RDP/client-1.8.4/Makefile.kmk
@@ -366,17 +358,17 @@ kmk %{_smp_mflags} KBUILD_VERBOSE=2 -C src/VBox/ExtPacks/VNC packing
 # install vbox components
 mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir}
 
-# NOTE: packaging like this is wrong!
+# (crazy) NOTE: packaging like this is wrong! FIXME
 (cd out/%{vbox_platform}/release/bin && tar cf - --exclude=additions .) | \
 (cd %{buildroot}%{vboxlibdir} && tar xf -)
 # move noarch files to vboxdatadir
-# (crazy) _WHY_ is VBox.sh in datadir?
+# (crazy) _WHY_ is VBox.sh in datadir? FIXME
 mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,rdesktop-vrdp-keymaps,*.png} %{buildroot}%{vboxdatadir}
 
 # wipe crap/duplicates
 # (crazy) broken symlink
 rm -f %{buildroot}%{vboxlibdir}/components/VBoxREM.so
-# packaged in mime 
+# packaged in mime
 rm -f %{buildroot}%{vboxlibdir}/virtualbox.xml
 # those service.sh etc scripts ( no such init here ) are junk, don't package
 rm -f %{buildroot}%{vboxlibdir}/*.sh
