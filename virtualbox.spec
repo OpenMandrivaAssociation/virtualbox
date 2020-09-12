@@ -188,7 +188,7 @@ The modules in this package are required on the HOST side.
 Summary:	Additions for VirtualBox guest systems
 Group:		Emulators
 Requires:   x11-driver-video-vmware
-Requires:   libdri-drivers-vmwgfx
+Requires:   lib64dri-drivers-vmwgfx
 Requires:	libnotify
 Requires(post,preun): rpm-helper
 
