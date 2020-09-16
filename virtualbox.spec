@@ -36,8 +36,8 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.1.12a
-Release:	9
+Version:	6.1.14a
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -187,8 +187,8 @@ The modules in this package are required on the HOST side.
 %package guest-additions
 Summary:	Additions for VirtualBox guest systems
 Group:		Emulators
-Requires:   x11-driver-video-vmware
-Requires:   lib64dri-drivers-vmwgfx
+Requires:	x11-driver-video-vmware
+Requires:	%{_lib}dri-drivers-vmwgfx
 Requires:	libnotify
 Requires(post,preun): rpm-helper
 
@@ -309,7 +309,6 @@ sed -i -e 's,-mpreferred-stack-boundary=2,,g' Config.kmk src/VBox/Devices/PC/ipx
 # (crazy) why? needs to go
 #sed -i -e 's#-fpermissive##g' -e 's#-finline-limit=8000##g' Config.kmk
 
-
 %build
 # FIXME: gold linker dies with internal error in segment_precedes, at ../../gold/layout.cc:3250
 mkdir -p BFD
@@ -342,7 +341,6 @@ sed -i -e 's|opt/VirtualBox|usr/share/virtualbox|g' src/VBox/RDP/client-1.8.4/Ma
     --disable-docs \
 %endif
     --enable-pulse || (cat configure.log && exit 1)
-
 
 . ./env.sh
 # (crazy) we want this package in kmk *very verbose* mode to see what the hell they do
