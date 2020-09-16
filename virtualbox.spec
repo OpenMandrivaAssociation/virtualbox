@@ -47,8 +47,8 @@ Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
 Source6:	vboxweb.service
-Source7:    vboxdrmclient.service
-Source8:    vboxdrmclient.path
+Source7:	vboxdrmclient.service
+Source8:	vboxdrmclient.path
 Source20:	os_openmandriva.png
 Source21:	os_openmandriva_64.png
 Source100:	virtualbox.rpmlintrc
@@ -84,7 +84,7 @@ Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
 #Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
-Patch25:    fix-vboxadd-xclient.patch
+Patch25:	fix-vboxadd-xclient.patch
 # "Borrowed" from Debian https://salsa.debian.org/pkg-virtualbox-team/virtualbox/blob/master/debian/patches
 #Patch103:	06-xsession.patch
 Patch104:	07-vboxnetflt-reference.patch
@@ -101,6 +101,8 @@ Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
+# (tpg) fix build with system-wide liblzf
+Patch203:	https://salsa.debian.org/pkg-virtualbox-team/virtualbox/-/blob/master/debian/patches/changeset_86042.patch
 ExclusiveArch:	%{x86_64}
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
 BuildRequires:	gcc-c++
@@ -110,8 +112,8 @@ BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	acpica
 BuildRequires:	yasm
-BuildRequires:  vde2
-BuildRequires: pkgconfig(xorg-server)
+BuildRequires:	vde2
+BuildRequires:	pkgconfig(xorg-server)
 %if %{with java}
 BuildRequires:	jdk-current
 BuildRequires:	javax.activation
