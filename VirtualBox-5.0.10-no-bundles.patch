@@ -1,7 +1,7 @@
-diff -Naur VirtualBox-6.0.14/Config.kmk VirtualBox-6.0.14.tpg/Config.kmk
---- VirtualBox-6.0.14/Config.kmk	2019-10-10 18:25:35.000000000 +0000
-+++ VirtualBox-6.0.14.tpg/Config.kmk	2019-10-31 15:08:08.235983271 +0000
-@@ -4069,23 +4069,27 @@
+diff -up VirtualBox-6.1.16/Config.kmk.14~ VirtualBox-6.1.16/Config.kmk
+--- VirtualBox-6.1.16/Config.kmk.14~	2020-10-16 18:27:46.000000000 +0200
++++ VirtualBox-6.1.16/Config.kmk	2020-10-28 14:47:22.514617605 +0100
+@@ -4079,23 +4079,27 @@ VBOXLNX32GUEST_SUFF_LIB = .a
  # SDKs for external libraries.
  #
  SDK_VBOX_LIBXML2           = .
@@ -34,7 +34,18 @@ diff -Naur VirtualBox-6.0.14/Config.kmk VirtualBox-6.0.14.tpg/Config.kmk
   SDK_VBOX_ZLIB_DEFS.linux ?= _LARGEFILE64_SOURCE
  endif
  
-@@ -4134,28 +4138,28 @@
+@@ -4112,8 +4116,8 @@ if1of ($(KBUILD_TARGET), os2 win) # Not
+ endif
+ 
+ SDK_VBOX_LZF		= .
+-SDK_VBOX_LZF_INCS  ?= $(PATH_ROOT)/src/libs/liblzf-3.4
+-SDK_VBOX_LZF_LIBS  ?= $(PATH_STAGE_LIB)/VBox-liblzf$(VBOX_SUFF_LIB)
++SDK_VBOX_LZF_INCS  ?= $(pkg-config lzf --variable=includedir)
++SDK_VBOX_LZF_LIBS  ?= $(pkg-config lzf --libs)
+ 
+ SDK_VBOX_LZF-x86	= .
+ SDK_VBOX_LZF-x86_EXTENDS = VBOX_LZF
+@@ -4158,28 +4162,28 @@ endif
  
  ifdef VBOX_WITH_LIBCURL
  SDK_VBOX_LIBCURL       = .
@@ -63,84 +74,27 @@ diff -Naur VirtualBox-6.0.14/Config.kmk VirtualBox-6.0.14.tpg/Config.kmk
  
  ifdef VBOX_WITH_LIBOPUS
   SDK_VBOX_OPUS       = .
-- SDK_VBOX_OPUS_DEFAULT_INCS := $(PATH_ROOT)/src/libs/libopus-1.2.1/include
+  SDK_VBOX_OPUS_DEFAULT_INCS := $(PATH_ROOT)/src/libs/libopus-1.2.1/include
 - SDK_VBOX_OPUS_INCS ?= $(SDK_VBOX_OPUS_DEFAULT_INCS)
 - SDK_VBOX_OPUS_LIBS ?= $(PATH_STAGE_LIB)/VBox-libopus$(VBOX_SUFF_LIB)
-+ SDK_VBOX_OPUS_DEFAULT_INCS := $(PATH_ROOT)/src/libs/libvpx-1.2.1/include
 + SDK_VBOX_OPUS_INCS ?= $(pkg-config opus --variable=includedir)
 + SDK_VBOX_OPUS_LIBS ?= $(pkg-config opus --libs)
  endif
  
- #
-@@ -5398,7 +5402,7 @@
-  	$(PATH_STAGE_LIB)/VBox-zlib-static$(VBOX_SUFF_LIB)
- else
-  TEMPLATE_VBoxR3Static_LIBS        += \
-- 	$(PATH_STAGE_LIB)/VBox-liblzf$(VBOX_SUFF_LIB) \
-+ 	$(SDK_VBOX_LIBLZF_LIBS) \
-  	$(SDK_VBOX_ZLIB_LIBS)
-  if1of ($(KBUILD_TARGET),darwin freebsd)
-   TEMPLATE_VBoxR3Static_LIBS       += iconv
-diff -Naur VirtualBox-6.0.14/src/VBox/Runtime/Makefile.kmk VirtualBox-6.0.14.tpg/src/VBox/Runtime/Makefile.kmk
---- VirtualBox-6.0.14/src/VBox/Runtime/Makefile.kmk	2019-10-10 18:35:56.000000000 +0000
-+++ VirtualBox-6.0.14.tpg/src/VBox/Runtime/Makefile.kmk	2019-10-31 15:08:08.237983271 +0000
-@@ -292,7 +292,7 @@
- 	include \
- 	$(SDK_VBOX_ZLIB_INCS)
- RuntimeR3_INCS         += \
--	$(PATH_ROOT)/src/libs/liblzf-3.4
-+	$(SDK_VBOX_LIBLZF_INCS)
- 
- # RuntimeR3_INCS.solaris  = \
- #    /usr/include
-@@ -2167,7 +2167,7 @@
- VBoxRT_INCS.$(KBUILD_TARGET)  := $(RuntimeR3_INCS.$(KBUILD_TARGET))
- VBoxRT_INCS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) := $(RuntimeR3_INCS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH))
- VBoxRT_LIBS                    = \
--	$(PATH_STAGE_LIB)/VBox-liblzf$(VBOX_SUFF_LIB)
-+	$(SDK_VBOX_LIBLZF_LIBS)
- if1of ($(KBUILD_TARGET_ARCH), amd64 x86)
- VBoxRT_LIBS                   += \
- 	$(PATH_STAGE_LIB)/SUPR3$(VBOX_SUFF_LIB)
-@@ -2314,7 +2314,7 @@
- VBoxRT-x86_SDKS  += VBOX_OPENSSL-x86
- 
- VBoxRT-x86_LIBS = \
--	$(PATH_STAGE_LIB)/VBox-liblzf-x86$(VBOX_SUFF_LIB)
-+	$(SDK_VBOX_LIBLZF_LIBS)
- if1of ($(KBUILD_TARGET_ARCH), amd64 x86)
- VBoxRT-x86_LIBS += \
- 	$(PATH_STAGE_LIB)/SUPR3-x86$(VBOX_SUFF_LIB)
-diff -Naur VirtualBox-6.0.14/src/VBox/Storage/testcase/Makefile.kmk VirtualBox-6.0.14.tpg/src/VBox/Storage/testcase/Makefile.kmk
---- VirtualBox-6.0.14/src/VBox/Storage/testcase/Makefile.kmk	2019-10-10 18:36:29.000000000 +0000
-+++ VirtualBox-6.0.14.tpg/src/VBox/Storage/testcase/Makefile.kmk	2019-10-31 15:11:22.649969762 +0000
-@@ -137,7 +137,7 @@
- 	$(PATH_STAGE_LIB)/VBox-zlib-static$(VBOX_SUFF_LIB)
-  else
-   vbox-img_LIBS += \
--	$(PATH_STAGE_LIB)/VBox-liblzf$(VBOX_SUFF_LIB) \
-+	$(SDK_VBOX_LIBLZF_LIBS) \
- 	$(SDK_VBOX_ZLIB_LIBS)
-  endif
-  ifeq ($(KBUILD_TARGET),linux)
-@@ -183,7 +183,7 @@
- 	$(PATH_STAGE_LIB)/VBox-zlib-static$(VBOX_SUFF_LIB)
-  else
-   vdkeystoremgr_LIBS += \
--	$(PATH_STAGE_LIB)/VBox-liblzf$(VBOX_SUFF_LIB) \
-+	$(SDK_VBOX_LIBLZF_LIBS) \
- 	$(SDK_VBOX_ZLIB_LIBS)
-  endif
-  ifeq ($(KBUILD_TARGET),linux)
-diff -Naur VirtualBox-6.0.14/src/libs/Makefile.kmk VirtualBox-6.0.14.tpg/src/libs/Makefile.kmk
---- VirtualBox-6.0.14/src/libs/Makefile.kmk	2019-10-10 18:36:58.000000000 +0000
-+++ VirtualBox-6.0.14.tpg/src/libs/Makefile.kmk	2019-10-31 15:08:08.237983271 +0000
-@@ -25,7 +25,7 @@
- #
- 
- # Compression libs used by IPRT and <what was it again?>.
--include $(PATH_SUB_CURRENT)/liblzf-3.4/Makefile.kmk
-+#include $(PATH_SUB_CURRENT)/liblzf-3.4/Makefile.kmk
- if  !defined(VBOX_ONLY_SDK) \
-  && "$(SDK_VBOX_ZLIB_INCS)" == "$(PATH_ROOT)/src/libs/zlib-1.2.11"
-  include $(PATH_SUB_CURRENT)/zlib-1.2.11/Makefile.kmk
+ ifdef VBOX_WITH_LIBFUSE
+diff -up VirtualBox-6.1.16/src/libs/Makefile.kmk.14~ VirtualBox-6.1.16/src/libs/Makefile.kmk
+diff -up VirtualBox-6.1.16/src/VBox/Runtime/Makefile.kmk.14~ VirtualBox-6.1.16/src/VBox/Runtime/Makefile.kmk
+diff -up VirtualBox-6.1.16/src/VBox/Storage/testcase/Makefile.kmk.14~ VirtualBox-6.1.16/src/VBox/Storage/testcase/Makefile.kmk
+diff -up VirtualBox-6.1.16/src/VBox/Runtime/common/zip/zip.cpp.omv~ VirtualBox-6.1.16/src/VBox/Runtime/common/zip/zip.cpp
+--- VirtualBox-6.1.16/src/VBox/Runtime/common/zip/zip.cpp.omv~	2020-10-28 15:14:24.586267674 +0100
++++ VirtualBox-6.1.16/src/VBox/Runtime/common/zip/zip.cpp	2020-10-28 15:14:38.189440790 +0100
+@@ -51,7 +51,9 @@
+ # include <zlib.h>
+ #endif
+ #ifdef RTZIP_USE_LZF
++extern "C" {
+ # include <lzf.h>
++}
+ # include <iprt/crc.h>
+ #endif
+ #ifdef RTZIP_USE_LZJB

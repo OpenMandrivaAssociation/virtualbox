@@ -36,7 +36,7 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.1.14a
+Version:	6.1.16
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -82,7 +82,7 @@ Patch11:	vbox-6.1.10-compile.patch
 
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
-#Patch23:	VirtualBox-5.0.10-no-bundles.patch
+Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 Patch25:	fix-vboxadd-xclient.patch
 # "Borrowed" from Debian https://salsa.debian.org/pkg-virtualbox-team/virtualbox/blob/master/debian/patches
@@ -101,8 +101,6 @@ Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
-# (tpg) fix build with system-wide liblzf
-Patch203:	https://salsa.debian.org/pkg-virtualbox-team/virtualbox/-/blob/master/debian/patches/changeset_86042.patch
 ExclusiveArch:	%{x86_64}
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
 BuildRequires:	gcc-c++
