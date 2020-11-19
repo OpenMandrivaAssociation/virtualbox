@@ -124,6 +124,9 @@ BuildRequires:	acpica
 BuildRequires:	yasm
 BuildRequires:	vde2
 BuildRequires:	pkgconfig(xorg-server)
+%if %{with firmware}
+BuildRequires:	nasm
+%endif
 %if %{with java}
 BuildRequires:	jdk-current
 BuildRequires:	javax.activation
