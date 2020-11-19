@@ -1,0 +1,46 @@
+diff -up VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/AutoGen/UniClassObject.py.omv~ VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/AutoGen/UniClassObject.py
+--- VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/AutoGen/UniClassObject.py.omv~	2020-11-19 00:11:43.325451341 +0100
++++ VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/AutoGen/UniClassObject.py	2020-11-19 00:13:34.384972912 +0100
+@@ -309,7 +309,11 @@ class UniFileClassObject(object):
+ 
+     @staticmethod
+     def VerifyUcs2Data(FileIn, FileName, Encoding):
+-        Ucs2Info = codecs.lookup('ucs-2')
++        try:
++            Ucs2Info = codecs.lookup('ucs-2')
++        except:
++            # FIXME why does the lookup not work?
++            Ucs2Info = TheUcs2Codec
+         #
+         # Convert to unicode
+         #
+diff -up VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/Common/Misc.py.omv~ VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/Common/Misc.py
+--- VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/Common/Misc.py.omv~	2020-11-19 00:17:19.184022113 +0100
++++ VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/Common/Misc.py	2020-11-19 00:17:37.070263329 +0100
+@@ -1648,7 +1648,7 @@ class PeImageClass():
+         ByteArray = array.array('B')
+         ByteArray.fromfile(PeObject, 4)
+         # PE signature should be 'PE\0\0'
+-        if ByteArray.tostring() != b'PE\0\0':
++        if ByteArray != b'PE\0\0':
+             self.ErrorInfo = self.FileName + ' has no valid PE signature PE00'
+             return
+ 
+diff -up VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/GenFds/GenFdsGlobalVariable.py.omv~ VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/GenFds/GenFdsGlobalVariable.py
+--- VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/GenFds/GenFdsGlobalVariable.py.omv~	2020-11-19 00:18:08.220683019 +0100
++++ VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/GenFds/GenFdsGlobalVariable.py	2020-11-19 00:26:11.012139567 +0100
+@@ -459,12 +459,12 @@ class GenFdsGlobalVariable:
+                     GenFdsGlobalVariable.SecCmdList.append(' '.join(Cmd).strip())
+             else:
+                 SectionData = array('B', [0, 0, 0, 0])
+-                SectionData.fromstring(Ui.encode("utf_16_le"))
++                SectionData.frombytes(Ui.encode("utf_16_le"))
+                 SectionData.append(0)
+                 SectionData.append(0)
+                 Len = len(SectionData)
+                 GenFdsGlobalVariable.SectionHeader.pack_into(SectionData, 0, Len & 0xff, (Len >> 8) & 0xff, (Len >> 16) & 0xff, 0x15)
+-                SaveFileOnChange(Output, SectionData.tostring())
++                SaveFileOnChange(Output, SectionData.tobytes())
+ 
+         elif Ver:
+             Cmd += ("-n", Ver)

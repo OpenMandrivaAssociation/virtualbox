@@ -30,6 +30,7 @@
 ## (crazy) fixem that is always true these days
 %bcond_without additions
 %bcond_without vnc_ext_pack
+%bcond_without firmware
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
@@ -37,7 +38,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.16
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -51,6 +52,12 @@ Source7:	vboxdrmclient.service
 Source8:	vboxdrmclient.path
 Source20:	os_openmandriva.png
 Source21:	os_openmandriva_64.png
+%if %{with firmware}
+# Can't use system openssl because we built OpenSSL for UEFI, not
+# for Linux
+%define openssl 1.1.1h
+Source50:	https://www.openssl.org/source/openssl-%{openssl}.tar.gz
+%endif
 Source100:	virtualbox.rpmlintrc
 # Revert upstream's (between 6.1.0 and 6.1.2) removal of symbols
 # that are used everywhere -- without this patch, starting
@@ -86,6 +93,7 @@ Patch22:	virtualbox-no-prehistoric-xfree86.patch
 Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 Patch25:	fix-vboxadd-xclient.patch
+Patch26:	vbox-6.1.6-firmware-build-python3.9.patch
 # "Borrowed" from Debian https://salsa.debian.org/pkg-virtualbox-team/virtualbox/blob/master/debian/patches
 #Patch103:	06-xsession.patch
 Patch104:	07-vboxnetflt-reference.patch
@@ -102,6 +110,9 @@ Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
+# From FrugalWare
+Patch300:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/boot-efi-boot.patch
+Patch301:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/firmware-build-fixes.patch
 ExclusiveArch:	%{x86_64}
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
 BuildRequires:	gcc-c++
@@ -298,6 +309,9 @@ VBOX_WITH_UPDATE_REQUEST:=0
 VBOX_GUI_WITH_SHARED_LIBRARY:=1
 # Default is Oracle VM VirtualBox -- let's not advertise the bad guys
 VBOX_PRODUCT=VirtualBox
+%if %{with firmware}
+VBOX_EFI_FIRMWARE_EFI_MODULES_KMK_INCLUDED := 0
+%endif
 EOF
 
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
@@ -344,6 +358,24 @@ sed -i -e 's|opt/VirtualBox|usr/share/virtualbox|g' src/VBox/RDP/client-1.8.4/Ma
     --enable-pulse || (cat configure.log && exit 1)
 
 . ./env.sh
+
+%if %{with firmware}
+	# NOTE: this needs to run before main kmk,
+	# *DD.so & *DD2.so uses the EFI* stuff we just build here
+	TOP="$(pwd)"
+	rm src/VBox/Devices/EFI/FirmwareBin/*
+	cd src/VBox/Devices/EFI/Firmware
+	. ./edksetup.sh
+	cd CryptoPkg/Library/OpensslLib/openssl
+	tar x --strip-components=1 -f %{S:50}
+	cd ..
+	perl process_files.pl
+	cd ../../..
+	kmk
+	cd "${TOP}"
+	cp out/*/release/bin/VBoxEFI*.fd src/VBox/Devices/EFI/FirmwareBin/
+%endif
+
 # (crazy) we want this package in kmk *very verbose* mode to see what the hell they do
 # DO NOT REMOVE!
 kmk %{_smp_mflags} KBUILD_VERBOSE=2 all
