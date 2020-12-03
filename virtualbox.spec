@@ -38,7 +38,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.16
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -499,7 +499,7 @@ install -m644 out/%{vbox_platform}/release/packages/VNC-*.vbox-extpack %{buildro
 %if %{with additions}
 mkdir -p %{buildroot}%{_sysconfdir}/xdg/autostart
 install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_bindir}/VBoxClient-all
-install -m755 src/VBox/Additions/x11/Installer/vboxclient.desktop %{buildroot}%{_sysconfdir}/xdg/autostart/vboxclient.desktop
+install -m644 src/VBox/Additions/x11/Installer/vboxclient.desktop %{buildroot}%{_sysconfdir}/xdg/autostart/vboxclient.desktop
 
 cd out/%{vbox_platform}/release/bin/additions
   install -d %{buildroot}/sbin %{buildroot}%{_sbindir}  %{buildroot}%{_unitdir}
