@@ -55,7 +55,7 @@ Source21:	os_openmandriva_64.png
 %if %{with firmware}
 # Can't use system openssl because we built OpenSSL for UEFI, not
 # for Linux
-%define openssl 1.1.1h
+%define openssl 1.1.1k
 Source50:	https://www.openssl.org/source/openssl-%{openssl}.tar.gz
 %endif
 Source100:	virtualbox.rpmlintrc
