@@ -78,7 +78,7 @@ Patch6:		vbox-6.0.0-kernel-modules-in-tree.patch
 # (tmb) disable update notification (OpenSuSe)
 Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # https://git.archlinux.org/svntogit/community.git/plain/trunk/101-vboxsf-automount.patch?h=packages/virtualbox
-Patch8:		101-vboxsf-automount.patch
+# Patch8:		101-vboxsf-automount.patch
 
 # don't check for:
 # - mkisofs: we're not going to build the additions .iso file
