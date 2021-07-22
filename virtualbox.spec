@@ -106,7 +106,7 @@ Patch111:	32-disable-guest-version-check.patch
 Patch112:	35-libvdeplug-soname.patch
 # (tpg) add support for OpenMandriva
 # (crazy) this should be prepared for upstream..
-Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
+# Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
