@@ -1,20 +1,17 @@
-This ghetto patch attempts to fix shared folder automounting for guests running
-Linux 4.16, and also suggests an alternative to mount.vboxsf.
-
-diff -uprb VirtualBox-5.2.8.orig/src/VBox/Additions/common/VBoxService/VBoxServiceAutoMount.cpp VirtualBox-5.2.8/src/VBox/Additions/common/VBoxService/VBoxServiceAutoMount.cpp
---- VirtualBox-5.2.8.orig/src/VBox/Additions/common/VBoxService/VBoxServiceAutoMount.cpp	2018-02-26 17:57:30.000000000 +0200
-+++ VirtualBox-5.2.8/src/VBox/Additions/common/VBoxService/VBoxServiceAutoMount.cpp	2018-04-07 21:00:05.785735622 +0300
-@@ -346,6 +346,13 @@ static int vbsvcAutoMountSharedFolder(co
-                       "vboxsf",
-                       fFlags,
-                       &mntinf);
+diff -up VirtualBox-6.1.24/src/VBox/Additions/common/VBoxService/VBoxServiceAutoMount.cpp.9~ VirtualBox-6.1.24/src/VBox/Additions/common/VBoxService/VBoxServiceAutoMount.cpp
+--- VirtualBox-6.1.24/src/VBox/Additions/common/VBoxService/VBoxServiceAutoMount.cpp.9~	2021-07-21 17:26:28.812790890 +0200
++++ VirtualBox-6.1.24/src/VBox/Additions/common/VBoxService/VBoxServiceAutoMount.cpp	2021-07-21 17:33:52.018092159 +0200
+@@ -388,6 +388,13 @@ static int vbsvcAutoMountSharedFolderOld
+                       0,                        /* int datalen */
+                       szOptBuf,
+                       sizeof(szOptBuf));
 +        if (r == -1 && errno == EINVAL)
 +        {
 +            /* Mainline vboxsf accepts regular mount opts. */
 +            char mount_opts[1024];
-+            snprintf(mount_opts, 1024, "gid=%d,dmode=0770,fmode=0770", mntinf.gid);
++            snprintf(mount_opts, 1024, "gid=%d,dmode=0770,fmode=0770", grp_vboxsf->gr_gid);
 +            r = mount(pszShareName, pszMountPoint, "vboxsf", fFlags, mount_opts);
 +        }
          if (r == 0)
-         {
              VGSvcVerbose(0, "vbsvcAutoMountWorker: Shared folder '%s' was mounted to '%s'\n", pszShareName, pszMountPoint);
+         else if (errno != EBUSY) /* Share is already mounted? Then skip error msg. */

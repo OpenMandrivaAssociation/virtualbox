@@ -1,6 +1,6 @@
-diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.dsc VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.dsc
---- VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.dsc	2020-10-16 18:34:50.000000000 +0200
-+++ VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.dsc	2020-11-18 13:48:01.686422876 +0100
+diff -up VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.dsc.30~ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.dsc
+--- VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.dsc.30~	2021-07-16 13:55:33.000000000 +0200
++++ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.dsc	2021-07-21 17:40:35.708162131 +0200
 @@ -873,7 +873,6 @@
      <LibraryClasses>
        PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
@@ -9,10 +9,10 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.d
   VBoxPkg/VBoxFsDxe/VBoxHfs.inf
   VBoxPkg/VBoxSysTables/VBoxSysTables.inf
   VBoxPkg/VBoxAppleSim/VBoxAppleSim.inf
-diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.fdf VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.fdf
---- VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.fdf	2020-10-16 18:34:50.000000000 +0200
-+++ VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.fdf	2020-11-18 13:48:01.684422863 +0100
-@@ -278,7 +278,6 @@
+diff -up VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.fdf.30~ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.fdf
+--- VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.fdf.30~	2021-07-16 13:55:33.000000000 +0200
++++ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.fdf	2021-07-21 17:40:35.708162131 +0200
+@@ -278,7 +278,6 @@ INF  OvmfPkg/SmbiosPlatformDxe/SmbiosPla
  !ifdef $(VBOX)
  INF VBoxPkg/VBoxVgaMiniPortDxe/VBoxVgaMiniPortDxe.inf
  INF VBoxPkg/VBoxVgaDxe/VBoxVgaDxe.inf
@@ -20,9 +20,9 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgIa32.f
  INF VBoxPkg/VBoxFsDxe/VBoxHfs.inf
  INF VBoxPkg/VBoxSysTables/VBoxSysTables.inf
  INF VBoxPkg/VBoxAppleSim/VBoxAppleSim.inf
-diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.dsc VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.dsc
---- VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.dsc	2020-10-16 18:34:50.000000000 +0200
-+++ VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.dsc	2020-11-18 13:48:01.685422869 +0100
+diff -up VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.dsc.30~ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.dsc
+--- VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.dsc.30~	2021-07-16 13:55:33.000000000 +0200
++++ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.dsc	2021-07-21 17:40:35.708162131 +0200
 @@ -879,7 +879,6 @@
      <LibraryClasses>
        PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
@@ -31,10 +31,10 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.ds
   VBoxPkg/VBoxFsDxe/VBoxHfs.inf
   VBoxPkg/VBoxSysTables/VBoxSysTables.inf
   VBoxPkg/VBoxAppleSim/VBoxAppleSim.inf
-diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.fdf VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.fdf
---- VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.fdf	2020-10-16 18:34:50.000000000 +0200
-+++ VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.fdf	2020-11-18 13:48:01.685422869 +0100
-@@ -279,7 +279,6 @@
+diff -up VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.fdf.30~ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.fdf
+--- VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.fdf.30~	2021-07-16 13:55:33.000000000 +0200
++++ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.fdf	2021-07-21 17:40:35.709162147 +0200
+@@ -279,7 +279,6 @@ INF  OvmfPkg/SmbiosPlatformDxe/SmbiosPla
  !ifdef $(VBOX)
  INF VBoxPkg/VBoxVgaMiniPortDxe/VBoxVgaMiniPortDxe.inf
  INF VBoxPkg/VBoxVgaDxe/VBoxVgaDxe.inf
@@ -42,9 +42,9 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/OvmfPkg/OvmfPkgX64.fd
  INF VBoxPkg/VBoxFsDxe/VBoxHfs.inf
  INF VBoxPkg/VBoxSysTables/VBoxSysTables.inf
  INF VBoxPkg/VBoxAppleSim/VBoxAppleSim.inf
-diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw_efi.c VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw_efi.c
---- VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw_efi.c	2020-10-16 18:35:19.000000000 +0200
-+++ VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw_efi.c	2020-11-18 13:48:01.684422863 +0100
+diff -up VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw_efi.c.30~ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw_efi.c
+--- VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw_efi.c.30~	2021-07-16 13:56:03.000000000 +0200
++++ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw_efi.c	2021-07-21 17:42:19.261775767 +0200
 @@ -58,11 +58,6 @@
  
  #include "fsw_efi.h"
@@ -57,7 +57,7 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw
  #define DEBUG_LEVEL 0
  
  #ifndef FSTYPE
-@@ -141,7 +136,7 @@
+@@ -141,7 +136,7 @@ EFI_STATUS fsw_efi_dnode_fill_FileInfo(I
                                         IN OUT UINTN *BufferSize,
                                         OUT VOID *Buffer);
  
@@ -66,7 +66,7 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw
  extern fsw_status_t fsw_hfs_get_blessed_file(void *vol, struct fsw_string *path);
  #endif
  
-@@ -265,128 +260,6 @@
+@@ -265,125 +260,6 @@ EFI_STATUS EFIAPI fsw_efi_DriverBinding_
      return Status;
  }
  
@@ -125,12 +125,9 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw
 -      break;
 -    }
 -
--    if ((CompareMem ((VOID *)VolDescriptor.Unknown.Id,
--                     (VOID *)CDVOL_ID,
--                     sizeof (VolDescriptor.Unknown.Id)) != 0) ||
--        (CompareMem ((VOID *)&VolDescriptor,
+-    if (CompareMem ((VOID *)&VolDescriptor,
 -                     (VOID *)&TerminatingVolDescriptor,
--                     sizeof (CDROM_VOLUME_DESCRIPTOR)) == 0)) {
+-                     sizeof (CDROM_VOLUME_DESCRIPTOR)) == 0) {
 -      return EFI_NOT_FOUND;
 -    }
 -  }
@@ -195,7 +192,7 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw
  static EFI_STATUS fsw_efi_ReMount(IN FSW_VOLUME_DATA *pVolume,
                                         IN EFI_HANDLE      ControllerHandle,
                                         EFI_DISK_IO        *pDiskIo,
-@@ -403,20 +276,6 @@
+@@ -400,20 +276,6 @@ static EFI_STATUS fsw_efi_ReMount(IN FSW
      Status = fsw_efi_map_status(fsw_mount(pVolume, &fsw_efi_host_table,
                                            &FSW_FSTYPE_TABLE_NAME(FSTYPE), &pVolume->vol),
                                  pVolume);
@@ -216,7 +213,7 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw
  
      if (!EFI_ERROR(Status)) {
          // register the SimpleFileSystem protocol
-@@ -1127,9 +986,10 @@
+@@ -1124,9 +986,10 @@ EFI_STATUS fsw_efi_dnode_getinfo(IN FSW_
          *BufferSize = RequiredSize;
          Status = EFI_SUCCESS;
  
@@ -228,7 +225,7 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw
          struct fsw_string StrBlessedFile;
  
          fsw_status_t rc = fsw_hfs_get_blessed_file(Volume->vol, &StrBlessedFile);
-@@ -1150,6 +1010,7 @@
+@@ -1147,6 +1010,7 @@ EFI_STATUS fsw_efi_dnode_getinfo(IN FSW_
              Status = EFI_SUCCESS;
          }
          else
@@ -236,9 +233,9 @@ diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/fsw
              Status = EFI_UNSUPPORTED;
  #endif
  
-diff -Naur VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/VBoxHfs.inf VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/VBoxHfs.inf
---- VirtualBox-6.1.16/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/VBoxHfs.inf	2020-10-16 18:35:19.000000000 +0200
-+++ VirtualBox-6.1.16-efi/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/VBoxHfs.inf	2020-11-18 13:48:01.683422857 +0100
+diff -up VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/VBoxHfs.inf.30~ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/VBoxHfs.inf
+--- VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/VBoxHfs.inf.30~	2021-07-16 13:56:03.000000000 +0200
++++ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/VBoxPkg/VBoxFsDxe/VBoxHfs.inf	2021-07-21 17:40:35.709162147 +0200
 @@ -78,8 +78,8 @@
    gEfiMdePkgTokenSpaceGuid.PcdUefiVariableDefaultPlatformLang
  

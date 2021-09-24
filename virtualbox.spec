@@ -30,15 +30,15 @@
 ## (crazy) fixem that is always true these days
 %bcond_without additions
 %bcond_without vnc_ext_pack
-%bcond_without firmware
+%bcond_with firmware
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.1.16
-Release:	4
+Version:	6.1.26
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -55,7 +55,7 @@ Source21:	os_openmandriva_64.png
 %if %{with firmware}
 # Can't use system openssl because we built OpenSSL for UEFI, not
 # for Linux
-%define openssl 1.1.1h
+%define openssl 1.1.1i
 Source50:	https://www.openssl.org/source/openssl-%{openssl}.tar.gz
 %endif
 Source100:	virtualbox.rpmlintrc
@@ -87,6 +87,7 @@ Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 # Default to a reasonable size in guest additions
 Patch10:	VirtualBox-6.1.12a-default-to-1024x768.patch
 Patch11:	vbox-6.1.10-compile.patch
+Patch12:	vbox-6.1.24-python-syntax.patch
 
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
@@ -620,6 +621,9 @@ done
 %{_bindir}/vboxwebsrv
 %{_unitdir}/vboxweb.service
 %endif
+%dir %{_prefix}/lib/virtualbox
+%{_prefix}/lib/virtualbox/vboxwebsrv
+%{_prefix}/lib/virtualbox/webtest
 %{vboxlibdir}/bldRTLdrCheckImports
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/components

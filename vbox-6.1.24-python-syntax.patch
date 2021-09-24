@@ -1,0 +1,24 @@
+diff -up VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/AutoGen/WorkspaceAutoGen.py.omv~ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/AutoGen/WorkspaceAutoGen.py
+--- VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/AutoGen/WorkspaceAutoGen.py.omv~	2021-07-21 17:45:20.854640461 +0200
++++ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/AutoGen/WorkspaceAutoGen.py	2021-07-21 17:45:31.652811961 +0200
+@@ -166,7 +166,7 @@ class WorkspaceAutoGen(AutoGen):
+             if Fdf.CurrentFdName and Fdf.CurrentFdName in Fdf.Profile.FdDict:
+                 FdDict = Fdf.Profile.FdDict[Fdf.CurrentFdName]
+                 for FdRegion in FdDict.RegionList:
+-                    if str(FdRegion.RegionType) is 'FILE' and self.Platform.VpdToolGuid in str(FdRegion.RegionDataList):
++                    if str(FdRegion.RegionType) == 'FILE' and self.Platform.VpdToolGuid in str(FdRegion.RegionDataList):
+                         if int(FdRegion.Offset) % 8 != 0:
+                             EdkLogger.error("build", FORMAT_INVALID, 'The VPD Base Address %s must be 8-byte aligned.' % (FdRegion.Offset))
+             FdfProfile = Fdf.Profile
+diff -up VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/build/BuildReport.py.omv~ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/build/BuildReport.py
+--- VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/build/BuildReport.py.omv~	2021-07-21 17:46:20.513589364 +0200
++++ VirtualBox-6.1.24/src/VBox/Devices/EFI/Firmware/BaseTools/Source/Python/build/BuildReport.py	2021-07-21 17:46:28.927723455 +0200
+@@ -2033,7 +2033,7 @@ class FdReport(object):
+         self.VPDBaseAddress = 0
+         self.VPDSize = 0
+         for index, FdRegion in enumerate(Fd.RegionList):
+-            if str(FdRegion.RegionType) is 'FILE' and Wa.Platform.VpdToolGuid in str(FdRegion.RegionDataList):
++            if str(FdRegion.RegionType) == 'FILE' and Wa.Platform.VpdToolGuid in str(FdRegion.RegionDataList):
+                 self.VPDBaseAddress = self.FdRegionList[index].BaseAddress
+                 self.VPDSize = self.FdRegionList[index].Size
+                 break
