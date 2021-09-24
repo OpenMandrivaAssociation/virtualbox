@@ -55,7 +55,7 @@ Source21:	os_openmandriva_64.png
 %if %{with firmware}
 # Can't use system openssl because we built OpenSSL for UEFI, not
 # for Linux
-%define openssl 1.1.1i
+%define openssl 1.1.1k
 Source50:	https://www.openssl.org/source/openssl-%{openssl}.tar.gz
 %endif
 Source100:	virtualbox.rpmlintrc
@@ -68,7 +68,7 @@ Source100:	virtualbox.rpmlintrc
 Patch0:		VirtualBox-6.1.2-revert-removal-of-vital-symbols.patch
 # Update docs on kernel modules
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
-Patch2:		virtualbox-6.1.16-python3.9.patch
+# Patch2:		virtualbox-6.1.16-python3.9.patch
 # Fix docs to give the right mount command for the in-tree version of vboxsf
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
