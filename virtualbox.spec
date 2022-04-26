@@ -148,7 +148,6 @@ BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
-BuildRequires:  pkgconfig(python2)
 BuildRequires:	pkgconfig(python)
 BuildRequires:	qt5-qttools
 BuildRequires:	qt5-linguist-tools
