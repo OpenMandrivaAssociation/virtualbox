@@ -654,11 +654,11 @@ done
 #%%if %{with vnc_ext_pack}
 #%%{vboxdatadir}/extensions/VNC-*
 #%%endif
-#%%{vboxlibdir}/scripts
-#%%{vboxlibdir}/tools
-#%%{vboxlibdir}/ExtensionPacks
-#%%{vboxlibdir}/rdesktop-vrdp
-#%%{vboxlibdir}/vbox-img
+%{vboxlibdir}/scripts
+%{vboxlibdir}/tools
+%{vboxlibdir}/ExtensionPacks
+%{vboxlibdir}/rdesktop-vrdp
+%{vboxlibdir}/vbox-img
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
 %attr(4711,root,root) %{vboxlibdir}/VBoxSDL
