@@ -1,0 +1,63 @@
+diff -up VirtualBox-6.1.34/src/VBox/Additions/linux/sharedfolders/regops.c.14~ VirtualBox-6.1.34/src/VBox/Additions/linux/sharedfolders/regops.c
+--- VirtualBox-6.1.34/src/VBox/Additions/linux/sharedfolders/regops.c.14~	2022-03-23 00:37:55.000000000 +0100
++++ VirtualBox-6.1.34/src/VBox/Additions/linux/sharedfolders/regops.c	2022-06-02 19:11:39.597713298 +0200
+@@ -3823,7 +3823,9 @@ struct address_space_operations vbsf_reg
+     .readpage       = vbsf_readpage,
+     .writepage      = vbsf_writepage,
+     /** @todo Need .writepages if we want msync performance...  */
+-#if RTLNX_VER_MIN(2,5,12)
++#if RTLNX_VER_MIN(5,18,0)
++    .dirty_folio = filemap_dirty_folio,
++#elif RTLNX_VER_MIN(2,5,12)
+     .set_page_dirty = __set_page_dirty_buffers,
+ #endif
+ #if RTLNX_VER_MIN(5,14,0)
+diff -up VirtualBox-6.1.34/src/VBox/HostDrivers/Support/SUPDrv.cpp.14~ VirtualBox-6.1.34/src/VBox/HostDrivers/Support/SUPDrv.cpp
+--- VirtualBox-6.1.34/src/VBox/HostDrivers/Support/SUPDrv.cpp.14~	2022-03-23 00:44:51.000000000 +0100
++++ VirtualBox-6.1.34/src/VBox/HostDrivers/Support/SUPDrv.cpp	2022-06-02 19:12:37.143353716 +0200
+@@ -75,6 +75,19 @@
+ # define VBOXDRV_IOCTL_RETURN(pvSession, uIOCtl, pvReqHdr, rcRet, rcReq) do { } while (0)
+ #endif
+ 
++#if defined(RT_OS_LINUX)
++/* In Linux 5.18-rc1, memcpy became a wrapper which does fortify checks
++ * before triggering __underlying_memcpy() call. We do not pass these checks here,
++ * so bypass them for now.  */
++# if RTLNX_VER_MIN(5,18,0) && !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
++#  define SUPDRV_MEMCPY __underlying_memcpy
++# else
++# define SUPDRV_MEMCPY  memcpy
++# endif
++#else
++# define SUPDRV_MEMCPY  memcpy
++#endif
++
+ #ifndef RT_MSC_VER_VS2019
+ # define RT_MSC_VER_VS2019   (1920)
+ #endif
+@@ -1742,7 +1755,7 @@ static int supdrvIOCtlInnerUnrestricted(
+ 
+             /* execute */
+             pReq->u.Out.cFunctions = RT_ELEMENTS(g_aFunctions);
+-            memcpy(&pReq->u.Out.aFunctions[0], g_aFunctions, sizeof(g_aFunctions));
++            SUPDRV_MEMCPY(&pReq->u.Out.aFunctions[0], g_aFunctions, sizeof(g_aFunctions));
+             pReq->Hdr.rc = VINF_SUCCESS;
+             return 0;
+         }
+diff -up VirtualBox-6.1.34/src/VBox/HostDrivers/VBoxNetFlt/linux/VBoxNetFlt-linux.c.14~ VirtualBox-6.1.34/src/VBox/HostDrivers/VBoxNetFlt/linux/VBoxNetFlt-linux.c
+--- VirtualBox-6.1.34/src/VBox/HostDrivers/VBoxNetFlt/linux/VBoxNetFlt-linux.c.14~	2022-03-23 00:44:54.000000000 +0100
++++ VirtualBox-6.1.34/src/VBox/HostDrivers/VBoxNetFlt/linux/VBoxNetFlt-linux.c	2022-06-02 19:11:39.595713312 +0200
+@@ -2311,7 +2311,13 @@ int  vboxNetFltPortOsXmit(PVBOXNETFLTINS
+                 vboxNetFltDumpPacket(pSG, true, "host", (fDst & INTNETTRUNKDIR_WIRE) ? 0 : 1);
+                 Log6(("vboxNetFltPortOsXmit: pBuf->cb dump:\n%.*Rhxd\n", sizeof(pBuf->cb), pBuf->cb));
+                 Log6(("vboxNetFltPortOsXmit: netif_rx_ni(%p)\n", pBuf));
++#if RTLNX_VER_MIN(5,18,0)
++                local_bh_disable();
++                err = netif_rx(pBuf);
++                local_bh_enable();
++#else
+                 err = netif_rx_ni(pBuf);
++#endif
+                 if (err)
+                     rc = RTErrConvertFromErrno(err);
+             }

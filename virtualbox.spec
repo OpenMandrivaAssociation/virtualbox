@@ -37,8 +37,8 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.1.32
-Release:	2
+Version:	6.1.34
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -88,6 +88,10 @@ Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 Patch10:	VirtualBox-6.1.12a-default-to-1024x768.patch
 Patch11:	vbox-6.1.10-compile.patch
 Patch12:	vbox-6.1.24-python-syntax.patch
+# Upstream commits 94500 to 94504 - bringing initial kernel 5.18 support
+Patch13:	vbox-commits-94500-to-94504.patch
+# https://www.virtualbox.org/ticket/20914 -- more 5.18 bits
+Patch14:	https://www.virtualbox.org/raw-attachment/ticket/20914/vbox-linux-5.18.patch
 
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
@@ -112,7 +116,7 @@ Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
 # From FrugalWare
-Patch300:	https://gitweb.frugalware.org/frugalware-current/raw/master/source/xapps-extra/virtualbox/fix-EFI-boot.patch
+#Patch300:	https://gitweb.frugalware.org/frugalware-current/raw/master/source/xapps-extra/virtualbox/fix-EFI-boot.patch
 Patch301:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/firmware-build-fixes.patch
 ExclusiveArch:	%{x86_64}
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
