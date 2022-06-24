@@ -38,7 +38,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.34
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -88,10 +88,8 @@ Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 Patch10:	VirtualBox-6.1.12a-default-to-1024x768.patch
 Patch11:	vbox-6.1.10-compile.patch
 Patch12:	vbox-6.1.24-python-syntax.patch
-# Upstream commits 94500 to 94504 - bringing initial kernel 5.18 support
-Patch13:	vbox-commits-94500-to-94504.patch
-# https://www.virtualbox.org/ticket/20914 -- more 5.18 bits
-Patch14:	https://www.virtualbox.org/raw-attachment/ticket/20914/vbox-linux-5.18.patch
+# https://www.virtualbox.org/ticket/20914 -- Kernel 5.18 and 5.19 bits
+Patch14:	https://www.virtualbox.org/raw-attachment/ticket/20914/vbox-linux-5.19.patch
 
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
