@@ -174,6 +174,11 @@ BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
 BuildRequires:	pkgconfig(liblzf)
 BuildRequires:	pkgconfig(libpng)
+# FIXME not sure why, but vbox checks if there's a working
+# 32-bit compiler. Probably for the BIOS?
+# But it doesn't use -nostdlib or so, so we need to BR
+# a 32-bit libc
+BuildRequires:	libc6
 %if %{with docs}
 # for building the user manual pdf file
 BuildRequires:	texlive
