@@ -1,4 +1,3 @@
-
 %define kname vboxdrv
 %define oname VirtualBox
 %define srcname %{oname}-%{version}%{?beta:_%{beta}}
@@ -38,7 +37,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	6.1.34
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -88,6 +87,8 @@ Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 Patch10:	VirtualBox-6.1.12a-default-to-1024x768.patch
 Patch11:	vbox-6.1.10-compile.patch
 Patch12:	vbox-6.1.24-python-syntax.patch
+# https://www.virtualbox.org/ticket/20904
+Patch13:	diff-trunk_Config.kmk-from-94252-to-94318.diff
 # https://www.virtualbox.org/ticket/20914 -- Kernel 5.18 and 5.19 bits
 Patch14:	https://www.virtualbox.org/raw-attachment/ticket/20914/vbox-linux-5.19.patch
 

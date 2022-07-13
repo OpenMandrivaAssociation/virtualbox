@@ -1,0 +1,22 @@
+diff -up VirtualBox-6.1.34/Config.kmk.14~ VirtualBox-6.1.34/Config.kmk
+--- VirtualBox-6.1.34/Config.kmk.14~	2022-07-13 20:09:41.061685897 +0200
++++ VirtualBox-6.1.34/Config.kmk	2022-07-13 20:19:46.454213753 +0200
+@@ -4507,6 +4507,9 @@ TEMPLATE_VBoxR0_CXXFLAGS            = -f
+ 	$(VBOX_GCC_Wno-variadic-macros) $(VBOX_GCC_R0_OPT) $(VBOX_GCC_R0_FP) -fno-strict-aliasing -fno-exceptions \
+ 	$(VBOX_GCC_fno-stack-protector) -fno-common $(VBOX_GCC_fvisibility-inlines-hidden) $(VBOX_GCC_fvisibility-hidden) \
+ 	-fno-rtti $(VBOX_GCC_IPRT_FMT_CHECK)
++if $(VBOX_GCC_VERSION_CC) >= 40500 # 4.1.2 complains, 4.5.2 is okay, didn't check which version inbetween made it okay with g++.
++TEMPLATE_VBoxR0_CXXFLAGS           += -ffreestanding
++endif
+ TEMPLATE_VBoxR0_CFLAGS.amd64        = -m64 -mno-red-zone -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -fasynchronous-unwind-tables -ffreestanding
+ TEMPLATE_VBoxR0_CXXFLAGS.amd64      = -m64 -mno-red-zone -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -fasynchronous-unwind-tables
+ TEMPLATE_VBoxR0_CXXFLAGS.freebsd    = -ffreestanding
+@@ -4560,7 +4563,7 @@ TEMPLATE_VBoxR0_CXXFLAGS            = $(
+ TEMPLATE_VBoxR0_CXXFLAGS.amd64      = -m64 -mno-red-zone -mno-sse3 -mno-sse4 -mno-sse4.1 -mno-sse4.2  -mno-sse4a -fno-unwind-tables
+ TEMPLATE_VBoxR0_CXXFLAGS.x86        = -m32
+ TEMPLATE_VBoxR0_CFLAGS              = $(VBOX_DARWIN_DEF_SDK_CFLAGS)   -nostdinc -g $(VBOX_GCC_pipe) $(VBOX_GCC_WERR) $(VBOX_GCC_PEDANTIC_C)   $(VBOX_GCC_Wno-variadic-macros) \
+-	-fno-common -msoft-float -static -fno-exceptions $(VBOX_GCC_R0_OPT) $(VBOX_GCC_R0_FP) -fno-strict-aliasing \
++	-fno-common -ffreestanding -msoft-float -static -fno-exceptions $(VBOX_GCC_R0_OPT) $(VBOX_GCC_R0_FP) -fno-strict-aliasing \
+ 	-mno-sse -mno-mmx -mno-sse2 -mno-3dnow $(VBOX_GCC_fno-stack-protector)
+ TEMPLATE_VBoxR0_CFLAGS.amd64        = -m64 -mno-red-zone -mno-sse3 -mno-sse4 -mno-sse4.1 -mno-sse4.2  -mno-sse4a -fno-unwind-tables
+ TEMPLATE_VBoxR0_CFLAGS.x86          = -m32
