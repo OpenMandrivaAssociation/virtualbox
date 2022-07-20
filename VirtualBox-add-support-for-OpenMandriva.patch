@@ -1,7 +1,7 @@
-diff -up VirtualBox-6.1.28/include/VBox/ostypes.h.27~ VirtualBox-6.1.28/include/VBox/ostypes.h
---- VirtualBox-6.1.28/include/VBox/ostypes.h.27~	2021-10-18 19:47:30.000000000 +0200
-+++ VirtualBox-6.1.28/include/VBox/ostypes.h	2021-10-21 00:55:46.394505196 +0200
-@@ -101,8 +101,8 @@ typedef enum VBOXOSTYPE
+diff -up VirtualBox-6.1.36/include/VBox/ostypes.h.28~ VirtualBox-6.1.36/include/VBox/ostypes.h
+--- VirtualBox-6.1.36/include/VBox/ostypes.h.28~	2022-07-19 22:48:58.000000000 +0200
++++ VirtualBox-6.1.36/include/VBox/ostypes.h	2022-07-20 14:54:34.321939768 +0200
+@@ -107,8 +107,8 @@ typedef enum VBOXOSTYPE
      VBOXOSTYPE_FedoraCore_x64   = 0x57100,
      VBOXOSTYPE_Gentoo           = 0x58000,
      VBOXOSTYPE_Gentoo_x64       = 0x58100,
@@ -12,9 +12,9 @@ diff -up VirtualBox-6.1.28/include/VBox/ostypes.h.27~ VirtualBox-6.1.28/include/
      VBOXOSTYPE_RedHat           = 0x5A000,
      VBOXOSTYPE_RedHat_x64       = 0x5A100,
      VBOXOSTYPE_Turbolinux       = 0x5B000,
-diff -up VirtualBox-6.1.28/src/VBox/Additions/linux/installer/vboxadd-x11.sh.27~ VirtualBox-6.1.28/src/VBox/Additions/linux/installer/vboxadd-x11.sh
---- VirtualBox-6.1.28/src/VBox/Additions/linux/installer/vboxadd-x11.sh.27~	2021-10-18 19:50:51.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Additions/linux/installer/vboxadd-x11.sh	2021-10-21 00:55:46.394505196 +0200
+diff -up VirtualBox-6.1.36/src/VBox/Additions/linux/installer/vboxadd-x11.sh.28~ VirtualBox-6.1.36/src/VBox/Additions/linux/installer/vboxadd-x11.sh
+--- VirtualBox-6.1.36/src/VBox/Additions/linux/installer/vboxadd-x11.sh.28~	2022-07-19 22:51:59.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Additions/linux/installer/vboxadd-x11.sh	2022-07-20 14:54:34.321939768 +0200
 @@ -94,11 +94,11 @@ install_x11_startup_app() {
      x11_autostart="/etc/xdg/autostart"
      kde_autostart="/usr/share/autostart"
@@ -30,10 +30,10 @@ diff -up VirtualBox-6.1.28/src/VBox/Additions/linux/installer/vboxadd-x11.sh.27~
          found=1
      fi
      if [ -d "$x11_autostart" -a -w "$x11_autostart" -a -x "$x11_autostart" ]
-diff -up VirtualBox-6.1.28/src/VBox/Devices/VMMDev/VMMDev.cpp.27~ VirtualBox-6.1.28/src/VBox/Devices/VMMDev/VMMDev.cpp
---- VirtualBox-6.1.28/src/VBox/Devices/VMMDev/VMMDev.cpp.27~	2021-10-18 19:56:47.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Devices/VMMDev/VMMDev.cpp	2021-10-21 00:55:46.395505200 +0200
-@@ -202,7 +202,7 @@ static void vmmdevLogGuestOsInfo(VBoxGue
+diff -up VirtualBox-6.1.36/src/VBox/Devices/VMMDev/VMMDev.cpp.28~ VirtualBox-6.1.36/src/VBox/Devices/VMMDev/VMMDev.cpp
+--- VirtualBox-6.1.36/src/VBox/Devices/VMMDev/VMMDev.cpp.28~	2022-07-19 22:57:28.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Devices/VMMDev/VMMDev.cpp	2022-07-20 14:54:34.323939780 +0200
+@@ -203,7 +203,7 @@ static void vmmdevLogGuestOsInfo(VBoxGue
          case VBOXOSTYPE_OpenSUSE:                         pszOs = "openSUSE";       break;
          case VBOXOSTYPE_FedoraCore:                       pszOs = "Fedora";         break;
          case VBOXOSTYPE_Gentoo:                           pszOs = "Gentoo";         break;
@@ -42,10 +42,10 @@ diff -up VirtualBox-6.1.28/src/VBox/Devices/VMMDev/VMMDev.cpp.27~ VirtualBox-6.1
          case VBOXOSTYPE_RedHat:                           pszOs = "RedHat";         break;
          case VBOXOSTYPE_Turbolinux:                       pszOs = "TurboLinux";     break;
          case VBOXOSTYPE_Ubuntu:                           pszOs = "Ubuntu";         break;
-diff -up VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp.27~ VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp
---- VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp.27~	2021-10-18 19:57:50.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp	2021-10-21 00:55:46.395505200 +0200
-@@ -327,8 +327,8 @@ UIIconPoolGeneral::UIIconPoolGeneral()
+diff -up VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp.28~ VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp
+--- VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp.28~	2022-07-19 22:58:29.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.cpp	2022-07-20 14:54:34.323939780 +0200
+@@ -328,8 +328,8 @@ UIIconPoolGeneral::UIIconPoolGeneral()
      m_guestOSTypeIconNames.insert("Fedora_64",       ":/os_fedora_64.png");
      m_guestOSTypeIconNames.insert("Gentoo",          ":/os_gentoo.png");
      m_guestOSTypeIconNames.insert("Gentoo_64",       ":/os_gentoo_64.png");
@@ -56,9 +56,9 @@ diff -up VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/globals/UIIconPool.
      m_guestOSTypeIconNames.insert("RedHat",          ":/os_redhat.png");
      m_guestOSTypeIconNames.insert("RedHat_64",       ":/os_redhat_64.png");
      m_guestOSTypeIconNames.insert("Turbolinux",      ":/os_turbolinux.png");
-diff -up VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp.27~ VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp
---- VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp.27~	2021-10-18 19:57:59.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2021-10-21 00:55:46.395505200 +0200
+diff -up VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp.28~ VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp
+--- VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp.28~	2022-07-19 22:58:38.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSystemEditor.cpp	2022-07-20 14:54:34.323939780 +0200
 @@ -306,15 +306,15 @@ void UINameAndSystemEditor::sltFamilyCha
          if (iIndexWin7 != -1)
              m_pComboType->setCurrentIndex(iIndexWin7);
@@ -91,10 +91,10 @@ diff -up VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/widgets/UINameAndSy
      /* And update the linked widgets accordingly: */
      sltFamilyChanged(m_pComboFamily->currentIndex());
  }
-diff -up VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp.27~ VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp
---- VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp.27~	2021-10-18 19:58:01.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp	2021-10-21 00:55:46.395505200 +0200
-@@ -138,8 +138,8 @@ static const osTypePattern gs_OSTypePatt
+diff -up VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp.28~ VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp
+--- VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp.28~	2022-07-19 22:58:40.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWizardNewVMPageBasic1.cpp	2022-07-20 14:54:34.324939785 +0200
+@@ -146,8 +146,8 @@ static const osTypePattern gs_OSTypePatt
      { QRegExp("Fe.*32",                            Qt::CaseInsensitive), "Fedora" },
      { QRegExp("((Gen)|(Sab)).*64",                 Qt::CaseInsensitive), "Gentoo_64" },
      { QRegExp("((Gen)|(Sab)).*32",                 Qt::CaseInsensitive), "Gentoo" },
@@ -105,9 +105,9 @@ diff -up VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/src/wizards/newvm/UIWiz
      { QRegExp("((Red)|(rhel)|(cen)).*64",          Qt::CaseInsensitive), "RedHat_64" },
      { QRegExp("((Red)|(rhel)|(cen)).*32",          Qt::CaseInsensitive), "RedHat" },
      { QRegExp("Tur.*64",                           Qt::CaseInsensitive), "Turbolinux_64" },
-diff -up VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/VirtualBox2.qrc.27~ VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/VirtualBox2.qrc
---- VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/VirtualBox2.qrc.27~	2021-10-18 19:57:28.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/VirtualBox2.qrc	2021-10-21 00:55:46.395505200 +0200
+diff -up VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/VirtualBox2.qrc.28~ VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/VirtualBox2.qrc
+--- VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/VirtualBox2.qrc.28~	2022-07-19 22:58:06.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Frontends/VirtualBox/VirtualBox2.qrc	2022-07-20 14:54:34.324939785 +0200
 @@ -64,8 +64,8 @@
          <file alias="os_linux_64.png">images/os_linux_64.png</file>
          <file alias="os_macosx.png">images/os_macosx.png</file>
@@ -119,22 +119,22 @@ diff -up VirtualBox-6.1.28/src/VBox/Frontends/VirtualBox/VirtualBox2.qrc.27~ Vir
          <file alias="os_netbsd.png">images/os_netbsd.png</file>
          <file alias="os_netbsd_64.png">images/os_netbsd_64.png</file>
          <file alias="os_netware.png">images/os_netware.png</file>
-diff -up VirtualBox-6.1.28/src/VBox/Installer/linux/distributions_rpm.27~ VirtualBox-6.1.28/src/VBox/Installer/linux/distributions_rpm
---- VirtualBox-6.1.28/src/VBox/Installer/linux/distributions_rpm.27~	2021-10-18 19:58:10.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Installer/linux/distributions_rpm	2021-10-21 00:55:46.395505200 +0200
-@@ -8,6 +8,9 @@ openSUSE113     = OPENSUSE_11_3
+diff -up VirtualBox-6.1.36/src/VBox/Installer/linux/distributions_rpm.28~ VirtualBox-6.1.36/src/VBox/Installer/linux/distributions_rpm
+--- VirtualBox-6.1.36/src/VBox/Installer/linux/distributions_rpm.28~	2022-07-20 14:54:34.324939785 +0200
++++ VirtualBox-6.1.36/src/VBox/Installer/linux/distributions_rpm	2022-07-20 14:55:40.068307878 +0200
+@@ -9,6 +9,9 @@ openSUSE113     = OPENSUSE_11_3
  sles11.0        = SLES_11_0
  sles10.1        = SLES_10_1
  mdv2011.0       = MANDRIVA_2011_0
 +omv2014.0	= OPENMANDRIVA_2014_0
 +omv2015.0	= OPENMANDRIVA_Lx3
 +omv4000.0	= OPENMANDRIVA_Lx4
+ fedora36        = FEDORA_36
+ fedora35        = FEDORA_35
  fedora33        = FEDORA_33
- fedora32        = FEDORA_32
- fedora31        = FEDORA_31
-diff -up VirtualBox-6.1.28/src/VBox/Installer/linux/rpm/rules.27~ VirtualBox-6.1.28/src/VBox/Installer/linux/rpm/rules
---- VirtualBox-6.1.28/src/VBox/Installer/linux/rpm/rules.27~	2021-10-18 19:58:10.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Installer/linux/rpm/rules	2021-10-21 00:55:46.395505200 +0200
+diff -up VirtualBox-6.1.36/src/VBox/Installer/linux/rpm/rules.28~ VirtualBox-6.1.36/src/VBox/Installer/linux/rpm/rules
+--- VirtualBox-6.1.36/src/VBox/Installer/linux/rpm/rules.28~	2022-07-19 22:58:50.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Installer/linux/rpm/rules	2022-07-20 14:54:34.325939791 +0200
 @@ -45,6 +45,10 @@
  #
  # Wine will not be required if both NODOCS and STAGEDISO are set.
@@ -146,9 +146,9 @@ diff -up VirtualBox-6.1.28/src/VBox/Installer/linux/rpm/rules.27~ VirtualBox-6.1
  verpkg   := VirtualBox-6.1
  vboxroot := $(shell while ! test -r configure && ! test "$$PWD" = "/"; do cd ..; done; pwd)
  instlin  := $(vboxroot)/src/VBox/Installer/linux
-diff -up VirtualBox-6.1.28/src/VBox/Installer/linux/VBoxSysInfo.sh.27~ VirtualBox-6.1.28/src/VBox/Installer/linux/VBoxSysInfo.sh
---- VirtualBox-6.1.28/src/VBox/Installer/linux/VBoxSysInfo.sh.27~	2021-10-18 19:58:09.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Installer/linux/VBoxSysInfo.sh	2021-10-21 00:55:46.395505200 +0200
+diff -up VirtualBox-6.1.36/src/VBox/Installer/linux/VBoxSysInfo.sh.28~ VirtualBox-6.1.36/src/VBox/Installer/linux/VBoxSysInfo.sh
+--- VirtualBox-6.1.36/src/VBox/Installer/linux/VBoxSysInfo.sh.28~	2022-07-19 22:58:50.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Installer/linux/VBoxSysInfo.sh	2022-07-20 14:54:34.325939791 +0200
 @@ -44,11 +44,11 @@ get_linux_info () {
          # Debian-based system
          release=`cat /etc/debian_version`
@@ -165,9 +165,9 @@ diff -up VirtualBox-6.1.28/src/VBox/Installer/linux/VBoxSysInfo.sh.27~ VirtualBo
      elif [ -r /etc/fedora-release ]
      then
          # Fedora-based
-diff -up VirtualBox-6.1.28/src/VBox/Main/include/ovfreader.h.27~ VirtualBox-6.1.28/src/VBox/Main/include/ovfreader.h
---- VirtualBox-6.1.28/src/VBox/Main/include/ovfreader.h.27~	2021-10-18 19:58:15.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Main/include/ovfreader.h	2021-10-21 00:55:46.396505205 +0200
+diff -up VirtualBox-6.1.36/src/VBox/Main/include/ovfreader.h.28~ VirtualBox-6.1.36/src/VBox/Main/include/ovfreader.h
+--- VirtualBox-6.1.36/src/VBox/Main/include/ovfreader.h.28~	2022-07-19 22:58:55.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Main/include/ovfreader.h	2022-07-20 14:54:34.326939797 +0200
 @@ -156,8 +156,8 @@ enum CIMOSType_T
      CIMOSType_CIMOS_NovellOES   = 86,
      CIMOSType_CIMOS_NovellLinuxDesktop  = 87,
@@ -179,9 +179,9 @@ diff -up VirtualBox-6.1.28/src/VBox/Main/include/ovfreader.h.27~ VirtualBox-6.1.
      CIMOSType_CIMOS_TurboLinux  = 91,
      CIMOSType_CIMOS_TurboLinux_64   = 92,
      CIMOSType_CIMOS_Ubuntu  = 93,
-diff -up VirtualBox-6.1.28/src/VBox/Main/src-all/Global.cpp.27~ VirtualBox-6.1.28/src/VBox/Main/src-all/Global.cpp
---- VirtualBox-6.1.28/src/VBox/Main/src-all/Global.cpp.27~	2021-10-21 00:55:46.396505205 +0200
-+++ VirtualBox-6.1.28/src/VBox/Main/src-all/Global.cpp	2021-10-21 02:54:13.243174314 +0200
+diff -up VirtualBox-6.1.36/src/VBox/Main/src-all/Global.cpp.28~ VirtualBox-6.1.36/src/VBox/Main/src-all/Global.cpp
+--- VirtualBox-6.1.36/src/VBox/Main/src-all/Global.cpp.28~	2022-07-19 22:58:56.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Main/src-all/Global.cpp	2022-07-20 14:54:34.326939797 +0200
 @@ -257,15 +257,15 @@ const Global::OSType Global::sOSTypes[]
        1, 1024,  16,  8 * _1G64, GraphicsControllerType_VMSVGA, NetworkAdapterType_I82540EM, 0, StorageControllerType_PIIX4, StorageBus_IDE,
        StorageControllerType_IntelAhci, StorageBus_SATA, ChipsetType_PIIX3, AudioControllerType_AC97, AudioCodecType_AD1980  },
@@ -204,10 +204,10 @@ diff -up VirtualBox-6.1.28/src/VBox/Main/src-all/Global.cpp.27~ VirtualBox-6.1.2
        StorageControllerType_IntelAhci, StorageBus_SATA, ChipsetType_PIIX3, AudioControllerType_AC97, AudioCodecType_AD1980  },
  
      { "Linux",   "Linux",             "Oracle",             "Oracle (32-bit)",
-diff -up VirtualBox-6.1.28/src/VBox/Main/src-server/ApplianceImpl.cpp.27~ VirtualBox-6.1.28/src/VBox/Main/src-server/ApplianceImpl.cpp
---- VirtualBox-6.1.28/src/VBox/Main/src-server/ApplianceImpl.cpp.27~	2021-10-18 19:58:17.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Main/src-server/ApplianceImpl.cpp	2021-10-21 00:55:46.396505205 +0200
-@@ -138,8 +138,8 @@ static struct
+diff -up VirtualBox-6.1.36/src/VBox/Main/src-server/ApplianceImpl.cpp.28~ VirtualBox-6.1.36/src/VBox/Main/src-server/ApplianceImpl.cpp
+--- VirtualBox-6.1.36/src/VBox/Main/src-server/ApplianceImpl.cpp.28~	2022-07-19 22:58:58.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Main/src-server/ApplianceImpl.cpp	2022-07-20 14:54:34.327939802 +0200
+@@ -143,8 +143,8 @@ static struct
      { ovf::CIMOSType_CIMOS_SunJavaDesktopSystem,                 VBOXOSTYPE_Linux },
      { ovf::CIMOSType_CIMOS_TurboLinux,                           VBOXOSTYPE_Turbolinux },
      { ovf::CIMOSType_CIMOS_TurboLinux_64,                        VBOXOSTYPE_Turbolinux_x64 },
@@ -218,7 +218,7 @@ diff -up VirtualBox-6.1.28/src/VBox/Main/src-server/ApplianceImpl.cpp.27~ Virtua
      { ovf::CIMOSType_CIMOS_Ubuntu,                               VBOXOSTYPE_Ubuntu },
      { ovf::CIMOSType_CIMOS_Ubuntu_64,                            VBOXOSTYPE_Ubuntu_x64 },
      { ovf::CIMOSType_CIMOS_Debian,                               VBOXOSTYPE_Debian },
-@@ -218,7 +218,7 @@ static const osTypePattern g_aOsTypesPat
+@@ -223,7 +223,7 @@ static const osTypePattern g_aOsTypesPat
      {"SUSE",          VBOXOSTYPE_OpenSUSE},
      {"Novell",        VBOXOSTYPE_OpenSUSE},
      {"Red Hat",       VBOXOSTYPE_RedHat},
@@ -227,7 +227,7 @@ diff -up VirtualBox-6.1.28/src/VBox/Main/src-server/ApplianceImpl.cpp.27~ Virtua
      {"Ubuntu",        VBOXOSTYPE_Ubuntu},
      {"Debian",        VBOXOSTYPE_Debian},
      {"QNX",           VBOXOSTYPE_QNX},
-@@ -254,7 +254,7 @@ static const osTypePattern g_aOsTypesPat
+@@ -259,7 +259,7 @@ static const osTypePattern g_aOsTypesPat
      {"SUSE",          VBOXOSTYPE_OpenSUSE_x64},
      {"Novell",        VBOXOSTYPE_OpenSUSE_x64},
      {"Red Hat",       VBOXOSTYPE_RedHat_x64},
@@ -236,10 +236,10 @@ diff -up VirtualBox-6.1.28/src/VBox/Main/src-server/ApplianceImpl.cpp.27~ Virtua
      {"Ubuntu",        VBOXOSTYPE_Ubuntu_x64},
      {"Debian",        VBOXOSTYPE_Debian_x64},
      {"Linux 2.4",     VBOXOSTYPE_Linux24_x64},
-diff -up VirtualBox-6.1.28/src/VBox/Main/xml/Settings.cpp.27~ VirtualBox-6.1.28/src/VBox/Main/xml/Settings.cpp
---- VirtualBox-6.1.28/src/VBox/Main/xml/Settings.cpp.27~	2021-10-18 19:58:21.000000000 +0200
-+++ VirtualBox-6.1.28/src/VBox/Main/xml/Settings.cpp	2021-10-21 00:55:46.397505209 +0200
-@@ -5673,7 +5673,7 @@ const struct {
+diff -up VirtualBox-6.1.36/src/VBox/Main/xml/Settings.cpp.28~ VirtualBox-6.1.36/src/VBox/Main/xml/Settings.cpp
+--- VirtualBox-6.1.36/src/VBox/Main/xml/Settings.cpp.28~	2022-07-19 22:59:02.000000000 +0200
++++ VirtualBox-6.1.36/src/VBox/Main/xml/Settings.cpp	2022-07-20 14:54:34.329939814 +0200
+@@ -5744,7 +5744,7 @@ const struct {
      { "opensuse", "OpenSUSE" },
      { "fedoracore", "Fedora" },
      { "gentoo", "Gentoo" },
