@@ -189,6 +189,11 @@ Requires(post,preun,postun):	rpm-helper
 #Requires:	kmod(vboxdrv) = %{version}
 Conflicts:	dkms-%{name} < 5.0.24-1
 
+# Force kernel-headers from the release package - kernel-rc headers cause
+# /usr/include/linux/usbdevice_fs.h:134:41: error: flexible array member 'usbdevfs_urb::iso_frame_desc' not at end of 'struct USBPROXYURBLNX'
+BuildRequires:	kernel-headers
+BuildConflicts:	kernel-rc-headers
+
 %description
 VirtualBox is a general-purpose full virtualizer for x86 hardware.
 
