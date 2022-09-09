@@ -104,6 +104,8 @@ Patch109:	27-hide-host-cache-warning.patch
 Patch110:	29-fix-ftbfs-as-needed.patch
 Patch111:	32-disable-guest-version-check.patch
 Patch112:	35-libvdeplug-soname.patch
+# Fixes patch 107
+Patch113:	disable-update-manager-for-real.patch
 # (tpg) add support for OpenMandriva
 # (crazy) this should be prepared for upstream..
 Patch200:	VirtualBox-add-support-for-OpenMandriva.patch

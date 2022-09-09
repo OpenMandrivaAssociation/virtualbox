@@ -1,0 +1,37 @@
+diff -up VirtualBox-6.1.38/src/VBox/Frontends/VirtualBox/src/globals/UICommon.cpp.omv~ VirtualBox-6.1.38/src/VBox/Frontends/VirtualBox/src/globals/UICommon.cpp
+--- VirtualBox-6.1.38/src/VBox/Frontends/VirtualBox/src/globals/UICommon.cpp.omv~	2022-09-09 15:56:03.189534891 +0200
++++ VirtualBox-6.1.38/src/VBox/Frontends/VirtualBox/src/globals/UICommon.cpp	2022-09-09 15:56:56.973138250 +0200
+@@ -68,7 +68,9 @@
+ #include "QIFileDialog.h"
+ #ifdef VBOX_GUI_WITH_NETWORK_MANAGER
+ # include "UINetworkManager.h"
++#if 0
+ # include "UIUpdateManager.h"
++#endif
+ #endif /* VBOX_GUI_WITH_NETWORK_MANAGER */
+ #include "UIConverter.h"
+ #include "UIMediumEnumerator.h"
+@@ -4519,8 +4521,10 @@ void UICommon::prepare()
+     /* Create network manager: */
+     UINetworkManager::create();
+ 
++#if 0
+     /* Schedule update manager: */
+     UIUpdateManager::schedule();
++#endif
+ #endif /* VBOX_GUI_WITH_NETWORK_MANAGER */
+ 
+ #ifdef RT_OS_LINUX
+@@ -4555,8 +4559,10 @@ void UICommon::cleanup()
+ #endif
+ 
+ #ifdef VBOX_GUI_WITH_NETWORK_MANAGER
++#if 0
+     /* Shutdown update manager: */
+     UIUpdateManager::shutdown();
++#endif
+ 
+     /* Destroy network manager: */
+     UINetworkManager::destroy();
+diff -up VirtualBox-6.1.38/src/VBox/Frontends/VirtualBox/src/manager/UIVirtualBoxManager.cpp.omv~ VirtualBox-6.1.38/src/VBox/Frontends/VirtualBox/src/manager/UIVirtualBoxManager.cpp
+diff -up VirtualBox-6.1.38/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp.omv~ VirtualBox-6.1.38/src/VBox/Frontends/VirtualBox/src/net/UIUpdateManager.cpp
