@@ -36,7 +36,7 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	6.1.38
+Version:	7.0.0
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -71,11 +71,11 @@ Patch2:		virtualbox-6.1.32-python3.11.patch
 # Fix docs to give the right mount command for the in-tree version of vboxsf
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
-Patch5:		vbox-6.1.4-gcc10.patch
+#Patch5:		vbox-6.1.4-gcc10.patch
 # We build the kernel modules in-tree -- adjust the Makefiles to support it
 Patch6:		vbox-6.0.0-kernel-modules-in-tree.patch
 # (tmb) disable update notification (OpenSuSe)
-Patch7:		VirtualBox-4.3.0-noupdate-check.patch
+#Patch7:		VirtualBox-4.3.0-noupdate-check.patch
 # https://git.archlinux.org/svntogit/community.git/plain/trunk/101-vboxsf-automount.patch?h=packages/virtualbox
 Patch8:		101-vboxsf-automount.patch
 
@@ -85,36 +85,37 @@ Patch8:		101-vboxsf-automount.patch
 Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 # Default to a reasonable size in guest additions
 Patch10:	VirtualBox-6.1.12a-default-to-1024x768.patch
-Patch11:	vbox-6.1.10-compile.patch
-Patch12:	vbox-6.1.24-python-syntax.patch
+#Patch11:	vbox-6.1.10-compile.patch
+#Patch12:	vbox-6.1.24-python-syntax.patch
 
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
-Patch23:	VirtualBox-5.0.10-no-bundles.patch
+#Patch23:	VirtualBox-5.0.10-no-bundles.patch
 Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
-Patch25:	fix-vboxadd-xclient.patch
-Patch26:	vbox-6.1.6-firmware-build-python3.9.patch
+#Patch25:	fix-vboxadd-xclient.patch
+#Patch26:	vbox-6.1.6-firmware-build-python3.9.patch
 # "Borrowed" from Debian https://salsa.debian.org/pkg-virtualbox-team/virtualbox/blob/master/debian/patches
 #Patch103:	06-xsession.patch
 Patch104:	07-vboxnetflt-reference.patch
 Patch105:	12-make-module.patch
-Patch107:	16-no-update.patch
+#Patch107:	16-no-update.patch
 Patch108:	18-system-xorg.patch
-Patch109:	27-hide-host-cache-warning.patch
+#Patch109:	27-hide-host-cache-warning.patch
 Patch110:	29-fix-ftbfs-as-needed.patch
 Patch111:	32-disable-guest-version-check.patch
 Patch112:	35-libvdeplug-soname.patch
 # Fixes patch 107
-Patch113:	disable-update-manager-for-real.patch
+#Patch113:	disable-update-manager-for-real.patch
 # (tpg) add support for OpenMandriva
 # (crazy) this should be prepared for upstream..
-Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
+#Patch200:	VirtualBox-add-support-for-OpenMandriva.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
+#Patch203:	vbox-7.0-lzf-linkage.patch
 # From FrugalWare
 #Patch300:	https://gitweb.frugalware.org/frugalware-current/raw/master/source/xapps-extra/virtualbox/fix-EFI-boot.patch
-Patch301:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/firmware-build-fixes.patch
+#Patch301:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/firmware-build-fixes.patch
 ExclusiveArch:	%{x86_64}
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
 BuildRequires:	gcc-c++
@@ -285,6 +286,9 @@ VBOX_PATH_SHARED_LIBS:=%{vboxlibdir}
 VBOX_WITH_RUNPATH:=%{vboxlibdir}
 VBOX_WITH_ORIGIN:=
 VBOX_PATH_APP_PRIVATE:=/usr/share/virtualbox
+# as-needed seems to strip liblzf from VBoxRT.so even though
+# it's needed
+VBOX_LD_as_needed:=
 VBOX_WITH_VNC:=1
 VBOX_WITH_VPX:=1
 VBOX_WITH_LIBOPUS:=1
@@ -294,8 +298,8 @@ SDK_VBOX_LIBPNG_LIBS:=png16
 SDK_VBOX_LIBXML2_LIBS:=xml2
 SDK_VBOX_ZLIB_INCS:=""
 SDK_VBOX_ZLIB_LIBS:=z
-SDK_VBOX_LIBLZF_INCS:=""
-SDK_VBOX_LIBLZF_LIBS:=lzf
+#SDK_VBOX_LZF_INCS:=""
+#SDK_VBOX_LZF_LIBS:=lzf
 SDK_VBOX_OPUS_INCS:=%{_includedir}/opus
 SDK_VBOX_OPUS_LIBS:=opus
 SDK_VBOX_VPX_INCS:=%{_includedir}/vpx
@@ -303,7 +307,8 @@ SDK_VBOX_VPX_LIBS:=vpx
 SDK_VBOX_LIBCURL_INCS:=%{_includedir}/curl
 SDK_VBOX_LIBCURL_LIBS:=curl
 VBOX_WITH_TESTCASES:=0
-VBOX_WITH_PCI_PASSTHROUGH:=1
+# FIXME re-enable when fixed upstream
+#VBOX_WITH_PCI_PASSTHROUGH:=1
 VBOX_WITH_VALIDATIONKIT:=0
 %if %{with java}
 VBOX_JAVA_HOME:=%{java_home}
@@ -355,7 +360,7 @@ echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e '
 echo TOOL_GCC_LDFLAGS="%{ldflags} -fuse-ld=bfd" >> LocalConfig.kmk
 
 # (crazy) /opt is the wrong location
-sed -i -e 's|opt/VirtualBox|usr/share/virtualbox|g' src/VBox/RDP/client-1.8.4/Makefile.kmk
+#sed -i -e 's|opt/VirtualBox|usr/share/virtualbox|g' src/VBox/RDP/client-1.8.4/Makefile.kmk
 
 ./configure \
     --enable-vnc \
@@ -411,7 +416,7 @@ mkdir -p %{buildroot}%{vboxlibdir} %{buildroot}%{vboxdatadir}
 (cd %{buildroot}%{vboxlibdir} && tar xf -)
 # move noarch files to vboxdatadir
 # (crazy) _WHY_ is VBox.sh in datadir? FIXME
-mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,rdesktop-vrdp-keymaps,*.png} %{buildroot}%{vboxdatadir}
+mv %{buildroot}%{vboxlibdir}/{VBox*.sh,nls,*.png} %{buildroot}%{vboxdatadir}
 
 # wipe crap/duplicates
 # (crazy) broken symlink
@@ -641,7 +646,6 @@ done
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/components
 %{vboxlibdir}/*.so
-%{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/UnattendedTemplates
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBalloonCtrl
@@ -654,12 +658,12 @@ done
 %{vboxlibdir}/VBoxManage
 %{vboxlibdir}/VBoxSVC
 %{vboxlibdir}/VBoxTestOGL
-%{vboxlibdir}/VBoxTunctl
 %{vboxlibdir}/VBoxVMMPreload
 %{vboxlibdir}/VBoxXPCOMIPCD
 %{vboxlibdir}/VirtualBox
 %{vboxlibdir}/vboxshell.py
 %{vboxlibdir}/vboximg-mount
+%{vboxlibdir}/VBoxAudioTest
 %if %{with java}
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/webtest
@@ -670,11 +674,9 @@ done
 %{vboxlibdir}/scripts
 %{vboxlibdir}/tools
 %{vboxlibdir}/ExtensionPacks
-%{vboxlibdir}/rdesktop-vrdp
 %{vboxlibdir}/vbox-img
 # this files need proper permission
 %attr(4711,root,root) %{vboxlibdir}/VBoxHeadless
-%attr(4711,root,root) %{vboxlibdir}/VBoxSDL
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetAdpCtl
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetDHCP
 %attr(4711,root,root) %{vboxlibdir}/VBoxNetNAT
@@ -691,6 +693,7 @@ done
 # desktop integration
 %{_iconsdir}/hicolor/*/*/*
 %{_datadir}/applications/%{name}.desktop
+%{_datadir}/applications/virtualboxvm.desktop
 %{_datadir}/mime/packages/virtualbox.xml
 
 %files kernel-module-sources

@@ -1,7 +1,7 @@
-diff -up VirtualBox-6.0.8/src/VBox/Installer/linux/Makefile-header.gmk.0006~ VirtualBox-6.0.8/src/VBox/Installer/linux/Makefile-header.gmk
---- VirtualBox-6.0.8/src/VBox/Installer/linux/Makefile-header.gmk.0006~	2019-05-15 23:28:05.097588379 +0200
-+++ VirtualBox-6.0.8/src/VBox/Installer/linux/Makefile-header.gmk	2019-05-15 23:28:59.191161633 +0200
-@@ -181,17 +181,6 @@ else # neq($(KERNELRELEASE),)
+diff -up VirtualBox-7.0.0/src/VBox/Installer/linux/Makefile-header.gmk.6~ VirtualBox-7.0.0/src/VBox/Installer/linux/Makefile-header.gmk
+--- VirtualBox-7.0.0/src/VBox/Installer/linux/Makefile-header.gmk.6~	2022-10-06 19:11:20.000000000 +0200
++++ VirtualBox-7.0.0/src/VBox/Installer/linux/Makefile-header.gmk	2022-10-12 18:24:11.742328223 +0200
+@@ -245,17 +245,6 @@ else # neq($(KERNELRELEASE),)
   endif
  endif # neq($(KERNELRELEASE),)
  
@@ -19,7 +19,7 @@ diff -up VirtualBox-6.0.8/src/VBox/Installer/linux/Makefile-header.gmk.0006~ Vir
  # For VBOX_GCC_CHECK_CC
  VBOX_CLOSEPAR := )
  VBOX_DOLLAR   := $$
-@@ -208,28 +197,3 @@ VBOX_GCC_CHECK_CC = $(shell \
+@@ -272,30 +261,3 @@ VBOX_GCC_CHECK_CC = $(shell \
           esac; \
      else echo "$(3)"; fi; \
      rm -f /tmp/$(VBOX_DOLLAR)$(VBOX_DOLLAR).check.c; )
@@ -28,10 +28,12 @@ diff -up VirtualBox-6.0.8/src/VBox/Installer/linux/Makefile-header.gmk.0006~ Vir
 -# Guess the module directory ASSUMING that this file is located in that directory.
 -# Note! The special MAKEFILE_LIST variable was introduced in GNU make 3.80.
 -#
--ifdef MAKEFILE_LIST
-- VBOX_MODULE_SRC_DIR := $(dir $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
--else
-- VBOX_MODULE_SRC_DIR := $(CURDIR)/
+-ifndef VBOX_MODULE_SRC_DIR
+- ifdef MAKEFILE_LIST
+-  VBOX_MODULE_SRC_DIR := $(dir $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
+- else
+-  VBOX_MODULE_SRC_DIR := $(CURDIR)/
+- endif
 -endif
 -
 -
