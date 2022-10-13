@@ -112,7 +112,6 @@ Patch112:	35-libvdeplug-soname.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
-#Patch203:	vbox-7.0-lzf-linkage.patch
 # From FrugalWare
 #Patch300:	https://gitweb.frugalware.org/frugalware-current/raw/master/source/xapps-extra/virtualbox/fix-EFI-boot.patch
 #Patch301:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/firmware-build-fixes.patch
@@ -126,6 +125,7 @@ BuildRequires:	gsoap
 BuildRequires:	acpica
 BuildRequires:	yasm
 BuildRequires:	vde2
+BuildRequires:	glslang
 BuildRequires:	pkgconfig(xorg-server)
 %if %{with firmware}
 BuildRequires:	nasm
