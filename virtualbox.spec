@@ -162,6 +162,7 @@ BuildRequires:	pkgconfig(Qt5OpenGL)
 BuildRequires:	pkgconfig(Qt5DBus)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(xcursor)
+BuildRequires:	pkgconfig(xcb)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xmu)
 BuildRequires:	pkgconfig(xorg-server) >= 1.18
@@ -175,6 +176,9 @@ BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
 BuildRequires:	pkgconfig(liblzf)
 BuildRequires:	pkgconfig(libpng)
+BuildRequires:	flex
+BuildRequires:	bison
+BuildRequires:	libxml2-utils
 # FIXME not sure why, but vbox checks if there's a working
 # 32-bit compiler. Probably for the BIOS?
 # But it doesn't use -nostdlib or so, so we need to BR
@@ -287,9 +291,6 @@ VBOX_PATH_SHARED_LIBS:=%{vboxlibdir}
 VBOX_WITH_RUNPATH:=%{vboxlibdir}
 VBOX_WITH_ORIGIN:=
 VBOX_PATH_APP_PRIVATE:=/usr/share/virtualbox
-# as-needed seems to strip liblzf from VBoxRT.so even though
-# it's needed
-VBOX_LD_as_needed:=
 VBOX_WITH_VNC:=1
 VBOX_WITH_VPX:=1
 VBOX_WITH_LIBOPUS:=1
