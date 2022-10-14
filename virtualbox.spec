@@ -124,6 +124,7 @@ BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	acpica
 BuildRequires:	yasm
+BuildRequires:	nasm
 BuildRequires:	vde2
 BuildRequires:	glslang
 BuildRequires:	pkgconfig(xorg-server)
