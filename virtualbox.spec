@@ -36,7 +36,7 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.0.2
+Version:	7.0.4
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -133,6 +133,7 @@ BuildRequires:	nasm
 %endif
 %if %{with java}
 BuildRequires:	jdk-current
+BuildRequires:	java-18-openjdk-module-java.logging
 BuildRequires:	javax.activation
 BuildRequires:	javax.xml.bind
 %endif
@@ -316,7 +317,7 @@ VBOX_WITH_TESTCASES:=0
 #VBOX_WITH_PCI_PASSTHROUGH:=1
 VBOX_WITH_VALIDATIONKIT:=0
 %if %{with java}
-VBOX_JAVA_HOME:=%{java_home}
+VBOX_JAVA_HOME:=${JAVA_HOME}
 %else
 VBOX_JAVA_HOME:=
 %endif
@@ -337,6 +338,9 @@ VBOX_PRODUCT=VirtualBox
 %if %{with firmware}
 VBOX_EFI_FIRMWARE_EFI_MODULES_KMK_INCLUDED := 0
 %endif
+VBOX_WITH_VBOX_IMG := 1
+VBOX_WITH_VBOXIMGMOUNT := 1
+VBOX_WITH_VBOXSDL := 1
 EOF
 
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
@@ -526,8 +530,8 @@ install -m755 src/VBox/Additions/x11/Installer/98vboxadd-xclient %{buildroot}%{_
 install -m644 src/VBox/Additions/x11/Installer/vboxclient.desktop %{buildroot}%{_sysconfdir}/xdg/autostart/vboxclient.desktop
 
 cd out/%{vbox_platform}/release/bin/additions
-  install -d %{buildroot}/sbin %{buildroot}%{_sbindir}  %{buildroot}%{_unitdir}
-  install -m755 mount.vboxsf %{buildroot}/sbin/mount.vboxsf
+  install -d %{buildroot}%{_sbindir}  %{buildroot}%{_unitdir}
+  install -m755 mount.vboxsf %{buildroot}%{_sbindir}/
   install -m755 VBoxService %{buildroot}%{_sbindir}
   install -m755 VBoxClient %{buildroot}%{_bindir}
   install -m755 VBoxControl %{buildroot}%{_bindir}
@@ -559,8 +563,7 @@ EOF
 cd -
 
 # install PAM module:
-install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}/%{_lib}/security/pam_vbox.so
-
+install -D -m755 out/%{vbox_platform}/release/bin/additions/pam_vbox.so %{buildroot}%{_libdir}/security/pam_vbox.so
 %endif
 
 # install mime types
@@ -598,13 +601,13 @@ install -m644 -D %{SOURCE3} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 %if %{with additions}
 # Replace the vboxsf mount wrapper with one that works for
 # the in-tree version of the kernel module
-mkdir -p %{buildroot}/sbin
-cat >%{buildroot}/sbin/mount.vboxsf <<'EOF'
+mkdir -p %{buildroot}%{_sbindir}
+cat >%{buildroot}%{_sbindir}/mount.vboxsf <<'EOF'
 #!/bin/bash
 name=${1#$PWD/}; shift
 exec /bin/mount -cit vboxsf "$name" "$@"
 EOF
-chmod 0755 %{buildroot}/sbin/mount.vboxsf
+chmod 0755 %{buildroot}%{_sbindir}/mount.vboxsf
 %endif
 
 %post
@@ -661,6 +664,7 @@ done
 %{vboxlibdir}/VBoxEFI64.fd
 %{vboxlibdir}/VBoxExtPackHelperApp
 %{vboxlibdir}/VBoxManage
+%{vboxlibdir}/VBoxSDL
 %{vboxlibdir}/VBoxSVC
 %{vboxlibdir}/VBoxTestOGL
 %{vboxlibdir}/VBoxVMMPreload
@@ -706,8 +710,8 @@ done
 
 %if %{with additions}
 %files guest-additions
-/%{_lib}/security/pam_vbox.so
-/sbin/mount.vboxsf
+%{_libdir}/security/pam_vbox.so
+%{_sbindir}/mount.vboxsf
 %{_presetdir}/86-virtualbox-guest-additions.preset
 %{_unitdir}/vboxadd.service
 %{_unitdir}/vboxdrmclient.service
