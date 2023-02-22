@@ -1,15 +1,20 @@
-Description: Disable notifications about outdated guest additions.
-Author: Felix Geyer <fgeyer@debian.org>
-
-Index: virtualbox/src/VBox/Additions/x11/VBoxClient/hostversion.cpp
-===================================================================
---- virtualbox.orig/src/VBox/Additions/x11/VBoxClient/hostversion.cpp
-+++ virtualbox/src/VBox/Additions/x11/VBoxClient/hostversion.cpp
-@@ -45,6 +45,7 @@
+diff -up VirtualBox-7.0.6/src/VBox/Additions/x11/VBoxClient/hostversion.cpp.17~ VirtualBox-7.0.6/src/VBox/Additions/x11/VBoxClient/hostversion.cpp
+--- VirtualBox-7.0.6/src/VBox/Additions/x11/VBoxClient/hostversion.cpp.17~	2023-02-22 01:51:18.759134777 +0100
++++ VirtualBox-7.0.6/src/VBox/Additions/x11/VBoxClient/hostversion.cpp	2023-02-22 02:04:47.728062300 +0100
+@@ -94,13 +94,13 @@ static DECLCALLBACK(int) vbclHostVerWork
+ * Guest Additions.  Distributors are encouraged to customise this. */
+             RTStrPrintf(szMsg, sizeof(szMsg), "Your virtual machine is currently running the Guest Additions version %s. Since you are running a version of the Guest Additions provided by the operating system you installed in the virtual machine we recommend that you update it to at least version %s using that system's update features, or alternatively that you remove this version and then install the " VBOX_VENDOR_SHORT " Guest Additions package using the install option from the Devices menu. Please consult the documentation for the operating system you are running to find out how to update or remove the current Guest Additions package.", pszGuestVersion, pszHostVersion);
+ # endif /* VBOX_OSE */
++#if 0
+             rc = VBClShowNotify(szTitle, szMsg);
++#endif
+         }
  
- static int showNotify(const char *pszHeader, const char *pszBody)
- {
-+    return VINF_SUCCESS;
-     int rc;
- # ifdef VBOX_WITH_DBUS
-     DBusConnection *conn;
+         /* Store host version to not notify again */
+-        int rc2 = VbglR3HostVersionLastCheckedStore(uGuestPropSvcClientID, pszHostVersion);
+-        if (RT_SUCCESS(rc))
+-            rc = rc2;
++        rc = VbglR3HostVersionLastCheckedStore(uGuestPropSvcClientID, pszHostVersion);
+ 
+         VbglR3GuestPropReadValueFree(pszHostVersion);
+         VbglR3GuestPropReadValueFree(pszGuestVersion);

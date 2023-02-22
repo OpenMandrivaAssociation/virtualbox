@@ -36,7 +36,7 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.0.4
+Version:	7.0.6
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -366,7 +366,7 @@ echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e '
 %else
 echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
 %endif
-echo TOOL_GCC_LDFLAGS="%{ldflags} -fuse-ld=bfd" >> LocalConfig.kmk
+echo TOOL_GCC_LDFLAGS="%{build_ldflags} -fuse-ld=bfd" >> LocalConfig.kmk
 
 # (crazy) /opt is the wrong location
 #sed -i -e 's|opt/VirtualBox|usr/share/virtualbox|g' src/VBox/RDP/client-1.8.4/Makefile.kmk
