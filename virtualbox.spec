@@ -362,9 +362,9 @@ export LIBPATH_LIB="%{_lib}"
 
 # remove fPIC to avoid causing issues
 %if %{with clang}
-echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -rtlib=libgcc" >> LocalConfig.kmk
+echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -rtlib=libgcc" >> LocalConfig.kmk
 %else
-echo VBOX_GCC_OPT="$(echo %{optflags} $(pkg-config --cflags pixman-1) | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
+echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
 %endif
 echo TOOL_GCC_LDFLAGS="%{build_ldflags} -fuse-ld=bfd" >> LocalConfig.kmk
 
