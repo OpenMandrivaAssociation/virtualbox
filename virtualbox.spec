@@ -22,6 +22,9 @@
 # error: Missing # define COM __gnu_lto_v1
 %define _disable_lto 1
 
+# (tpg) reduce the opt flags, especially for znver1
+%global optflags %{optflags} -Os
+
 %bcond_with java
 %bcond_with clang
 %bcond_with docs
@@ -118,13 +121,12 @@ Patch202:	vbox-6.0.6-find-java-modules.patch
 ExclusiveArch:	%{x86_64}
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
 BuildRequires:	gcc-c++
-BuildRequires:	systemd-macros
+BuildRequires:	systemd-rpm-macros
 BuildRequires:	dev86
 BuildRequires:	gawk
 BuildRequires:	gsoap
 BuildRequires:	acpica
 BuildRequires:	yasm
-BuildRequires:	nasm
 BuildRequires:	vde2
 BuildRequires:	glslang
 BuildRequires:	pkgconfig(xorg-server)
@@ -313,6 +315,7 @@ SDK_VBOX_VPX_LIBS:=vpx
 SDK_VBOX_LIBCURL_INCS:=%{_includedir}/curl
 SDK_VBOX_LIBCURL_LIBS:=curl
 VBOX_WITH_TESTCASES:=0
+VBOX_WITH_TESTSUITE:=0
 # FIXME re-enable when fixed upstream
 #VBOX_WITH_PCI_PASSTHROUGH:=1
 VBOX_WITH_VALIDATIONKIT:=0
