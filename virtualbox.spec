@@ -365,7 +365,7 @@ export LIBPATH_LIB="%{_lib}"
 
 # remove fPIC to avoid causing issues
 %if %{with clang}
-echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -rtlib=libgcc" >> LocalConfig.kmk
+echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -isystem %{_libdir}/gcc/x86_64-openmandriva-linux-gnu/12.2.0/include -rtlib=libgcc" >> LocalConfig.kmk
 %else
 echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
 %endif
@@ -400,9 +400,9 @@ export PATH=$PWD/BFD:$PATH
 	rm src/VBox/Devices/EFI/FirmwareBin/*
 	cd src/VBox/Devices/EFI/Firmware
 	. ./edksetup.sh
-	cd CryptoPkg/Library/OpensslLib/openssl
-	tar x --strip-components=1 -f %{S:50}
-	cd ..
+	cd CryptoPkg/Library/OpensslLib
+	tar xf %{S:50}
+	mv openssl-1* openssl
 	perl process_files.pl
 	cd ../../..
 	kmk
