@@ -40,7 +40,7 @@ Name:		virtualbox
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	7.0.6
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
