@@ -1,11 +1,12 @@
---- a/src/VBox/Main/webservice/Makefile.kmk.orig	2013-05-13 18:43:42.492674768 +0100
-+++ b/src/VBox/Main/webservice/Makefile.kmk	2013-05-13 18:43:51.484674243 +0100
-@@ -650,7 +650,7 @@
- 		$(RECOMPILE_ON_MAKEFILE_CURRENT) | $$(dir $$@)
+diff -up VirtualBox-7.0.8/src/VBox/Main/webservice/Makefile.kmk.10~ VirtualBox-7.0.8/src/VBox/Main/webservice/Makefile.kmk
+--- VirtualBox-7.0.8/src/VBox/Main/webservice/Makefile.kmk.10~	2023-04-20 20:42:56.947946069 +0200
++++ VirtualBox-7.0.8/src/VBox/Main/webservice/Makefile.kmk	2023-04-20 20:45:08.118120834 +0200
+@@ -848,7 +848,7 @@ ifdef VBOX_GSOAP_INSTALLED
+  		$(RECOMPILE_ON_MAKEFILE_CURRENT) | $$(dir $$@)
  	$(call MSG_GENERATE,,lots of files,$(GSOAPH_RELEVANT))
  	$(RM) -f $@
 -	$(REDIRECT) -C $(VBOXWEB_OUT_DIR) -- $(VBOX_SOAPCPP2) $(VBOXWEB_SOAPCPP2_SKIP_FILES) -L -2 -w -I$(VBOX_PATH_GSOAP_IMPORT) $(GSOAPH_RELEVANT)
 +	$(REDIRECT) -C $(VBOXWEB_OUT_DIR) -- $(VBOX_SOAPCPP2) $(VBOXWEB_SOAPCPP2_SKIP_FILES) -z1 -L -2 -w -I$(VBOX_PATH_GSOAP_IMPORT) $(GSOAPH_RELEVANT)
- ifeq ($(KBUILD_TARGET),win) # MSC -Wall workaround.
+  ifeq ($(KBUILD_TARGET),win) # MSC -Wall workaround.
  	$(CP) -f "$(VBOXWEB_SOAP_CLIENT_H)" "$(VBOXWEB_SOAP_CLIENT_H).tmp"
  	$(SED) -f $(VBOX_PATH_WEBSERVICE)/stdsoap2.sed --output "$(VBOXWEB_SOAP_CLIENT_H)" "$(VBOXWEB_SOAP_CLIENT_H).tmp"

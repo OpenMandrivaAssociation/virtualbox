@@ -1,0 +1,11 @@
+diff -up VirtualBox-7.0.8/src/libs/dxvk-native-1.9.2a/src/util/util_bit.h.omv~ VirtualBox-7.0.8/src/libs/dxvk-native-1.9.2a/src/util/util_bit.h
+--- VirtualBox-7.0.8/src/libs/dxvk-native-1.9.2a/src/util/util_bit.h.omv~	2023-04-25 18:02:48.709831851 +0200
++++ VirtualBox-7.0.8/src/libs/dxvk-native-1.9.2a/src/util/util_bit.h	2023-04-25 18:02:58.378894612 +0200
+@@ -16,6 +16,7 @@
+ #include "util_likely.h"
+ #include "util_math.h"
+ 
++#include <cstdint>
+ #include <cstring>
+ #include <iterator>
+ #include <type_traits>

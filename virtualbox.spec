@@ -32,15 +32,15 @@
 ## (crazy) fixem that is always true these days
 %bcond_without additions
 %bcond_without vnc_ext_pack
-%bcond_with firmware
+%bcond_without firmware
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.0.6
-Release:	3
+Version:	7.0.8a
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -74,7 +74,7 @@ Patch2:		virtualbox-6.1.32-python3.11.patch
 # Fix docs to give the right mount command for the in-tree version of vboxsf
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
-#Patch5:		vbox-6.1.4-gcc10.patch
+Patch5:		virtualbox-7.0.8-libstdc++13.patch
 # We build the kernel modules in-tree -- adjust the Makefiles to support it
 Patch6:		vbox-6.0.0-kernel-modules-in-tree.patch
 # (tmb) disable update notification (OpenSuSe)
@@ -357,7 +357,7 @@ sed -i -e 's,-mpreferred-stack-boundary=2,,g' Config.kmk src/VBox/Devices/PC/ipx
 #sed -i -e 's#-fpermissive##g' -e 's#-finline-limit=8000##g' Config.kmk
 
 %build
-# FIXME: gold linker dies with internal error in segment_precedes, at ../../gold/layout.cc:3250
+# FIXME: lld: src/VBox/Devices/PC/ipxe/src/arch/x86/scripts/pcbios.lds:267: at least one side of the expression must be absolute
 mkdir -p BFD
 ln -sf /usr/bin/ld.bfd BFD/ld
 export PATH=$PWD/BFD:$PATH
@@ -365,7 +365,7 @@ export LIBPATH_LIB="%{_lib}"
 
 # remove fPIC to avoid causing issues
 %if %{with clang}
-echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -isystem %{_libdir}/gcc/x86_64-openmandriva-linux-gnu/12.2.0/include -rtlib=libgcc" >> LocalConfig.kmk
+echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -isystem %{_libdir}/gcc/x86_64-openmandriva-linux-gnu/13.1.0/include -rtlib=libgcc" >> LocalConfig.kmk
 %else
 echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
 %endif
@@ -657,6 +657,7 @@ done
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/components
 %{vboxlibdir}/*.so
+%{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/UnattendedTemplates
 %{vboxlibdir}/VBoxAutostart
 %{vboxlibdir}/VBoxBalloonCtrl
@@ -727,7 +728,6 @@ done
 %{_udevrulesdir}/vbox-additions.rules
 %{_sysconfdir}/xdg/autostart/*
 %{_sysconfdir}/modules-load.d/vbox-guest-additions.conf
-
 
 %files guest-kernel-module-sources
 %{_usr}/src/vbox*-%{version}-%{release}

@@ -1,12 +1,12 @@
-Fix FTBFS by not compile X.org-1.19 drv, we don't use it, just need in el <= 7
---- ./src/VBox/Additions/x11/vboxvideo/Makefile.kmk.orig	2016-10-11 02:49:23.184986182 +0100
-+++ ./src/VBox/Additions/x11/vboxvideo/Makefile.kmk	2016-10-11 02:49:39.879176964 +0100
-@@ -376,7 +376,7 @@ vboxvideo_drv_118_SOURCES := $(vboxvideo
+diff -up VirtualBox-7.0.8/src/VBox/Additions/x11/vboxvideo/Makefile.kmk.12~ VirtualBox-7.0.8/src/VBox/Additions/x11/vboxvideo/Makefile.kmk
+--- VirtualBox-7.0.8/src/VBox/Additions/x11/vboxvideo/Makefile.kmk.12~	2023-04-20 20:49:29.676339991 +0200
++++ VirtualBox-7.0.8/src/VBox/Additions/x11/vboxvideo/Makefile.kmk	2023-04-20 21:01:47.691147821 +0200
+@@ -406,7 +406,7 @@ vboxvideo_drv_118_LIBS += $(vboxvideo_dr
  
  ifdef VBOX_USE_SYSTEM_XORG_HEADERS
   # Build using local X.Org headers.  We assume X.Org Server 1.7 or later.
 - DLLS    := $(filter-out vboxvideo_drv_%,$(DLLS)) vboxvideo_drv_system
 + DLLS    := $(filter-out vboxvideo_drv_%,$(DLLS))
   SYSMODS := $(filter-out vboxvideo_drv%,$(SYSMODS))
-  vboxvideo_drv_system_TEMPLATE = VBOXGUESTR3XORGMOD
+  vboxvideo_drv_system_TEMPLATE = VBoxGuestR3XOrgMod
   vboxvideo_drv_system_CFLAGS := \

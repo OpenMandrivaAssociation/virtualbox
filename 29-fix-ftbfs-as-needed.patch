@@ -1,16 +1,12 @@
-Description: Fix FTBFS with ld --as-needed.
-Origin: vendor, http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/app-emulation/virtualbox/files/virtualbox-4.1.4-asneeded.patch?revision=1.2&view=markup
-
-Index: virtualbox/Config.kmk
-===================================================================
---- virtualbox.orig/Config.kmk	2015-04-02 15:46:59.611743003 +0200
-+++ virtualbox/Config.kmk	2015-04-02 15:46:59.611743003 +0200
-@@ -6409,7 +6409,7 @@
- TEMPLATE_VBoxBldProg_LDFLAGS.amd64       = -m64
- TEMPLATE_VBoxBldProg_LDFLAGS.sparc64     = -m64
-  ifeq ($(KBUILD_HOST),linux)
--TEMPLATE_VBoxBldProg_LIBS                = pthread m rt dl
-+TEMPLATE_VBoxBldProg_LIBS                = pthread m rt dl crypt
-  else ifeq ($(KBUILD_HOST),os2)
- TEMPLATE_VBoxBldProg_TOOL                = GXX3OMF
- TEMPLATE_VBoxBldProg_LIBS                = socket iconv
+diff -up VirtualBox-7.0.8/Config.kmk.16~ VirtualBox-7.0.8/Config.kmk
+--- VirtualBox-7.0.8/Config.kmk.16~	2023-04-20 21:30:49.010417755 +0200
++++ VirtualBox-7.0.8/Config.kmk	2023-04-20 21:32:25.612330016 +0200
+@@ -6264,7 +6264,7 @@ else # the gcc guys
+  TEMPLATE_VBoxR3Exe_LDFLAGS.solaris    = -Wl,-z,ignore # same as VBOX_LD_as_needed
+ 
+  ifeq ($(KBUILD_TARGET),linux)
+-  TEMPLATE_VBoxR3Exe_LIBS              = pthread m rt dl
++  TEMPLATE_VBoxR3Exe_LIBS              = pthread m rt dl crypt
+  else ifeq ($(KBUILD_TARGET),os2)
+   TEMPLATE_VBoxR3Exe_TOOL              = GXX3OMF
+   TEMPLATE_VBoxR3Exe_LIBS              = socket iconv

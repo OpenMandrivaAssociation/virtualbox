@@ -1,16 +1,16 @@
-diff -up VirtualBox-6.0.0/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk.0108~ VirtualBox-6.0.0/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk
---- VirtualBox-6.0.0/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk.0108~	2018-12-19 00:23:11.145158830 +0100
-+++ VirtualBox-6.0.0/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk	2018-12-19 00:26:13.714950398 +0100
-@@ -38,18 +38,6 @@ endif
+diff -up VirtualBox-7.0.8/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk.15~ VirtualBox-7.0.8/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk
+--- VirtualBox-7.0.8/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk.15~	2023-04-20 21:02:59.080692158 +0200
++++ VirtualBox-7.0.8/src/VBox/Additions/common/VBoxGuest/lib/Makefile.kmk	2023-04-20 21:29:53.776886999 +0200
+@@ -50,18 +50,6 @@ endif
  LIBRARIES += \
  	VBoxGuestR3Lib \
  	VBoxGuestR3LibShared
 -ifndef VBOX_ONLY_VALIDATIONKIT
 - if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd)
-- ifndef VBOX_USE_SYSTEM_XORG_HEADERS
--  LIBRARIES += \
--  	VBoxGuestR3LibXFree86
-- endif
+-  ifndef VBOX_USE_SYSTEM_XORG_HEADERS
+-   LIBRARIES += \
+-   	VBoxGuestR3LibXFree86
+-  endif
 - endif
 - if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris)
 -  LIBRARIES += \
