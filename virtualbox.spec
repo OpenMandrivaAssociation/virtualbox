@@ -166,6 +166,7 @@ BuildRequires:	pkgconfig(Qt5OpenGL)
 BuildRequires:	pkgconfig(Qt5DBus)
 BuildRequires:	pkgconfig(Qt5Xml)
 BuildRequires:	pkgconfig(Qt5Help)
+BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(sdl2)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xcb)
@@ -182,7 +183,6 @@ BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
 BuildRequires:	pkgconfig(liblzf)
 BuildRequires:	pkgconfig(libpng)
-BuildRequires:	pkgconfig(libtpms)
 BuildRequires:	flex
 BuildRequires:	bison
 BuildRequires:	libxml2-utils
