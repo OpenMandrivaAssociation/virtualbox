@@ -182,6 +182,7 @@ BuildRequires:	pkgconfig(devmapper)
 BuildRequires:	pkgconfig(vpx)
 BuildRequires:	pkgconfig(liblzf)
 BuildRequires:	pkgconfig(libpng)
+BuildRequires:	pkgconfig(libtpms)
 BuildRequires:	flex
 BuildRequires:	bison
 BuildRequires:	libxml2-utils
