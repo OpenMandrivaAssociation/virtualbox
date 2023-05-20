@@ -34,17 +34,23 @@
 %bcond_without vnc_ext_pack
 %bcond_without firmware
 
+%define svn 20230520
+
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.0.8a
-Release:	2
+Version:	7.0.8b
+Release:	%{?svn:0.%{svn}.}1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
+%if 0%{?svn:1}
+Source0:	VirtualBox-%{svn}.tar.xz
+%else
 Source0:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')/%{srcname}.tar.bz2
+%endif
 Source1:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')/UserManual.pdf
 Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
@@ -70,7 +76,6 @@ Source100:	virtualbox.rpmlintrc
 Patch0:		VirtualBox-6.1.2-revert-removal-of-vital-symbols.patch
 # Update docs on kernel modules
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
-Patch2:		virtualbox-6.1.32-python3.11.patch
 # Fix docs to give the right mount command for the in-tree version of vboxsf
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
@@ -268,7 +273,7 @@ This package contains the user manual PDF file for %{name}.
 %endif
 
 %prep
-%autosetup -p1 -n %(echo %{distname} |sed -e 's,[a-z]*$,,')
+%autosetup -p1 -n %{?svn:VirtualBox-%{svn}}%{!?svn:%(echo %{distname} |sed -e 's,[a-z]*$,,')}
 
 %if %{with java}
 . %{_sysconfdir}/profile.d/90java.sh
