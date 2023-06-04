@@ -1,9 +1,10 @@
---- VirtualBox-5.2.0/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp.0022~	2017-10-18 09:06:44.000000000 +0200
-+++ VirtualBox-5.2.0/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp	2017-10-31 13:31:27.646597617 +0100
-@@ -36,16 +36,14 @@
- #if defined(VBOX_VBGLR3_XFREE86)
- extern "C" {
- # define XFree86LOADER
+diff -up VirtualBox-20230604/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp.11~ VirtualBox-20230604/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp
+--- VirtualBox-20230604/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp.11~	2023-06-04 19:08:18.686004485 +0200
++++ VirtualBox-20230604/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp	2023-06-04 19:09:43.793831246 +0200
+@@ -49,16 +49,14 @@ extern "C" {
+ # if RT_GNUC_PREREQ(13,0) /* cmath gets dragged in and the c++/13/cmath header is allergic to -ffreestanding.  */
+ #  define _GLIBCXX_INCLUDE_NEXT_C_HEADERS
+ # endif
 -# include <xf86_ansic.h>
  # undef size_t
  }
@@ -22,9 +23,10 @@
  
  RTDECL(void)    RTAssertMsg1Weak(const char *pszExpr, unsigned uLine, const char *pszFile, const char *pszFunction)
  {
---- VirtualBox-5.2.0/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h.0022~	2017-10-18 09:06:50.000000000 +0200
-+++ VirtualBox-5.2.0/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h	2017-10-31 13:36:20.635971573 +0100
-@@ -52,7 +52,7 @@ RT_C_DECLS_BEGIN
+diff -up VirtualBox-20230604/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h.11~ VirtualBox-20230604/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h
+--- VirtualBox-20230604/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h.11~	2023-01-17 15:15:46.000000000 +0100
++++ VirtualBox-20230604/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h	2023-06-04 19:08:18.686004485 +0200
+@@ -59,7 +59,7 @@ RT_C_DECLS_BEGIN
  RT_C_DECLS_END
  #endif  /* defined(IN_XF86_MODULE) && !defined(NO_ANSIC) */
  #define __STDC_LIMIT_MACROS  /* define *INT*_MAX on C++ too. */

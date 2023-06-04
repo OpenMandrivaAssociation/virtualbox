@@ -34,7 +34,7 @@
 %bcond_without vnc_ext_pack
 %bcond_without firmware
 
-%define svn 20230520
+%define svn 20230604
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
@@ -676,7 +676,6 @@ done
 %{vboxlibdir}/VBoxManage
 %{vboxlibdir}/VBoxSDL
 %{vboxlibdir}/VBoxSVC
-%{vboxlibdir}/VBoxTestOGL
 %{vboxlibdir}/VBoxVMMPreload
 %{vboxlibdir}/VBoxXPCOMIPCD
 %{vboxlibdir}/VirtualBox
