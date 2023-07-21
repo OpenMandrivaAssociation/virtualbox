@@ -34,14 +34,14 @@
 %bcond_without vnc_ext_pack
 %bcond_without firmware
 
-%define svn 20230604
+#define svn 20230604
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
-# kernel-release AND kernel-rc PACKAGES TO MAKE SURE MODULES
+# kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.0.8b
+Version:	7.0.10
 Release:	%{?svn:0.%{svn}.}1
 License:	GPLv2
 Group:		Emulators
@@ -682,6 +682,7 @@ done
 %{vboxlibdir}/vboxshell.py
 %{vboxlibdir}/vboximg-mount
 %{vboxlibdir}/VBoxAudioTest
+%{vboxlibdir}/VBoxTestOGL
 %if %{with java}
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/webtest

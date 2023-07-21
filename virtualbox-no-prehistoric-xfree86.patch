@@ -1,31 +1,33 @@
-diff -up VirtualBox-20230604/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp.11~ VirtualBox-20230604/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp
---- VirtualBox-20230604/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp.11~	2023-06-04 19:08:18.686004485 +0200
-+++ VirtualBox-20230604/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp	2023-06-04 19:09:43.793831246 +0200
-@@ -49,16 +49,14 @@ extern "C" {
- # if RT_GNUC_PREREQ(13,0) /* cmath gets dragged in and the c++/13/cmath header is allergic to -ffreestanding.  */
- #  define _GLIBCXX_INCLUDE_NEXT_C_HEADERS
- # endif
+diff -up VirtualBox-7.0.10/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp.11~ VirtualBox-7.0.10/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp
+--- VirtualBox-7.0.10/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp.11~	2023-07-21 11:44:15.102246840 +0200
++++ VirtualBox-7.0.10/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibRuntimeXF86.cpp	2023-07-21 11:45:24.941892105 +0200
+@@ -43,19 +43,11 @@
+ #include <iprt/assert.h>
+ #include <iprt/log.h>
+ #include <iprt/mem.h>
+-#if defined(VBOX_VBGLR3_XFREE86)
+-extern "C" {
+-# define XFree86LOADER
 -# include <xf86_ansic.h>
- # undef size_t
- }
+-# undef size_t
+-}
 -#else
 -# include <stdarg.h>
 -# include <stdlib.h>
 -# define xalloc malloc
 -# define xfree free
--extern "C" void ErrorF(const char *f, ...);
- #endif
 +#include <stdarg.h>
 +#include <stdlib.h>
 +#define xalloc malloc
 +#define xfree free
-+extern "C" void ErrorF(const char *f, ...);
+ extern "C" void ErrorF(const char *f, ...);
+-#endif
  
  RTDECL(void)    RTAssertMsg1Weak(const char *pszExpr, unsigned uLine, const char *pszFile, const char *pszFunction)
  {
-diff -up VirtualBox-20230604/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h.11~ VirtualBox-20230604/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h
---- VirtualBox-20230604/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h.11~	2023-01-17 15:15:46.000000000 +0100
-+++ VirtualBox-20230604/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h	2023-06-04 19:08:18.686004485 +0200
+diff -up VirtualBox-7.0.10/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h.11~ VirtualBox-7.0.10/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h
+--- VirtualBox-7.0.10/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h.11~	2023-07-12 18:28:48.000000000 +0200
++++ VirtualBox-7.0.10/src/VBox/Additions/x11/vboxvideo/VBoxVideoIPRT.h	2023-07-21 11:44:15.103246850 +0200
 @@ -59,7 +59,7 @@ RT_C_DECLS_BEGIN
  RT_C_DECLS_END
  #endif  /* defined(IN_XF86_MODULE) && !defined(NO_ANSIC) */
