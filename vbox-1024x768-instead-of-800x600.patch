@@ -1,0 +1,15 @@
+diff -up VirtualBox-7.0.10/src/VBox/Frontends/VirtualBox/src/runtime/UIMachineView.cpp.omv~ VirtualBox-7.0.10/src/VBox/Frontends/VirtualBox/src/runtime/UIMachineView.cpp
+--- VirtualBox-7.0.10/src/VBox/Frontends/VirtualBox/src/runtime/UIMachineView.cpp.omv~	2023-08-05 16:03:13.612168524 +0200
++++ VirtualBox-7.0.10/src/VBox/Frontends/VirtualBox/src/runtime/UIMachineView.cpp	2023-08-05 16:04:35.160982097 +0200
+@@ -896,9 +896,9 @@ void UIMachineView::sltHandleActionTrigg
+     {
+         /* Defaults: */
+         if (!uWidth)
+-            uWidth = 800;
++            uWidth = 1024;
+         if (!uHeight)
+-            uHeight = 600;
++            uHeight = 768;
+ 
+         /* Update current window size limitations: */
+         setMaximumGuestSize(QSize(uWidth, uHeight));

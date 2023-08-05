@@ -42,7 +42,7 @@ Name:		virtualbox
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	7.0.10
-Release:	%{?svn:0.%{svn}.}1
+Release:	%{?svn:0.%{svn}.}2
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -76,6 +76,8 @@ Source100:	virtualbox.rpmlintrc
 Patch0:		VirtualBox-6.1.2-revert-removal-of-vital-symbols.patch
 # Update docs on kernel modules
 Patch1:		virtualbox-fix-modules-rebuild-command.patch
+# 800x600 is too small to see the entire OM installer...
+Patch2:		vbox-1024x768-instead-of-800x600.patch
 # Fix docs to give the right mount command for the in-tree version of vboxsf
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
