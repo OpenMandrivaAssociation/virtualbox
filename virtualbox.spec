@@ -42,7 +42,7 @@ Name:		virtualbox
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	7.0.10
-Release:	%{?svn:0.%{svn}.}2
+Release:	%{?svn:0.%{svn}.}3
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
@@ -208,6 +208,8 @@ Suggests:	%{name}-doc
 Requires(post,preun,postun):	rpm-helper
 #Requires:	kmod(vboxdrv) = %{version}
 Conflicts:	dkms-%{name} < 5.0.24-1
+
+BuildRequires:	rpm-helper
 
 # Force kernel-headers from the release package - kernel-rc headers cause
 # /usr/include/linux/usbdevice_fs.h:134:41: error: flexible array member 'usbdevfs_urb::iso_frame_desc' not at end of 'struct USBPROXYURBLNX'
