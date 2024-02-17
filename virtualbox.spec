@@ -139,6 +139,7 @@ BuildRequires:	yasm
 BuildRequires:	vde2
 BuildRequires:	glslang
 BuildRequires:	pkgconfig(xorg-server)
+BuildRequires:	which
 %if %{with firmware}
 BuildRequires:	nasm
 %endif
