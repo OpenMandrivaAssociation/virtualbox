@@ -1,3 +1,4 @@
+%define beta BETA1
 %define kname vboxdrv
 %define oname VirtualBox
 %define srcname %{oname}-%{version}%{?beta:_%{beta}}
@@ -32,7 +33,7 @@
 ## (crazy) fixem that is always true these days
 %bcond_without additions
 %bcond_without vnc_ext_pack
-%bcond_without firmware
+%bcond_with firmware
 
 #define svn 20230604
 
@@ -41,17 +42,17 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.0.18
-Release:	%{?svn:0.%{svn}.}1
+Version:	7.1.0
+Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}1
 License:	GPLv2
 Group:		Emulators
 Url:		http://www.virtualbox.org/
 %if 0%{?svn:1}
 Source0:	VirtualBox-%{svn}.tar.xz
 %else
-Source0:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')/%{srcname}.tar.bz2
+Source0:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')%{?beta:_%{beta}}/%{srcname}.tar.bz2
 %endif
-Source1:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')/UserManual.pdf
+Source1:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')%{?beta:_%{beta}}/UserManual.pdf
 Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
@@ -81,7 +82,7 @@ Patch2:		vbox-1024x768-instead-of-800x600.patch
 # Fix docs to give the right mount command for the in-tree version of vboxsf
 Patch3:		VirtualBox-4.1.8-futex.patch
 Patch4:		virtualbox-fix-vboxadd-req.patch
-Patch5:		virtualbox-7.0.8-libstdc++13.patch
+#Patch5:		virtualbox-7.0.8-libstdc++13.patch
 # We build the kernel modules in-tree -- adjust the Makefiles to support it
 Patch6:		vbox-6.0.0-kernel-modules-in-tree.patch
 # (tmb) disable update notification (OpenSuSe)
@@ -163,17 +164,16 @@ BuildRequires:	pkgconfig(libIDL-2.0)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(libvncserver)
 BuildRequires:	pkgconfig(python)
-BuildRequires:	qt5-qttools
-BuildRequires:	qt5-linguist-tools
-BuildRequires:	pkgconfig(Qt5Core)
-BuildRequires:	pkgconfig(Qt5Gui)
-BuildRequires:	pkgconfig(Qt5Widgets)
-BuildRequires:	pkgconfig(Qt5X11Extras)
-BuildRequires:	pkgconfig(Qt5PrintSupport)
-BuildRequires:	pkgconfig(Qt5OpenGL)
-BuildRequires:	pkgconfig(Qt5DBus)
-BuildRequires:	pkgconfig(Qt5Xml)
-BuildRequires:	pkgconfig(Qt5Help)
+BuildRequires:	qt6-qttools
+BuildRequires:	qt6-qttools-linguist-tools
+BuildRequires:	pkgconfig(Qt6Core)
+BuildRequires:	pkgconfig(Qt6Gui)
+BuildRequires:	pkgconfig(Qt6Widgets)
+BuildRequires:	pkgconfig(Qt6PrintSupport)
+BuildRequires:	pkgconfig(Qt6OpenGL)
+BuildRequires:	pkgconfig(Qt6DBus)
+BuildRequires:	pkgconfig(Qt6Xml)
+BuildRequires:	pkgconfig(Qt6Help)
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(sdl2)
 BuildRequires:	pkgconfig(xcursor)
@@ -355,7 +355,11 @@ VBOX_EFI_FIRMWARE_EFI_MODULES_KMK_INCLUDED := 0
 VBOX_WITH_VBOX_IMG := 1
 VBOX_WITH_VBOXIMGMOUNT := 1
 VBOX_WITH_VBOXSDL := 1
+VBOX_GCC_WERR:=
 EOF
+
+# vbox code is dirty as ****, but tries to force -Werror...
+sed -i -e 's,-Werror$,,;s,-Werror ,,g' Config.kmk src/VBox/VMM/Makefile.kmk src/VBox/Devices/EFI/Firmware/BaseTools/Conf/tools_def.template src/VBox/Devices/EFI/Firmware/BaseTools/Source/C/Makefiles/header.makefile src/VBox/Installer/linux/Makefile-header.gmk src/VBox/Devices/EFI/Firmware/BaseTools/Conf/tools_def.template src/VBox/Devices/EFI/Firmware/BaseTools/Source/C/Makefiles/header.makefile src/VBox/Installer/linux/Makefile-footer.gmk
 
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
 %if %{with clang}
@@ -394,7 +398,6 @@ echo TOOL_GCC_LDFLAGS="%{build_ldflags} -fuse-ld=bfd" >> LocalConfig.kmk
     --disable-java \
 %endif
     --disable-kmods \
-    --enable-qt5 \
 %if %{without docs}
     --disable-docs \
 %endif
@@ -414,7 +417,6 @@ export PATH=$PWD/BFD:$PATH
 	cd CryptoPkg/Library/OpensslLib
 	tar xf %{S:50}
 	mv openssl-1* openssl
-	perl process_files.pl
 	cd ../../..
 	kmk
 	cd "${TOP}"
@@ -682,12 +684,10 @@ done
 %{vboxlibdir}/VBoxSDL
 %{vboxlibdir}/VBoxSVC
 %{vboxlibdir}/VBoxVMMPreload
-%{vboxlibdir}/VBoxXPCOMIPCD
 %{vboxlibdir}/VirtualBox
 %{vboxlibdir}/vboxshell.py
 %{vboxlibdir}/vboximg-mount
 %{vboxlibdir}/VBoxAudioTest
-%{vboxlibdir}/VBoxTestOGL
 %if %{with java}
 %{vboxlibdir}/vboxwebsrv
 %{vboxlibdir}/webtest
