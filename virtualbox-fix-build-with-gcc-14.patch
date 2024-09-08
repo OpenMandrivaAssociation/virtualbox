@@ -1,0 +1,23 @@
+diff -up VirtualBox-7.1.0_BETA2/src/VBox/Devices/PC/ipxe/Makefile.kmk.omv~ VirtualBox-7.1.0_BETA2/src/VBox/Devices/PC/ipxe/Makefile.kmk
+--- VirtualBox-7.1.0_BETA2/src/VBox/Devices/PC/ipxe/Makefile.kmk.omv~	2024-09-08 15:41:48.830631510 +0200
++++ VirtualBox-7.1.0_BETA2/src/VBox/Devices/PC/ipxe/Makefile.kmk	2024-09-08 15:41:58.000724843 +0200
+@@ -142,6 +142,7 @@ endif
+ 	-Wall \
+ 	-W \
+ 	-Wformat-nonliteral \
++	-Wno-array-bounds \
+ 	$(VBOX_GCC_fno-stack-protector) \
+ 	$(VBOX_GCC_fno-dwarf2-cfi-asm) \
+ 	$(VBOX_GCC_Wno-address)
+diff -up VirtualBox-7.1.0_BETA2/src/VBox/Devices/PC/ipxe/src/arch/i386/Makefile.omv~ VirtualBox-7.1.0_BETA2/src/VBox/Devices/PC/ipxe/src/arch/i386/Makefile
+--- VirtualBox-7.1.0_BETA2/src/VBox/Devices/PC/ipxe/src/arch/i386/Makefile.omv~	2024-09-08 15:42:07.060817062 +0200
++++ VirtualBox-7.1.0_BETA2/src/VBox/Devices/PC/ipxe/src/arch/i386/Makefile	2024-09-08 15:42:21.800967112 +0200
+@@ -48,6 +48,8 @@ endif
+ #
+ CFLAGS		+= -freg-struct-return
+ 
++CFLAGS += -Wno-array-bounds
++
+ # Force 32-bit code even on an x86-64 machine
+ #
+ CFLAGS		+= -m32

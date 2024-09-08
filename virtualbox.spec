@@ -1,4 +1,8 @@
-%define beta BETA1
+# Useful for debugging build failures, vbox make output tends
+# to be quite garbled
+#global _smp_mflags -j1
+
+%define beta BETA2
 %define kname vboxdrv
 %define oname VirtualBox
 %define srcname %{oname}-%{version}%{?beta:_%{beta}}
@@ -96,6 +100,7 @@ Patch8:		101-vboxsf-automount.patch
 Patch9:		VirtualBox-5.0.0_BETA3-dont-check-for-mkisofs-or-makeself.patch
 # Default to a reasonable size in guest additions
 Patch10:	VirtualBox-6.1.12a-default-to-1024x768.patch
+Patch11:	virtualbox-fix-build-with-gcc-14.patch
 #Patch11:	vbox-6.1.10-compile.patch
 #Patch12:	vbox-6.1.24-python-syntax.patch
 
@@ -106,6 +111,7 @@ Patch24:	VirtualBox-5.0.18-xserver_guest_xorg19.patch
 #Patch25:	fix-vboxadd-xclient.patch
 #Patch26:	vbox-6.1.6-firmware-build-python3.9.patch
 # "Borrowed" from Debian https://salsa.debian.org/pkg-virtualbox-team/virtualbox/blob/master/debian/patches
+# https://sources.debian.org/patches/virtualbox/
 #Patch103:	06-xsession.patch
 Patch104:	07-vboxnetflt-reference.patch
 Patch105:	12-make-module.patch
@@ -195,6 +201,9 @@ BuildRequires:	pkgconfig(libpng)
 BuildRequires:	flex
 BuildRequires:	bison
 BuildRequires:	libxml2-utils
+# For now -- current versions of pylint find lots of additional
+# errors that cause the build to abort
+BuildConflicts:	pylint
 # FIXME not sure why, but vbox checks if there's a working
 # 32-bit compiler. Probably for the BIOS?
 # But it doesn't use -nostdlib or so, so we need to BR
