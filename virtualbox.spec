@@ -50,7 +50,7 @@ Version:	7.1.4
 Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}1
 License:	GPLv2
 Group:		Emulators
-Url:		http://www.virtualbox.org/
+Url:		https://www.virtualbox.org/
 %if 0%{?svn:1}
 Source0:	VirtualBox-%{svn}.tar.xz
 %else
