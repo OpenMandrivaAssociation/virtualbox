@@ -47,7 +47,7 @@ Name:		virtualbox
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	7.1.4
-Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}1
+Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}2
 License:	GPLv2
 Group:		Emulators
 Url:		https://www.virtualbox.org/
