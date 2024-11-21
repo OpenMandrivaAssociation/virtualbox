@@ -47,7 +47,7 @@ Name:		virtualbox
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
 Version:	7.1.4
-Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}2
+Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}3
 License:	GPLv2
 Group:		Emulators
 Url:		https://www.virtualbox.org/
@@ -123,6 +123,7 @@ Patch111:	32-disable-guest-version-check.patch
 Patch112:	35-libvdeplug-soname.patch
 # Fixes patch 107
 #Patch113:	disable-update-manager-for-real.patch
+Patch114:	VirtualBox-7.1.4-unload-kvm.patch
 # (tpg) add support for OpenMandriva
 # (crazy) this should be prepared for upstream..
 #Patch200:	VirtualBox-add-support-for-OpenMandriva.patch

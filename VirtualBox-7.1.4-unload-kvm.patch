@@ -1,0 +1,22 @@
+diff -up VirtualBox-7.1.4/src/VBox/Installer/linux/VBox.sh.omv~ VirtualBox-7.1.4/src/VBox/Installer/linux/VBox.sh
+--- VirtualBox-7.1.4/src/VBox/Installer/linux/VBox.sh.omv~	2024-11-21 01:11:45.133644133 +0100
++++ VirtualBox-7.1.4/src/VBox/Installer/linux/VBox.sh	2024-11-21 01:19:00.778717214 +0100
+@@ -61,6 +61,18 @@ else
+     exit 1
+ fi
+ 
++### As of kernel 6.12.0, the KVM module initializes itself on load,
++### preventing vboxdrv from grabbing the CPU extensions for itself
++if lsmod |grep -q kvm_amd; then
++	pkexec rmmod kvm_amd
++fi
++if lsmod |grep -q kvm_intel; then
++	pkexec rmmod kvm_intel
++fi
++if lsmod |grep -q kvm; then
++	pkexec rmmod kvm
++fi
++
+ # Note: This script must not fail if the module was not successfully installed
+ #       because the user might not want to run a VM but only change VM params!
+ 
