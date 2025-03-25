@@ -1,0 +1,11 @@
+diff -urN VirtualBox-7.1.6/doc/manual/en_US/dita/UserManual.ditamap VirtualBox-7.1.4/doc/manual/en_US/dita/UserManual.ditamap
+--- VirtualBox-7.1.6/doc/manual/en_US/dita/UserManual.ditamap	2025-01-21 13:41:16.000000000 +0100
++++ VirtualBox-7.1.4/doc/manual/en_US/dita/UserManual.ditamap	2024-10-10 18:55:33.000000000 +0200
+@@ -615,7 +615,6 @@
+          <topicref href="topics/security-model.dita"/>
+          <topicref href="topics/secure-config-vms.dita">
+             <topicref href="topics/security-networking.dita"/>
+-        <topicref href="topics/security-of-remote-vms.dita"/>
+             <topicref href="topics/security-vrdp-auth.dita"/>
+             <topicref href="topics/security_clipboard.dita"/>
+             <topicref href="topics/security-shared-folders.dita"/>

@@ -46,8 +46,8 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.1.4
-Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}3
+Version:	7.1.6
+Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}1
 License:	GPLv2
 Group:		Emulators
 Url:		https://www.virtualbox.org/
@@ -91,6 +91,8 @@ Patch4:		virtualbox-fix-vboxadd-req.patch
 Patch6:		vbox-6.0.0-kernel-modules-in-tree.patch
 # (tmb) disable update notification (OpenSuSe)
 #Patch7:		VirtualBox-4.3.0-noupdate-check.patch
+# Workaround for doc build failure
+Patch7:		vbox-7.1.6-workaround-doc-build-failure.patch
 # https://git.archlinux.org/svntogit/community.git/plain/trunk/101-vboxsf-automount.patch?h=packages/virtualbox
 Patch8:		101-vboxsf-automount.patch
 
