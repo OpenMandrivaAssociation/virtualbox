@@ -105,6 +105,7 @@ Patch10:	VirtualBox-6.1.12a-default-to-1024x768.patch
 Patch11:	virtualbox-fix-build-with-gcc-14.patch
 #Patch11:	vbox-6.1.10-compile.patch
 #Patch12:	vbox-6.1.24-python-syntax.patch
+Patch13:	vbox-7.1.6-kernel-module-updates-from-svn.patch
 
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
