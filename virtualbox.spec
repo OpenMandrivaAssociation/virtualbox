@@ -37,7 +37,7 @@
 ## (crazy) fixem that is always true these days
 %bcond_without additions
 %bcond_without vnc_ext_pack
-%bcond_with firmware
+%bcond_without firmware
 
 #define svn 20230604
 
@@ -46,7 +46,7 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.1.6
+Version:	7.1.8
 Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}1
 License:	GPLv2
 Group:		Emulators
@@ -68,7 +68,7 @@ Source21:	os_openmandriva_64.png
 %if %{with firmware}
 # Can't use system openssl because we built OpenSSL for UEFI, not
 # for Linux
-%define openssl 1.1.1k
+%define openssl 3.0.16
 Source50:	https://www.openssl.org/source/openssl-%{openssl}.tar.gz
 %endif
 Source100:	virtualbox.rpmlintrc
@@ -105,7 +105,6 @@ Patch10:	VirtualBox-6.1.12a-default-to-1024x768.patch
 Patch11:	virtualbox-fix-build-with-gcc-14.patch
 #Patch11:	vbox-6.1.10-compile.patch
 #Patch12:	vbox-6.1.24-python-syntax.patch
-Patch13:	vbox-7.1.6-kernel-module-updates-from-svn.patch
 
 Patch18:	VirtualBox-5.1.8-gsoap-2.8.13.patch
 Patch22:	virtualbox-no-prehistoric-xfree86.patch
@@ -430,7 +429,7 @@ export PATH=$PWD/BFD:$PATH
 	. ./edksetup.sh
 	cd CryptoPkg/Library/OpensslLib
 	tar xf %{S:50}
-	mv openssl-1* openssl
+	mv openssl-3* openssl
 	cd ../../..
 	kmk
 	cd "${TOP}"
