@@ -2,11 +2,11 @@
 # to be quite garbled
 #global _smp_mflags -j1
 
-#define beta BETA2
+%define beta BETA2
 %define kname vboxdrv
 %define oname VirtualBox
-%define srcname %{oname}-%{version}%{?beta:_%{beta}}
-%define distname %{oname}-%{version}%{?beta:_%{beta}}
+%define srcname %{oname}-%(echo %{version}|sed -e 's,~,_,g')
+%define distname %{oname}-%(echo %{version}|sed -e 's,~,_,g')
 %define pkgver %{ver}
 
 %define vboxlibdir %{_prefix}/lib/%{name}
@@ -48,17 +48,17 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.1.10
-Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}1
+Version:	7.2.0%{?beta:~%{beta}}
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		https://www.virtualbox.org/
 %if 0%{?svn:1}
 Source0:	VirtualBox-%{svn}.tar.xz
 %else
-Source0:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')%{?beta:_%{beta}}/%{srcname}.tar.bz2
+Source0:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g;s,~.*,,')%{?beta:_%{beta}}/%{srcname}.tar.bz2
 %endif
-Source1:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')%{?beta:_%{beta}}/UserManual.pdf
+Source1:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g;s,~.*,,')%{?beta:_%{beta}}/UserManual.pdf
 Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
@@ -686,6 +686,9 @@ done
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/components
 %{vboxlibdir}/*.so
+%{vboxlibdir}/.autoreg
+%{vboxlibdir}/VBoxEFI-*.fd
+%{vboxlibdir}/svn2git-vbox
 %{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/UnattendedTemplates
 %{vboxlibdir}/VBoxAutostart
@@ -693,8 +696,6 @@ done
 %{vboxlibdir}/VBoxBugReport
 %{vboxlibdir}/VBoxCpuReport
 %{vboxlibdir}/VBoxDTrace
-%{vboxlibdir}/VBoxEFI32.fd
-%{vboxlibdir}/VBoxEFI64.fd
 %{vboxlibdir}/VBoxExtPackHelperApp
 %{vboxlibdir}/VBoxManage
 %{vboxlibdir}/VBoxSDL
