@@ -2,7 +2,7 @@
 # to be quite garbled
 #global _smp_mflags -j1
 
-%define beta BETA2
+#define beta BETA2
 %define kname vboxdrv
 %define oname VirtualBox
 %define srcname %{oname}-%(echo %{version}|sed -e 's,~,_,g')
