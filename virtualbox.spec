@@ -48,7 +48,7 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.2.4%{?beta:~%{beta}}
+Version:	7.2.6%{?beta:~%{beta}}
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -315,8 +315,7 @@ cp -a %{SOURCE20} %{SOURCE21} src/VBox/Frontends/VirtualBox/images/
 
 # Remove prebuilt binary tools
 find -name '*.py[co]' -delete
-rm -r src/VBox/Additions/WINNT
-rm -r src/VBox/Additions/os2
+rm -r src/VBox/Additions/{win,os2,darwin,solaris,freebsd,haiku}
 # Remove bundle X11 sources and some lib sources, before patching.
 rm -rf src/VBox/Additions/x11/x11include
 rm -rf src/VBox/Additions/x11/x11stubs
