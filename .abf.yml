@@ -2,5 +2,6 @@ sources:
   os_openmandriva.png: 3c1c957c644369db0009773c895fbbb0617d5785
   os_openmandriva_64.png: 80cce1aee0eea3e7aed9ee36d5829c0f0fa50fd4
   openssl-3.0.16.tar.gz: 9f2b9d6aa10576a5938b5a9cbc777af3ff51d64a
-  UserManual.pdf: 672ae9814cb63697f5a6d7b5ac6e50454d48ed59
-  VirtualBox-7.2.6.tar.bz2: 76b41de1e223261b04435bd79a34eb94f7789ac7
+  VBox-7.2.tar.gz: 023fc5cf602846466a8ce38ccaf9b506167b0fd6
+  kbuild.tar.gz: dfa0b6e98077addc06edb68a1263c49da7f2ea14
+  UserManual.pdf: c104c8882f06977044943625f6cdd7657f9c2d47

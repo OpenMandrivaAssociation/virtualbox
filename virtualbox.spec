@@ -41,20 +41,21 @@
 # Re-enable building firmware from source when this is fixed.
 %bcond_with firmware
 
-#define svn 20230604
+%define svn 173562
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.2.6%{?beta:~%{beta}}
+Version:	7.2.7%{?beta:~%{beta}}%{?svn:~%{svn}}
 Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		https://www.virtualbox.org/
 %if 0%{?svn:1}
-Source0:	VirtualBox-%{svn}.tar.xz
+Source0:	https://github.com/VirtualBox/virtualbox/archive/refs/heads/VBox-%(echo %{version}|cut -d. -f1-2).tar.gz
+Source2:	https://github.com/VirtualBox/kbuild/archive/refs/heads/main.tar.gz#/kbuild.tar.gz
 %else
 Source0:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g;s,~.*,,')%{?beta:_%{beta}}/%{srcname}.tar.bz2
 %endif
@@ -143,7 +144,6 @@ ExclusiveArch:	%{x86_64}
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	libtool-base
 BuildRequires:	slibtool
 BuildRequires:	make
 BuildRequires:	gcc-c++
@@ -300,7 +300,12 @@ This package contains the user manual PDF file for %{name}.
 %endif
 
 %prep
-%autosetup -p1 -n %{?svn:VirtualBox-%{svn}}%{!?svn:%(echo %{distname} |sed -e 's,[a-z]*$,,')}
+%autosetup -p1 -n %{?svn:virtualbox-VBox-%(echo %{version}|cut -d. -f1-2)}%{!?svn:%(echo %{distname} |sed -e 's,[a-z]*$,,')}
+%if 0%{?svn:1}
+tar xf %{S:2}
+rmdir kBuild
+mv kbuild-main kBuild
+%endif
 
 %if %{with java}
 . %{_sysconfdir}/profile.d/90java.sh
