@@ -41,15 +41,15 @@
 # Re-enable building firmware from source when this is fixed.
 %bcond_with firmware
 
-%define svn 173562
+#define svn 173562
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.2.7%{?beta:~%{beta}}%{?svn:~%{svn}}
-Release:	2
+Version:	7.2.8%{?beta:~%{beta}}%{?svn:~%{svn}}
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		https://www.virtualbox.org/
