@@ -5,8 +5,8 @@
 #define beta BETA2
 %define kname vboxdrv
 %define oname VirtualBox
-%define srcname %{oname}-%{version}%{?beta:_%{beta}}
-%define distname %{oname}-%{version}%{?beta:_%{beta}}
+%define srcname %{oname}-%(echo %{version}|sed -e 's,~,_,g')
+%define distname %{oname}-%(echo %{version}|sed -e 's,~,_,g')
 %define pkgver %{ver}
 
 %define vboxlibdir %{_prefix}/lib/%{name}
@@ -28,7 +28,7 @@
 %define _disable_lto 1
 
 # (tpg) reduce the opt flags, especially for znver1
-%global optflags %{optflags} -Os
+%global optflags %{optflags} -Os -Wno-error
 
 %bcond_with java
 %bcond_with clang
@@ -37,26 +37,29 @@
 ## (crazy) fixem that is always true these days
 %bcond_without additions
 %bcond_without vnc_ext_pack
-%bcond_without firmware
+# FIXME firmware currently doesn't build because of gcc 15.x strictness
+# Re-enable building firmware from source when this is fixed.
+%bcond_with firmware
 
-#define svn 20230604
+#define svn 173562
 
 Summary:	A general-purpose full virtualizer for x86 hardware
 Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.1.8
-Release:	%{?beta:0.%{beta}.}%{?svn:0.%{svn}.}1
+Version:	7.2.8%{?beta:~%{beta}}%{?svn:~%{svn}}
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		https://www.virtualbox.org/
 %if 0%{?svn:1}
-Source0:	VirtualBox-%{svn}.tar.xz
+Source0:	https://github.com/VirtualBox/virtualbox/archive/refs/heads/VBox-%(echo %{version}|cut -d. -f1-2).tar.gz
+Source2:	https://github.com/VirtualBox/kbuild/archive/refs/heads/main.tar.gz#/kbuild.tar.gz
 %else
-Source0:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')%{?beta:_%{beta}}/%{srcname}.tar.bz2
+Source0:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g;s,~.*,,')%{?beta:_%{beta}}/%{srcname}.tar.bz2
 %endif
-Source1:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g')%{?beta:_%{beta}}/UserManual.pdf
+Source1:	http://download.virtualbox.org/virtualbox/%(echo %{version} |sed -e 's,[a-z]*,,g;s,~.*,,')%{?beta:_%{beta}}/UserManual.pdf
 Source3:	virtualbox-tmpfiles.conf
 Source4:	60-vboxadd.perms
 Source5:	vboxadd.service
@@ -132,11 +135,17 @@ Patch114:	VirtualBox-7.1.4-unload-kvm.patch
 # (tpg) do not crash on Wayland
 Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
+Patch203:	virtualbox-7.1.10-c23.patch
+Patch204:	vbox-7.2.2-curl-8.16.patch
 # From FrugalWare
 #Patch300:	https://gitweb.frugalware.org/frugalware-current/raw/master/source/xapps-extra/virtualbox/fix-EFI-boot.patch
 #Patch301:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/firmware-build-fixes.patch
 ExclusiveArch:	%{x86_64}
 # (tpg) 2019-10-16 vbox is not ready for LLVM/clang
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	gcc-c++
 BuildRequires:	systemd-rpm-macros
 BuildRequires:	dev86
@@ -206,7 +215,7 @@ BuildRequires:	bison
 BuildRequires:	libxml2-utils
 # For now -- current versions of pylint find lots of additional
 # errors that cause the build to abort
-BuildConflicts:	pylint
+BuildConflicts:	pylint python-pylint
 # FIXME not sure why, but vbox checks if there's a working
 # 32-bit compiler. Probably for the BIOS?
 # But it doesn't use -nostdlib or so, so we need to BR
@@ -291,7 +300,12 @@ This package contains the user manual PDF file for %{name}.
 %endif
 
 %prep
-%autosetup -p1 -n %{?svn:VirtualBox-%{svn}}%{!?svn:%(echo %{distname} |sed -e 's,[a-z]*$,,')}
+%autosetup -p1 -n %{?svn:virtualbox-VBox-%(echo %{version}|cut -d. -f1-2)}%{!?svn:%(echo %{distname} |sed -e 's,[a-z]*$,,')}
+%if 0%{?svn:1}
+tar xf %{S:2}
+rmdir kBuild
+mv kbuild-main kBuild
+%endif
 
 %if %{with java}
 . %{_sysconfdir}/profile.d/90java.sh
@@ -306,8 +320,7 @@ cp -a %{SOURCE20} %{SOURCE21} src/VBox/Frontends/VirtualBox/images/
 
 # Remove prebuilt binary tools
 find -name '*.py[co]' -delete
-rm -r src/VBox/Additions/WINNT
-rm -r src/VBox/Additions/os2
+rm -r src/VBox/Additions/{win,os2,darwin,solaris,freebsd,haiku}
 # Remove bundle X11 sources and some lib sources, before patching.
 rm -rf src/VBox/Additions/x11/x11include
 rm -rf src/VBox/Additions/x11/x11stubs
@@ -393,9 +406,9 @@ export LIBPATH_LIB="%{_lib}"
 
 # remove fPIC to avoid causing issues
 %if %{with clang}
-echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -isystem %{_libdir}/gcc/x86_64-openmandriva-linux-gnu/13.1.0/include -rtlib=libgcc" >> LocalConfig.kmk
+echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -isystem %{_libdir}/gcc/x86_64-openmandriva-linux-gnu/15.1.0/include -rtlib=libgcc" >> LocalConfig.kmk
 %else
-echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//')" >> LocalConfig.kmk
+echo VBOX_GCC_OPT="$(echo %{optflags} | sed -e 's/-fPIC//' -e 's/-Werror=format-security//') -Wno-error" >> LocalConfig.kmk
 %endif
 echo TOOL_GCC_LDFLAGS="%{build_ldflags} -fuse-ld=bfd" >> LocalConfig.kmk
 
@@ -683,6 +696,9 @@ done
 %{vboxlibdir}/dtrace
 %{vboxlibdir}/components
 %{vboxlibdir}/*.so
+%{vboxlibdir}/.autoreg
+%{vboxlibdir}/VBoxEFI-*.fd
+%{vboxlibdir}/svn2git-vbox
 %{vboxlibdir}/iPxeBaseBin
 %{vboxlibdir}/UnattendedTemplates
 %{vboxlibdir}/VBoxAutostart
@@ -690,8 +706,6 @@ done
 %{vboxlibdir}/VBoxBugReport
 %{vboxlibdir}/VBoxCpuReport
 %{vboxlibdir}/VBoxDTrace
-%{vboxlibdir}/VBoxEFI32.fd
-%{vboxlibdir}/VBoxEFI64.fd
 %{vboxlibdir}/VBoxExtPackHelperApp
 %{vboxlibdir}/VBoxManage
 %{vboxlibdir}/VBoxSDL

@@ -1,0 +1,13 @@
+diff -up VirtualBox-7.1.10/include/iprt/types.h.omv~ VirtualBox-7.1.10/include/iprt/types.h
+--- VirtualBox-7.1.10/include/iprt/types.h.omv~	2025-06-06 21:29:06.874678096 +0200
++++ VirtualBox-7.1.10/include/iprt/types.h	2025-06-06 21:32:21.056426282 +0200
+@@ -280,6 +280,8 @@ typedef _Bool bool;
+ #    undef bool
+      typedef _Bool bool;
+ #   endif
++#  elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
++#   include <stdbool.h>
+ #  else
+ #   undef bool /* see above netbsd explanation */
+ typedef _Bool bool;
+diff -up VirtualBox-7.1.10/include/iprt/types.h:.omv~ VirtualBox-7.1.10/include/iprt/types.h:

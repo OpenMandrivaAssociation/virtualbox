@@ -1,12 +1,12 @@
-diff -Naur VirtualBox-5.2.16/configure VirtualBox-5.2.16.tpg/configure
---- VirtualBox-5.2.16/configure	2018-07-27 16:16:32.858489000 +0000
-+++ VirtualBox-5.2.16.tpg/configure	2018-07-27 16:19:05.690495478 +0000
-@@ -2823,8 +2823,6 @@
+diff -up VirtualBox-7.2.0/configure.9~ VirtualBox-7.2.0/configure
+--- VirtualBox-7.2.0/configure.9~	2025-08-13 21:37:05.000000000 +0200
++++ VirtualBox-7.2.0/configure	2025-08-18 02:26:38.405106403 +0200
+@@ -3016,7 +3016,7 @@ if [ "$OS" = "linux" ]; then
    fi
    check_compiler_h
-   [ $ONLY_ADDITIONS -eq 0 -a "$BUILD_MACHINE" = "amd64" -a $WITH_VMMRAW -eq 1 ] && check_32bit
--  # tools/common/makeself*
+   # tools/common/makeself*
 -  [ $OSE -ge 1 ] && check_makeself
++  #[ $OSE -ge 1 ] && check_makeself
  fi
  
  [ -n "$SETUP_WINE" ] && setup_wine

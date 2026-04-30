@@ -6,7 +6,7 @@ diff -up VirtualBox-6.0.6/src/VBox/Installer/linux/VBox.sh.0001~ VirtualBox-6.0.
           load. Please recompile the kernel module and install it by
  
 -           sudo /sbin/vboxconfig
-+           sudo dnf --refresh install kernel-release-desktop-latest
++           sudo dnf --refresh install kernel-desktop
  
           You will not be able to start VMs until this problem is fixed.
  EOF
@@ -15,13 +15,13 @@ diff -up VirtualBox-6.0.6/src/VBox/Installer/linux/VBox.sh.0001~ VirtualBox-6.0.
  
             sudo /sbin/vboxconfig
 +           or
-+           sudo dnf --refresh install kernel-release-desktop-latest
++           sudo dnf --refresh install kernel-desktop
  
           and if that is not successful, try to re-install the package.
  
-diff -up VirtualBox-6.0.6/src/VBox/VMM/VMMR3/VM.cpp.0001~ VirtualBox-6.0.6/src/VBox/VMM/VMMR3/VM.cpp
---- VirtualBox-6.0.6/src/VBox/VMM/VMMR3/VM.cpp.0001~	2019-04-17 03:14:10.363183984 +0200
-+++ VirtualBox-6.0.6/src/VBox/VMM/VMMR3/VM.cpp	2019-04-17 03:18:48.068170511 +0200
+diff -up VirtualBox-6.0.6/src/VBox/VMM/VMMR3/VMR3.cpp.0001~ VirtualBox-6.0.6/src/VBox/VMM/VMMR3/VMR3.cpp
+--- VirtualBox-6.0.6/src/VBox/VMM/VMMR3/VMR3.cpp.0001~	2019-04-17 03:14:10.363183984 +0200
++++ VirtualBox-6.0.6/src/VBox/VMM/VMMR3/VMR3.cpp	2019-04-17 03:18:48.068170511 +0200
 @@ -274,9 +274,9 @@ VMMR3DECL(int)   VMR3Create(uint32_t cCp
                      pszError = N_("One of the kernel modules was not successfully loaded. Make sure "
                                    "that VirtualBox is correctly installed, and if you are using EFI "
