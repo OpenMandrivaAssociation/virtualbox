@@ -159,6 +159,7 @@ BuildRequires:	vde2
 BuildRequires:	glslang
 BuildRequires:	pkgconfig(xorg-server)
 BuildRequires:	which
+BuildRequires:	atomic-devel
 %if %{with firmware}
 BuildRequires:	nasm
 %endif
