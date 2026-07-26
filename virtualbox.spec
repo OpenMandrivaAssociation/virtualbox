@@ -48,8 +48,8 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.2.8%{?beta:~%{beta}}%{?svn:~%{svn}}
-Release:	2
+Version:	7.2.14%{?beta:~%{beta}}%{?svn:~%{svn}}
+Release:	1
 License:	GPLv2
 Group:		Emulators
 Url:		https://www.virtualbox.org/
@@ -137,6 +137,8 @@ Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
 Patch203:	virtualbox-7.1.10-c23.patch
 Patch204:	vbox-7.2.2-curl-8.16.patch
+# OpenSSL 4.0: X509_get_issuer_name() returns const X509_NAME *
+Patch205:	virtualbox-7.2.14-openssl4-const.patch
 # From FrugalWare
 #Patch300:	https://gitweb.frugalware.org/frugalware-current/raw/master/source/xapps-extra/virtualbox/fix-EFI-boot.patch
 #Patch301:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/firmware-build-fixes.patch
@@ -351,11 +353,12 @@ SDK_VBOX_VPX_INCS:=%{_includedir}/vpx
 SDK_VBOX_VPX_LIBS:=vpx
 SDK_VBOX_LIBCURL_INCS:=%{_includedir}/curl
 SDK_VBOX_LIBCURL_LIBS:=curl
-VBOX_WITH_TESTCASES:=0
-VBOX_WITH_TESTSUITE:=0
+# kBuild treats any non-empty value as enabled (including "0"); leave empty to disable.
+VBOX_WITH_TESTCASES:=
+VBOX_WITH_TESTSUITE:=
 # FIXME re-enable when fixed upstream
 #VBOX_WITH_PCI_PASSTHROUGH:=1
-VBOX_WITH_VALIDATIONKIT:=0
+VBOX_WITH_VALIDATIONKIT:=
 %if %{with java}
 VBOX_JAVA_HOME:=${JAVA_HOME}
 %else
