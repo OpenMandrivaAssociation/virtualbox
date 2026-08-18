@@ -1,0 +1,30 @@
+NASM 3.x rejects "push strict dword" in 64-bit mode. The intended
+encoding is still opcode 68 + imm32 (sign-extended 64-bit push).
+"push strict qword" produces that same encoding on NASM 3.01.
+
+--- VirtualBox-7.2.16/src/VBox/Devices/EFI/Firmware/UefiCpuPkg/Library/CpuExceptionHandlerLib/X64/ExceptionHandlerAsm.nasm.omv~
++++ VirtualBox-7.2.16/src/VBox/Devices/EFI/Firmware/UefiCpuPkg/Library/CpuExceptionHandlerLib/X64/ExceptionHandlerAsm.nasm
+@@ -57,7 +57,11 @@ ALIGN   8
+ AsmIdtVectorBegin:
+ %assign Vector 0
+ %rep  256
++%if __?NASM_MAJOR?__ >= 3
++    push    strict qword %[Vector] ; 68+imm32, sign-extended 64-bit push (NASM 3)
++%else
+     push    strict dword %[Vector] ; This instruction pushes sign-extended 8-byte value on stack
++%endif
+     push    rax
+ %ifdef NO_ABSOLUTE_RELOCS_IN_TEXT
+     mov     rax, strict qword 0    ; mov     rax, ASM_PFX(CommonInterruptEntry)
+@@ -70,7 +74,11 @@ AsmIdtVectorBegin:
+ AsmIdtVectorEnd:
+ 
+ HookAfterStubHeaderBegin:
++%if __?NASM_MAJOR?__ >= 3
++    push    strict qword 0      ; 0 will be fixed
++%else
+     push    strict dword 0      ; 0 will be fixed
++%endif
+ VectorNum:
+     push    rax
+ %ifdef NO_ABSOLUTE_RELOCS_IN_TEXT

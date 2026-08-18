@@ -37,9 +37,7 @@
 ## (crazy) fixem that is always true these days
 %bcond_without additions
 %bcond_without vnc_ext_pack
-# FIXME firmware currently doesn't build because of gcc 15.x strictness
-# Re-enable building firmware from source when this is fixed.
-%bcond_with firmware
+%bcond_without firmware
 
 #define svn 173562
 
@@ -137,6 +135,8 @@ Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
 Patch203:	virtualbox-7.1.10-c23.patch
 Patch204:	vbox-7.2.2-curl-8.16.patch
+# NASM 3.x rejects "push strict dword" in 64-bit EFI exception stubs
+Patch205:	virtualbox-7.2.16-nasm3-efi-exception-handler.patch
 # From FrugalWare
 #Patch300:	https://gitweb.frugalware.org/frugalware-current/raw/master/source/xapps-extra/virtualbox/fix-EFI-boot.patch
 #Patch301:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/firmware-build-fixes.patch
@@ -160,6 +160,7 @@ BuildRequires:	which
 BuildRequires:	atomic-devel
 %if %{with firmware}
 BuildRequires:	nasm
+BuildRequires:	clang
 %endif
 %if %{with java}
 BuildRequires:	jdk-current
@@ -379,6 +380,7 @@ VBOX_GUI_WITH_SHARED_LIBRARY:=1
 VBOX_PRODUCT=VirtualBox
 %if %{with firmware}
 VBOX_EFI_FIRMWARE_EFI_MODULES_KMK_INCLUDED := 0
+PATH_TOOL_VBoxXClang := /usr/bin
 %endif
 VBOX_WITH_VBOX_IMG := 1
 VBOX_WITH_VBOXIMGMOUNT := 1
@@ -436,18 +438,14 @@ echo TOOL_GCC_LDFLAGS="%{build_ldflags} -fuse-ld=bfd" >> LocalConfig.kmk
 export PATH=$PWD/BFD:$PATH
 
 %if %{with firmware}
-	# NOTE: this needs to run before main kmk,
-	# *DD.so & *DD2.so uses the EFI* stuff we just build here
-	TOP="$(pwd)"
-	rm src/VBox/Devices/EFI/FirmwareBin/*
-	cd src/VBox/Devices/EFI/Firmware
-	. ./edksetup.sh
-	cd CryptoPkg/Library/OpensslLib
-	tar xf %{S:50}
-	mv openssl-3* openssl
-	cd ../../..
-	kmk
-	cd "${TOP}"
+	# Must run before main kmk: VBoxDD embeds the EFI images.
+	# Top-level efi-build builds bldRTIasl first; cd Firmware && kmk does not.
+	rm -f src/VBox/Devices/EFI/FirmwareBin/*
+	# Bundled OpenSSL is for UEFI, not the host
+	tar xf %{S:50} -C src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib
+	mv src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/openssl-3* \
+		src/VBox/Devices/EFI/Firmware/CryptoPkg/Library/OpensslLib/openssl
+	kmk efi-build
 	cp out/*/release/bin/VBoxEFI*.fd src/VBox/Devices/EFI/FirmwareBin/
 %endif
 
