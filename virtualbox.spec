@@ -48,7 +48,7 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.2.14%{?beta:~%{beta}}%{?svn:~%{svn}}
+Version:	7.2.16%{?beta:~%{beta}}%{?svn:~%{svn}}
 Release:	1
 License:	GPLv2
 Group:		Emulators
@@ -137,8 +137,6 @@ Patch201:	VirtualBox-5.2.16-use-xcb-on-wayland.patch
 Patch202:	vbox-6.0.6-find-java-modules.patch
 Patch203:	virtualbox-7.1.10-c23.patch
 Patch204:	vbox-7.2.2-curl-8.16.patch
-# OpenSSL 4.0: X509_get_issuer_name() returns const X509_NAME *
-Patch205:	virtualbox-7.2.14-openssl4-const.patch
 # From FrugalWare
 #Patch300:	https://gitweb.frugalware.org/frugalware-current/raw/master/source/xapps-extra/virtualbox/fix-EFI-boot.patch
 #Patch301:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/firmware-build-fixes.patch
