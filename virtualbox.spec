@@ -139,6 +139,8 @@ Patch204:	vbox-7.2.2-curl-8.16.patch
 Patch205:	virtualbox-7.2.16-nasm3-efi-exception-handler.patch
 # Cooker has Python 3.15 only; upstream probes stop at 3.14
 Patch206:	virtualbox-7.2.22-python-3.15.patch
+# gSOAP 2.8.140+ one-entry-per-line maps overflow split-soapC's window
+Patch207:	virtualbox-7.2.22-gsoap-2.8.140-soapc.patch
 # From FrugalWare
 #Patch300:	https://gitweb.frugalware.org/frugalware-current/raw/master/source/xapps-extra/virtualbox/fix-EFI-boot.patch
 #Patch301:	https://gitweb.frugalware.org/frugalware-current/raw/67d0618e5c19f8b44ebb6eab78c56048b412bdc3/source/xapps-extra/virtualbox/firmware-build-fixes.patch

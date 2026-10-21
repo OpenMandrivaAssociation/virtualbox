@@ -1,0 +1,41 @@
+gSOAP 2.8.140+ emits one soap_code_map entry per line. PartitionType
+has 152 entries, so split-soapC's 150-line window expired at the end of the
+map and soapC-7.cpp referenced soap_codes_vbox__PartitionType without its
+definition.
+
+Keep the whole initializer in the same chunk as the serializers that follow it.
+
+--- a/src/VBox/Main/webservice/split-soapC.cpp
++++ b/src/VBox/Main/webservice/split-soapC.cpp
+@@ -123,6 +123,8 @@
+     unsigned long cBraceNesting = 0;
+     unsigned long cLinesSinceStaticMap = ~0UL / 2;
+     bool          fJustZero = false;
++    /* True while the current soap_code_map initializer is still open. */
++    bool          fInSoapCodeMap = false;
+ 
+     do
+     {
+@@ -204,9 +206,21 @@
+             }
+         }
+ 
+-        /* look for static variables used for enum conversion. */
++        /* look for static variables used for enum conversion.
++           gSOAP 2.8.140+ writes one map entry per line. PartitionType has
++           more than 150 entries, so counting from the declaration split the
++           map away from soap_*2s() and the next chunk failed to compile. */
+         if (!strncmp(pszLine, "static const struct soap_code_map", sizeof("static const struct soap_code_map") - 1))
++        {
+             cLinesSinceStaticMap = 0;
++            fInSoapCodeMap = true;
++        }
++        else if (fInSoapCodeMap)
++        {
++            cLinesSinceStaticMap = 0;
++            if (cBraceNesting == 0)
++                fInSoapCodeMap = false;
++        }
+         else
+             cLinesSinceStaticMap++;
+ 
