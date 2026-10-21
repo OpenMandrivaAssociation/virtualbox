@@ -46,7 +46,7 @@ Name:		virtualbox
 # WARNING: WHEN UPDATING THIS PACKAGE, ALWAYS REBUILD THE
 # kernel AND kernel-rc PACKAGES TO MAKE SURE MODULES
 # AND USERSPACE ARE IN SYNC
-Version:	7.2.16%{?beta:~%{beta}}%{?svn:~%{svn}}
+Version:	7.2.22%{?beta:~%{beta}}%{?svn:~%{svn}}
 Release:	1
 License:	GPLv2
 Group:		Emulators
